@@ -1,0 +1,32 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+.layout {
+  width: 100%;
+  min-height: 100vh;
+  background: #0f172a;
+}
+
+.appContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: stretch;
+  height: calc(100vh - 70px);
+}
+
+.mainContent {
+  flex: 1;
+  padding: 2rem;
+  margin-left: 260px;
+  transition: margin-left 0.3s ease;
+  overflow-y: auto;
+}
+
+.expanded {
+  margin-left: 80px;
+}
+
+@media (max-width: 768px) {
+  .mainContent {
+    margin-left: 0;
+  }
+}/*# sourceMappingURL=Homepage.module.css.map */

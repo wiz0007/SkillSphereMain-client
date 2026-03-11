@@ -1,0 +1,252 @@
+@use "../../styles/mixin" as *;
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar {
+  @include Flex(row, space-between, center);
+
+  padding: 0 2rem;
+  height: 70px;
+
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(12px);
+
+  transition: transform 0.3s ease;
+}
+
+.hide {
+  transform: translateY(-100%);
+}
+
+/* =========================
+   LEFT SECTION
+========================= */
+
+.leftSection {
+  @include Flex(row, center, center);
+  gap: 1rem;
+}
+
+/* =========================
+   LOGO
+========================= */
+
+.logo {
+
+  .compactLogo {
+    display: none;
+    color: #38bdf8;
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+
+  .fullLogo {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: white;
+
+    span {
+      color: #38bdf8;
+    }
+  }
+
+}
+
+/* =========================
+   DESKTOP LINKS
+========================= */
+
+.desktopLinks {
+  @include Flex(row, center, center);
+  gap: 2rem;
+
+  a {
+    @include Text(15px, #cbd5e1);
+    text-decoration: none;
+
+    &.active,
+    &:hover {
+      color: #38bdf8;
+    }
+  }
+}
+
+/* =========================
+   ACTIONS
+========================= */
+
+.actions {
+  @include Flex(row, center, center);
+  gap: 1rem;
+}
+
+.icon {
+  font-size: 1.2rem;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #38bdf8;
+  }
+}
+
+/* =========================
+   PROFILE
+========================= */
+
+.profile {
+  position: relative;
+
+  @include Flex(row, center, center);
+  gap: 0.3rem;
+
+  cursor: pointer;
+
+  img {
+    @include Image(36px, 36px);
+    border-radius: 50%;
+  }
+
+  .chevron {
+    font-size: 0.9rem;
+    color: #cbd5e1;
+  }
+}
+
+/* =========================
+   DROPDOWN
+========================= */
+
+.dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+
+  background: #1e293b;
+
+  padding: 1rem;
+
+  border-radius: 8px;
+
+  min-width: 150px;
+
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+
+  @include Flex(column, flex-start, flex-start);
+  gap: 0.8rem;
+
+  a,
+  button {
+    background: none;
+    border: none;
+
+    color: #cbd5e1;
+
+    cursor: pointer;
+    text-decoration: none;
+
+    @include Text(14px, #cbd5e1);
+
+    &:hover {
+      color: #38bdf8;
+    }
+  }
+}
+
+/* =========================
+   SIDEBAR TOGGLE (HAMBURGER)
+========================= */
+
+.hamburger {
+  @include Flex(column, center, flex-start);
+
+  gap: 5px;
+
+  background: none;
+  border: none;
+
+  cursor: pointer;
+
+  span {
+    width: 22px;
+    height: 2px;
+
+    background: white;
+
+    transition: all 0.3s ease;
+  }
+}
+
+/* =========================
+   MOBILE BOTTOM NAV
+========================= */
+
+.bottomNav {
+  display: none;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+
+  .desktopLinks {
+    display: none;
+  }
+
+  .actions {
+    gap: 0.6rem;
+  }
+
+}
+
+/* Mobile */
+
+@media (max-width: 500px) {
+
+  .fullLogo {
+    display: none;
+  }
+
+  .compactLogo {
+    display: inline;
+  }
+
+  .bottomNav {
+
+    position: fixed;
+
+    bottom: 0;
+    left: 0;
+
+    width: 100%;
+    height: 60px;
+
+    background: #0f172a;
+
+    @include Flex(row, space-around, center);
+
+    z-index: 1000;
+
+    a {
+
+      @include Text(13px, #cbd5e1);
+
+      text-decoration: none;
+
+      &.active {
+        color: #38bdf8;
+      }
+
+    }
+
+  }
+}

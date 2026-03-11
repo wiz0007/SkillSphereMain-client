@@ -1,0 +1,54 @@
+@use "../../styles/mixin" as *;
+
+.container {
+  width: 100%;
+}
+
+.header {
+  margin-bottom: 20px;
+
+  @include Flex(row, space-between, center);
+  gap: 16px;
+
+  flex-wrap: wrap;
+}
+
+/* title */
+
+.header h2 {
+  @include Text(24px, #111827);
+  font-weight: 600;
+
+  white-space: nowrap; /* prevents "Discover Skills" from breaking */
+}
+
+/* search bar */
+
+.header input {
+  padding: 10px 14px;
+
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+
+  width: 260px;
+  max-width: 100%;
+}
+.grid {
+  margin-top: 25px;
+
+  display: grid;
+
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+
+  gap: 25px;
+}
+
+.empty {
+  margin-top: 40px;
+
+  text-align: center;
+
+  p {
+    @include Text(16px, #6b7280);
+  }
+}

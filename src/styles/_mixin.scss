@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+@mixin Flex($direction, $justify, $align) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+@mixin Image($height, $width) {
+  height: $height;
+  width: $width;
+  object-fit: contain;
+}
+
+@mixin Text($size, $color) {
+  font-size: $size;
+  color: $color;
+  font-family: 'Roboto', sans-serif;
+}

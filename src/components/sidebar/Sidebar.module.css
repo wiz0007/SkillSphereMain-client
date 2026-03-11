@@ -1,0 +1,41 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 260px;
+  height: calc(100vh - 70px);
+  background: linear-gradient(180deg, #0f172a, #1e293b);
+  padding: 1.5rem 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+}
+.sidebar.collapsed {
+  width: 80px;
+}
+
+/* MOBILE MODE */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 70px;
+    left: -100%;
+    width: 260px;
+    height: calc(100vh - 70px);
+    z-index: 1000;
+  }
+  .mobileOpen {
+    left: 0;
+  }
+}
+/* Overlay */
+.overlay {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 70px);
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 900;
+}/*# sourceMappingURL=Sidebar.module.css.map */
