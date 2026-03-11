@@ -1,0 +1,132 @@
+@use "../../styles/mixin" as *;
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 260px;
+
+  background: #0f172a;
+  color: white;
+
+  padding: 20px;
+
+  transition: all 0.3s ease;
+
+  z-index: 1000;
+
+  @include Flex(column, space-between, flex-start);
+}
+
+.collapsed {
+  transform: translateX(-100%);
+}
+
+.logoArea {
+  width: 100%;
+  @include Flex(row, space-between, center);
+}
+
+.logo {
+  @include Text(20px, #ffffff);
+  font-weight: 600;
+}
+
+.toggleBtn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.menu {
+  width: 100%;
+  margin-top: 40px;
+}
+
+.menuItem {
+  width: 100%;
+  padding: 14px 16px;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  margin-bottom: 8px;
+
+  transition: all 0.25s ease;
+
+  @include Flex(row, flex-start, center);
+  gap: 12px;
+
+  &:hover {
+    background: #1e293b;
+  }
+}
+
+.icon {
+  font-size: 20px;
+}
+
+.title {
+  @include Text(15px, #e5e7eb);
+}
+
+.active {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+}
+
+.footer {
+  width: 100%;
+}
+
+.logout {
+  width: 100%;
+  padding: 12px;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+
+  @include Flex(row, flex-start, center);
+  gap: 12px;
+
+  &:hover {
+    background: #1e293b;
+  }
+}
+
+/* Overlay for mobile */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.4);
+
+  opacity: 0;
+  visibility: hidden;
+
+  transition: 0.3s;
+}
+
+.showOverlay {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Responsive */
+
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .collapsed {
+    transform: translateX(0);
+  }
+}

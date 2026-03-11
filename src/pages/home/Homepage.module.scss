@@ -1,0 +1,42 @@
+@use "../../styles/mixin" as *;
+
+.layout {
+  width: 100%;
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+/* MAIN CONTENT */
+
+.main {
+  padding: 30px;
+  transition: margin-left 0.3s ease;
+}
+
+/* Sidebar open */
+
+.sidebarOpen {
+  margin-left: 260px;
+}
+
+/* Sidebar closed */
+
+.sidebarClosed {
+  margin-left: 80px;
+}
+
+/* Tablet */
+
+@media (max-width: 900px) {
+  .main {
+    margin-left: 0;
+  }
+}
+
+/* Phone (space for bottom nav) */
+
+@media (max-width: 500px) {
+  .main {
+    padding-bottom: 80px;
+  }
+}
