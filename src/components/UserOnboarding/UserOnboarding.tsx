@@ -1,4 +1,4 @@
-import { useState, useEffect, type SetStateAction } from "react";
+import { useState, useEffect, } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./UserOnboarding.module.scss";
 import { createProfile } from "../../services/profile.service";
@@ -9,7 +9,7 @@ import StudentSection from "./StudentSection";
 import TeacherSection from "./TeacherSection";
 
 import { useOnboardingForm } from "./userOnboardingForm";
-import type { FormState, Role } from "./onboarding.types";
+import type { Role } from "./onboarding.types";
 
 export default function UserOnboarding() {
   const navigate = useNavigate();
@@ -51,7 +51,7 @@ export default function UserOnboarding() {
     navigate("/");
   };
 
-  function setForm(value: SetStateAction<FormState>): void {
+  function setForm(): void {
     throw new Error("Function not implemented.");
   }
 
