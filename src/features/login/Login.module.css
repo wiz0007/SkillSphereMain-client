@@ -191,4 +191,20 @@ p a:hover {
 .eye:hover {
   opacity: 1;
   transform: translateY(-50%) scale(1.1);
+}
+
+.profile {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.username {
+  font-size: 14px;
+  color: #333;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
 }/*# sourceMappingURL=Login.module.css.map */

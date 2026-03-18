@@ -1,0 +1,43 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+.filters {
+  width: 100%;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 15px;
+}
+
+/* select inputs */
+.filters select {
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  cursor: pointer;
+  min-width: 150px;
+  flex: 1 1 160px;
+  font-size: 14px;
+  color: #111827;
+  font-family: "Roboto", sans-serif;
+}
+
+/* tablet */
+@media (max-width: 900px) {
+  .filters {
+    gap: 10px;
+  }
+  .filters select {
+    flex: 1 1 45%;
+  }
+}
+/* mobile */
+@media (max-width: 600px) {
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .filters select {
+    width: 100%;
+  }
+}/*# sourceMappingURL=SkillFilters.module.css.map */
