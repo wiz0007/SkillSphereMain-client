@@ -1,4 +1,3 @@
-import React from 'react'
 import { Register } from '../../features/register/Register'
 import { AuthNavbar } from '../../components/authNavbar/authNavbar'
 
