@@ -1,5 +1,5 @@
 import { Register } from '../../features/register/Register'
-import { AuthNavbar } from '../../components/authNavbar/AuthNavbar.jsx'
+import { AuthNavbar } from '../../components/AuthNavbar/AuthNavbar'
 
 const RegisterPage = () => {
   return (
