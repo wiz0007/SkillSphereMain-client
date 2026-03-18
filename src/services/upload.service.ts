@@ -5,7 +5,7 @@ export const uploadProfilePhoto = async (file: File): Promise<string> => {
   formData.append("profilePhoto", file);
 
   const res = await axios.post(
-    "http://localhost:5000/api/profile/upload-photo",
+    "https://skillspheremain-server-1.onrender.com/api/profile/upload-photo",
     formData,
     {
       headers: {

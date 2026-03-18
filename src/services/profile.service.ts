@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "http://localhost:5000/api/profile";
+const API = "https://skillspheremain-server-1.onrender.com/api/profile";
 
 export const createProfile = async (data: any) => {
   const token = localStorage.getItem("token");

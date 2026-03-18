@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "http://localhost:5000/api/auth";
+const API = "https://skillspheremain-server-1.onrender.com/api/auth";
 
 export const loginUser = async (data: {
   email: string;
