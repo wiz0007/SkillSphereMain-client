@@ -11,7 +11,10 @@ export const createProfile = async (data: any) => {
     }
   });
 
-  return res.data;
+  console.log("CREATE PROFILE RESPONSE:", res.data);
+
+  // 🔥 IMPORTANT: adjust based on backend response
+  return res.data.profile || res.data.user || res.data;
 };
 
 export const getMyProfile = async () => {
@@ -23,5 +26,5 @@ export const getMyProfile = async () => {
     }
   });
 
-  return res.data;
+  return res.data.profile || res.data.user || res.data;
 };
