@@ -1,19 +1,19 @@
-import { useState, useEffect, } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./UserOnboarding.module.scss";
 import { createProfile } from "../../services/profile.service";
-
 import RoleSwitch from "./RoleSwitch";
 import BasicProfileSection from "./BasicProfileSection";
 import StudentSection from "./StudentSection";
 import TeacherSection from "./TeacherSection";
-
 import { useOnboardingForm } from "./userOnboardingForm";
 import type { Role } from "./onboarding.types";
+import { useAuth } from "../../context/AuthContext"; // ✅ ADD
 
 export default function UserOnboarding() {
   const navigate = useNavigate();
-  const { form, handleChange } = useOnboardingForm();
+  const { form, handleChange, setForm } = useOnboardingForm();
+  const { setUser } = useAuth(); // ✅ ADD
 
   const [role, setRole] = useState<Role>("student");
   const [timezone, setTimezone] = useState("");
@@ -47,13 +47,19 @@ export default function UserOnboarding() {
       };
     }
 
-    await createProfile(payload);
-    navigate("/");
-  };
+    try {
+      const updatedUser = await createProfile(payload);
 
-  function setForm(): void {
-    throw new Error("Function not implemented.");
-  }
+      console.log("UPDATED USER:", updatedUser);
+
+      // 🔥 THIS FIXES NAVBAR AVATAR
+      setUser(updatedUser);
+
+      navigate("/");
+    } catch (error) {
+      console.error("Profile creation failed:", error);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -63,11 +69,7 @@ export default function UserOnboarding() {
           <RoleSwitch role={role} setRole={setRole} />
         </header>
 
-        <BasicProfileSection
-          form={form}
-          handleChange={handleChange}
-          setForm={setForm}
-        />
+        <BasicProfileSection form={form} handleChange={handleChange} setForm={setForm} />
 
         {role === "student" && (
           <StudentSection form={form} handleChange={handleChange} />
