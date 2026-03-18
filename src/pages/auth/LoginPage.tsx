@@ -1,5 +1,5 @@
 import {Login} from "../../features/login/Login"
-import { AuthNavbar } from "../../components/authNavbar/AuthNavbar.jsx"
+import { AuthNavbar } from "../../components/authNavbar/AuthNavbar.tsx"
 
 const LoginPage = () => {
   return (
