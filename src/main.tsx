@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
+// import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "./context/ThemeContext";
 import App from "./App";
 import "./index.css";
@@ -8,10 +8,10 @@ import 'remixicon/fonts/remixicon.css'
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <BrowserRouter>
+    {/* <BrowserRouter> */}
       <ThemeProvider>
         <App />
       </ThemeProvider>
-    </BrowserRouter>
+    {/* </BrowserRouter> */}
   </React.StrictMode>
 );

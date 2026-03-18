@@ -3,7 +3,7 @@ import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import SkillDiscovery from "../../components/skillDiscovery/SkillDiscovery";
 
-import styles from "./HomePage.module.scss";
+import styles from "../home/Homepage.module.scss";
 
 const HomePage: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
