@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface ThemeContextType {
   dark: boolean;
@@ -11,10 +11,15 @@ export const ThemeContext = createContext<ThemeContextType>({
 });
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [dark, setDark] = useState(true);
+  const [dark, setDark] = useState<boolean>(() => {
+    // ✅ persist theme
+    const stored = localStorage.getItem("theme");
+    return stored ? stored === "dark" : true;
+  });
 
   useEffect(() => {
     document.body.dataset.theme = dark ? "dark" : "light";
+    localStorage.setItem("theme", dark ? "dark" : "light");
   }, [dark]);
 
   const toggleTheme = () => setDark(prev => !prev);
@@ -24,4 +29,9 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       {children}
     </ThemeContext.Provider>
   );
+};
+
+// ✅ custom hook
+export const useTheme = () => {
+  return useContext(ThemeContext);
 };

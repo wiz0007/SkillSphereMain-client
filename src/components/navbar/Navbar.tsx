@@ -9,8 +9,7 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
-
-  const { user, logout } = useAuth();
+  const { user, logout, loading } = useAuth();
 
   const [profileOpen, setProfileOpen] = useState(false);
   const [hideNav, setHideNav] = useState(false);
@@ -47,12 +46,9 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
     <>
       <nav className={`${styles.navbar} ${hideNav ? styles.hide : ""}`}>
 
+        {/* LEFT */}
         <div className={styles.leftSection}>
-
-          <button
-            className={styles.hamburger}
-            onClick={toggleSidebar}
-          >
+          <button className={styles.hamburger} onClick={toggleSidebar}>
             <span></span>
             <span></span>
             <span></span>
@@ -64,52 +60,77 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
             </span>
             <span className={styles.compactLogo}>SS</span>
           </div>
-
         </div>
 
+        {/* CENTER */}
         <div className={styles.desktopLinks}>
           <NavLink to="/explore">Explore</NavLink>
           <NavLink to="/sessions">Sessions</NavLink>
           <NavLink to="/dashboard">Dashboard</NavLink>
         </div>
 
+        {/* RIGHT */}
         <div className={styles.actions}>
 
-          <FiBell className={styles.icon} />
-          <FiMessageSquare className={styles.icon} />
-
-          <div
-            className={styles.profile}
-            ref={profileRef}
-            onClick={() => setProfileOpen(!profileOpen)}
-          >
-            <img
-              src={user?.profilePhoto || "https://i.pravatar.cc/40"}
-              alt="profile"
-            />
-
-            <span className={styles.username}>
-              {user?.name || "User"}
-            </span>
-
-            <FiChevronDown className={styles.chevron} />
-
-            {profileOpen && (
-              <div className={styles.dropdown}>
-                <NavLink to="/profile">Profile</NavLink>
-                <NavLink to="/settings">Settings</NavLink>
-
-                <button onClick={logout}>
-                  Logout
-                </button>
-              </div>
-            )}
+          {/* 🔔 Notifications */}
+          <div className={styles.iconWrapper}>
+            <FiBell className={styles.icon} />
+            <span className={styles.badge}></span>
           </div>
+
+          {/* 💬 Messages */}
+          <div className={styles.iconWrapper}>
+            <FiMessageSquare className={styles.icon} />
+          </div>
+
+          {/* ⏳ LOADING */}
+          {loading ? (
+            <div className={styles.skeleton}></div>
+          ) : !user ? (
+
+            /* 🔴 NOT LOGGED */
+            <div className={styles.authButtons}>
+              <NavLink to="/login" className={styles.loginBtn}>
+                Login
+              </NavLink>
+              <NavLink to="/register" className={styles.registerBtn}>
+                Register
+              </NavLink>
+            </div>
+
+          ) : (
+
+            /* 🟢 LOGGED */
+            <div
+              className={styles.profile}
+              ref={profileRef}
+              onClick={() => setProfileOpen(!profileOpen)}
+            >
+              <img
+                src={user.profilePhoto || "https://i.pravatar.cc/40"}
+                alt="profile"
+              />
+
+              <span className={styles.username}>{user.name}</span>
+
+              <FiChevronDown />
+
+              {profileOpen && (
+                <div className={styles.dropdown}>
+                  <NavLink to="/profile">Profile</NavLink>
+                  <NavLink to="/settings">Settings</NavLink>
+                  <button onClick={logout}>Logout</button>
+                </div>
+              )}
+            </div>
+
+          )}
 
         </div>
 
       </nav>
 
+      {/* MOBILE */}
       <div className={styles.bottomNav}>
         <NavLink to="/explore">Explore</NavLink>
         <NavLink to="/sessions">Sessions</NavLink>
