@@ -2,31 +2,34 @@
 .layout {
   width: 100%;
   min-height: 100vh;
-  background: #0f172a;
+  background: #f8fafc;
 }
 
-.appContainer {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: stretch;
-  height: calc(100vh - 70px);
-}
-
-.mainContent {
-  flex: 1;
-  padding: 2rem;
-  margin-left: 260px;
+/* MAIN CONTENT */
+.main {
+  padding: 30px;
   transition: margin-left 0.3s ease;
-  overflow-y: auto;
 }
 
-.expanded {
+/* Sidebar open */
+.sidebarOpen {
+  margin-left: 260px;
+}
+
+/* Sidebar closed */
+.sidebarClosed {
   margin-left: 80px;
 }
 
-@media (max-width: 768px) {
-  .mainContent {
+/* Tablet */
+@media (max-width: 900px) {
+  .main {
     margin-left: 0;
+  }
+}
+/* Phone (space for bottom nav) */
+@media (max-width: 500px) {
+  .main {
+    padding-bottom: 80px;
   }
 }/*# sourceMappingURL=Homepage.module.css.map */

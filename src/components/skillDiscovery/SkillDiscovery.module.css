@@ -1,0 +1,49 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+.container {
+  width: 100%;
+}
+
+.header {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* title */
+.header h2 {
+  font-size: 24px;
+  color: #111827;
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+  white-space: nowrap; /* prevents "Discover Skills" from breaking */
+}
+
+/* search bar */
+.header input {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  width: 260px;
+  max-width: 100%;
+}
+
+.grid {
+  margin-top: 25px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 25px;
+}
+
+.empty {
+  margin-top: 40px;
+  text-align: center;
+}
+.empty p {
+  font-size: 16px;
+  color: #6b7280;
+  font-family: "Roboto", sans-serif;
+}/*# sourceMappingURL=SkillDiscovery.module.css.map */
