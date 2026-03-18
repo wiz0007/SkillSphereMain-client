@@ -1,7 +1,7 @@
 @use "../../styles/mixin" as *;
 
 /* =========================
-   NAVBAR
+   NAVBAR (GLASS)
 ========================= */
 
 .navbar {
@@ -14,8 +14,11 @@
   top: 0;
   z-index: 1000;
 
-  background: rgba(15, 23, 42, 0.8);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
+  background: rgba(15, 23, 42, 0.65);
+
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
 
   transition: transform 0.3s ease;
 }
@@ -59,7 +62,7 @@
 }
 
 /* =========================
-   DESKTOP LINKS
+   LINKS
 ========================= */
 
 .desktopLinks {
@@ -69,10 +72,28 @@
   a {
     @include Text(15px, #cbd5e1);
     text-decoration: none;
+    position: relative;
+
+    transition: color 0.2s;
 
     &.active,
     &:hover {
       color: #38bdf8;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: #38bdf8;
+      transition: width 0.2s;
+    }
+
+    &:hover::after {
+      width: 100%;
     }
   }
 }
@@ -83,17 +104,120 @@
 
 .actions {
   @include Flex(row, center, center);
-  gap: 1rem;
+  gap: 1.2rem;
+}
+
+/* =========================
+   ICONS
+========================= */
+
+.iconWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .icon {
-  font-size: 1.2rem;
+  font-size: 1.6rem;
   color: #cbd5e1;
+
+  padding: 8px;
+  border-radius: 50%;
+
   cursor: pointer;
-  transition: color 0.2s;
+
+  transition: all 0.25s ease;
 
   &:hover {
+    background: rgba(56,189,248,0.15);
     color: #38bdf8;
+    transform: scale(1.1);
+  }
+}
+
+/* =========================
+   NOTIFICATION BADGE
+========================= */
+
+.badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+
+  width: 8px;
+  height: 8px;
+
+  background: #ef4444;
+  border-radius: 50%;
+
+  box-shadow: 0 0 0 2px #0f172a;
+}
+
+/* =========================
+   AUTH BUTTONS
+========================= */
+
+.authButtons {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.loginBtn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid #334155;
+
+  color: #cbd5e1;
+  text-decoration: none;
+
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: #38bdf8;
+    color: #38bdf8;
+  }
+}
+
+.registerBtn {
+  padding: 6px 14px;
+  border-radius: 6px;
+
+  background: linear-gradient(135deg, #38bdf8, #6366f1);
+  color: white;
+  text-decoration: none;
+
+  transition: all 0.2s;
+
+  &:hover {
+    transform: translateY(-1px);
+    opacity: 0.9;
+  }
+}
+
+/* =========================
+   SKELETON LOADING
+========================= */
+
+.skeleton {
+  width: 100px;
+  height: 32px;
+  border-radius: 6px;
+
+  background: linear-gradient(
+    90deg,
+    #1e293b 25%,
+    #334155 50%,
+    #1e293b 75%
+  );
+
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
   }
 }
 
@@ -105,18 +229,31 @@
   position: relative;
 
   @include Flex(row, center, center);
-  gap: 0.3rem;
+  gap: 0.4rem;
+
+  padding: 4px 8px;
+  border-radius: 999px;
 
   cursor: pointer;
+  transition: 0.2s;
 
-  img {
-    @include Image(36px, 36px);
-    border-radius: 50%;
+  &:hover {
+    background: rgba(255,255,255,0.05);
   }
 
-  .chevron {
-    font-size: 0.9rem;
+  img {
+    @include Image(38px, 38px);
+    border-radius: 50%;
+    border: 2px solid transparent;
+  }
+
+  &:hover img {
+    border-color: #38bdf8;
+  }
+
+  .username {
     color: #cbd5e1;
+    font-size: 14px;
   }
 }
 
@@ -130,62 +267,73 @@
   right: 0;
 
   background: #1e293b;
-
   padding: 1rem;
+  border-radius: 10px;
 
-  border-radius: 8px;
+  min-width: 160px;
 
-  min-width: 150px;
-
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 
   @include Flex(column, flex-start, flex-start);
-  gap: 0.8rem;
+  gap: 0.6rem;
+
+  animation: dropdownFade 0.2s ease forwards;
 
   a,
   button {
+    width: 100%;
+    padding: 6px 8px;
+    border-radius: 6px;
+
     background: none;
     border: none;
 
     color: #cbd5e1;
-
-    cursor: pointer;
     text-decoration: none;
+    cursor: pointer;
 
-    @include Text(14px, #cbd5e1);
+    transition: all 0.2s;
 
     &:hover {
+      background: rgba(56,189,248,0.1);
       color: #38bdf8;
     }
   }
 }
 
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* =========================
-   SIDEBAR TOGGLE (HAMBURGER)
+   HAMBURGER
 ========================= */
 
 .hamburger {
   @include Flex(column, center, flex-start);
-
   gap: 5px;
 
   background: none;
   border: none;
-
   cursor: pointer;
 
   span {
     width: 22px;
     height: 2px;
-
     background: white;
-
-    transition: all 0.3s ease;
+    transition: all 0.3s;
   }
 }
 
 /* =========================
-   MOBILE BOTTOM NAV
+   MOBILE NAV
 ========================= */
 
 .bottomNav {
@@ -197,18 +345,14 @@
 ========================= */
 
 @media (max-width: 900px) {
-
   .desktopLinks {
     display: none;
   }
 
   .actions {
-    gap: 0.6rem;
+    gap: 0.8rem;
   }
-
 }
-
-/* Mobile */
 
 @media (max-width: 500px) {
 
@@ -220,10 +364,22 @@
     display: inline;
   }
 
+  .profile .username {
+    display: none;
+  }
+
+  .authButtons {
+    gap: 0.3rem;
+  }
+
+  .loginBtn,
+  .registerBtn {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
   .bottomNav {
-
     position: fixed;
-
     bottom: 0;
     left: 0;
 
@@ -237,16 +393,13 @@
     z-index: 1000;
 
     a {
-
       @include Text(13px, #cbd5e1);
-
       text-decoration: none;
 
       &.active {
         color: #38bdf8;
       }
-
     }
-
   }
 }
+
