@@ -18,7 +18,6 @@ export default function UserOnboarding() {
   const [role, setRole] = useState<Role>("student");
   const [timezone, setTimezone] = useState("");
 
-  const [profilePhoto, setProfilePhoto] = useState("");
 
   useEffect(() => {
     setTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone);
@@ -27,10 +26,11 @@ export default function UserOnboarding() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
+
+    console.log("FORM BEFORE SUBMIT:", form);
     const payload: any = {
       role,
       ...form,
-      profilePhoto, // 🔥 OVERRIDE WITH LATEST
       timezone,
     };
 
@@ -76,7 +76,6 @@ export default function UserOnboarding() {
           form={form}
           handleChange={handleChange}
           setForm={setForm}
-          setProfilePhoto={setProfilePhoto} // ✅ ADD
         />
 
         {role === "student" && (
