@@ -18,6 +18,8 @@ export default function UserOnboarding() {
   const [role, setRole] = useState<Role>("student");
   const [timezone, setTimezone] = useState("");
 
+  const [profilePhoto, setProfilePhoto] = useState("");
+
   useEffect(() => {
     setTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone);
   }, []);
@@ -28,6 +30,7 @@ export default function UserOnboarding() {
     const payload: any = {
       role,
       ...form,
+      profilePhoto, // 🔥 OVERRIDE WITH LATEST
       timezone,
     };
 
@@ -69,7 +72,12 @@ export default function UserOnboarding() {
           <RoleSwitch role={role} setRole={setRole} />
         </header>
 
-        <BasicProfileSection form={form} handleChange={handleChange} setForm={setForm} />
+        <BasicProfileSection
+          form={form}
+          handleChange={handleChange}
+          setForm={setForm}
+          setProfilePhoto={setProfilePhoto} // ✅ ADD
+        />
 
         {role === "student" && (
           <StudentSection form={form} handleChange={handleChange} />
