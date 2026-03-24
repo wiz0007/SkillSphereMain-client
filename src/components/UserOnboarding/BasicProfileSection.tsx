@@ -7,14 +7,12 @@ interface Props {
   form: FormState;
   handleChange: (e: any) => void;
   setForm: React.Dispatch<React.SetStateAction<FormState>>;
-  setProfilePhoto: (url: string) => void; // ✅ ADD
 }
 
 export default function BasicProfileSection({
   form,
   handleChange,
   setForm,
-  setProfilePhoto,
 }: Props) {
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -28,12 +26,18 @@ export default function BasicProfileSection({
     // upload to cloudinary
     const imageUrl = await uploadProfilePhoto(file);
 
-    setProfilePhoto(imageUrl); // ✅ ensure latest value
+    console.log("IMAGE URL:", imageUrl); // must show URL
 
-    setForm((prev) => ({
-      ...prev,
-      profilePhoto: imageUrl,
-    }));
+    setForm((prev) => {
+      const updated = {
+        ...prev,
+        profilePhoto: imageUrl,
+      };
+
+      console.log("FORM AFTER IMAGE:", updated); // 🔥 MUST show URL
+
+      return updated;
+    });
   };
 
   return (
