@@ -7,14 +7,18 @@ interface Props {
   form: FormState;
   handleChange: (e: any) => void;
   setForm: React.Dispatch<React.SetStateAction<FormState>>;
+  setProfilePhoto: (url: string) => void; // ✅ ADD
 }
 
-export default function BasicProfileSection({ form, handleChange, setForm }: Props) {
-
+export default function BasicProfileSection({
+  form,
+  handleChange,
+  setForm,
+  setProfilePhoto,
+}: Props) {
   const [preview, setPreview] = useState<string | null>(null);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -24,10 +28,11 @@ export default function BasicProfileSection({ form, handleChange, setForm }: Pro
     // upload to cloudinary
     const imageUrl = await uploadProfilePhoto(file);
 
-    // update form state
-    setForm(prev => ({
+    setProfilePhoto(imageUrl); // ✅ ensure latest value
+
+    setForm((prev) => ({
       ...prev,
-      profilePhoto: imageUrl
+      profilePhoto: imageUrl,
     }));
   };
 
@@ -36,7 +41,6 @@ export default function BasicProfileSection({ form, handleChange, setForm }: Pro
       <h2>Basic Profile</h2>
 
       <div className={styles.grid}>
-
         <div className={styles.field}>
           <label>Full Name *</label>
           <input
@@ -50,29 +54,19 @@ export default function BasicProfileSection({ form, handleChange, setForm }: Pro
           <label>Profile Photo</label>
 
           <label className={styles.uploadBox}>
-
             {preview ? (
               <img src={preview} alt="preview" />
             ) : (
               <span>Click to Upload</span>
             )}
 
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-            />
-
+            <input type="file" accept="image/*" onChange={handleImageUpload} />
           </label>
         </div>
 
         <div className={`${styles.field} ${styles.fullWidth}`}>
           <label>Short Bio *</label>
-          <textarea
-            name="bio"
-            value={form.bio}
-            onChange={handleChange}
-          />
+          <textarea name="bio" value={form.bio} onChange={handleChange} />
         </div>
 
         <div className={styles.field}>
@@ -97,38 +91,22 @@ export default function BasicProfileSection({ form, handleChange, setForm }: Pro
 
         <div className={styles.field}>
           <label>Phone *</label>
-          <input
-            name="phone"
-            value={form.phone}
-            onChange={handleChange}
-          />
+          <input name="phone" value={form.phone} onChange={handleChange} />
         </div>
 
         <div className={styles.field}>
           <label>Country *</label>
-          <input
-            name="country"
-            value={form.country}
-            onChange={handleChange}
-          />
+          <input name="country" value={form.country} onChange={handleChange} />
         </div>
 
         <div className={styles.field}>
           <label>State *</label>
-          <input
-            name="state"
-            value={form.state}
-            onChange={handleChange}
-          />
+          <input name="state" value={form.state} onChange={handleChange} />
         </div>
 
         <div className={styles.field}>
           <label>City *</label>
-          <input
-            name="city"
-            value={form.city}
-            onChange={handleChange}
-          />
+          <input name="city" value={form.city} onChange={handleChange} />
         </div>
 
         <div className={styles.field}>
@@ -139,7 +117,6 @@ export default function BasicProfileSection({ form, handleChange, setForm }: Pro
             onChange={handleChange}
           />
         </div>
-
       </div>
     </section>
   );
