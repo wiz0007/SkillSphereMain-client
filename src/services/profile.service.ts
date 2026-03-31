@@ -2,6 +2,8 @@ import axios from "axios";
 
 const API = "https://skillspheremain-server-1.onrender.com/api/profile";
 
+/* ================= CREATE PROFILE ================= */
+
 export const createProfile = async (data: any) => {
   const token = localStorage.getItem("token");
 
@@ -13,9 +15,10 @@ export const createProfile = async (data: any) => {
 
   console.log("CREATE PROFILE RESPONSE:", res.data);
 
-  // 🔥 IMPORTANT: adjust based on backend response
-  return res.data.profile || res.data.user || res.data;
+  return res.data;
 };
+
+/* ================= GET PROFILE ================= */
 
 export const getMyProfile = async () => {
   const token = localStorage.getItem("token");
@@ -26,5 +29,26 @@ export const getMyProfile = async () => {
     }
   });
 
-  return res.data.profile || res.data.user || res.data;
+  return res.data;
 };
+
+/* ================= BECOME TUTOR ================= */
+
+export const becomeTutor = async (data: {
+  category: string;
+  experience: number;
+  hourlyRate: number;
+}) => {
+  const token = localStorage.getItem("token");
+
+  const res = await axios.patch(`${API}/become-tutor`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  console.log("BECOME TUTOR RESPONSE:", res.data);
+
+  return res.data;
+};
+

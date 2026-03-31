@@ -1,5 +1,3 @@
-export type Role = "student" | "teacher";
-
 export interface FormState {
   fullName: string;
   bio: string;
@@ -11,10 +9,4 @@ export interface FormState {
   dob: string;
   gender: string;
   profilePhoto: string;
-  skills: string;
-  level: string;
-  goal: string;
-  category: string;
-  experience: string;
-  hourlyRate: string;
 }
