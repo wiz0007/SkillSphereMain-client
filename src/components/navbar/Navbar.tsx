@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import styles from "./Navbar.module.scss";
 import { FiBell, FiMessageSquare, FiChevronDown } from "react-icons/fi";
 import { useAuth } from "../../context/AuthContext";
@@ -16,6 +16,10 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
 
   const profileRef = useRef<HTMLDivElement>(null);
   const lastScrollY = useRef(0);
+
+  const location = useLocation();
+  const isExploreActive =
+    location.pathname === "/" || location.pathname === "/explore";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,31 +68,46 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
 
         {/* CENTER */}
         <div className={styles.desktopLinks}>
-          <NavLink to="/explore">Explore</NavLink>
+
+          <NavLink
+            to="/explore"
+            className={({ isActive }) =>
+              isActive || isExploreActive ? "active" : ""
+            }
+          >
+            Explore
+          </NavLink>
+
           <NavLink to="/sessions">Sessions</NavLink>
           <NavLink to="/dashboard">Dashboard</NavLink>
+
+          {/* ✅ Become Tutor */}
+          {user && !user.isTutor && (
+            <NavLink
+              to="/become-tutor"
+              className={styles.becomeTutor}
+            >
+              Become a Tutor
+            </NavLink>
+          )}
+
         </div>
 
         {/* RIGHT */}
         <div className={styles.actions}>
 
-          {/* 🔔 Notifications */}
           <div className={styles.iconWrapper}>
             <FiBell className={styles.icon} />
             <span className={styles.badge}></span>
           </div>
 
-          {/* 💬 Messages */}
           <div className={styles.iconWrapper}>
             <FiMessageSquare className={styles.icon} />
           </div>
 
-          {/* ⏳ LOADING */}
           {loading ? (
             <div className={styles.skeleton}></div>
           ) : !user ? (
-
-            /* 🔴 NOT LOGGED */
             <div className={styles.authButtons}>
               <NavLink to="/login" className={styles.loginBtn}>
                 Login
@@ -97,10 +116,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
                 Register
               </NavLink>
             </div>
-
           ) : (
-
-            /* 🟢 LOGGED */
             <div
               className={styles.profile}
               ref={profileRef}
@@ -123,18 +139,29 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
                 </div>
               )}
             </div>
-
           )}
 
         </div>
-
       </nav>
 
       {/* MOBILE */}
       <div className={styles.bottomNav}>
-        <NavLink to="/explore">Explore</NavLink>
+        <NavLink
+          to="/explore"
+          className={({ isActive }) =>
+            isActive || isExploreActive ? "active" : ""
+          }
+        >
+          Explore
+        </NavLink>
+
         <NavLink to="/sessions">Sessions</NavLink>
         <NavLink to="/dashboard">Dashboard</NavLink>
+
+        {/* ✅ Mobile Tutor */}
+        {user && !user.isTutor && (
+          <NavLink to="/become-tutor">Tutor</NavLink>
+        )}
       </div>
     </>
   );
