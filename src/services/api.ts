@@ -1,8 +1,0 @@
-import axios from "axios";
-
-export const api = axios.create({
-  baseURL: "https://skillspheremain-server-1.onrender.com/api",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});

@@ -1,12 +1,10 @@
-import axios from "axios";
-
-const API = "https://skillspheremain-server-1.onrender.com/api/auth";
+import { api } from "../components/api/api";
 
 export const loginUser = async (data: {
   email: string;
   password: string;
 }) => {
-  const res = await axios.post(`${API}/login`, data);
+  const res = await api.post("/auth/login", data);
   return res.data;
 };
 
@@ -15,6 +13,6 @@ export const registerUser = async (data: {
   email: string;
   password: string;
 }) => {
-  const res = await axios.post(`${API}/register`, data);
+  const res = await api.post("/auth/register", data);
   return res.data;
 };
