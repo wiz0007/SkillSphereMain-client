@@ -1,4 +1,4 @@
-import { api } from "./api";
+import { api } from "../components/api/api";
 
 export const getMySessions = async () => {
   const { data } = await api.get("/sessions");

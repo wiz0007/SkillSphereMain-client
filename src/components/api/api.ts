@@ -4,34 +4,38 @@ const API_BASE_URL = "https://skillspheremain-server-1.onrender.com/api";
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
-  headers: {
-    "Content-Type": "application/json"
-  }
 });
 
+// 🔐 REQUEST INTERCEPTOR (FINAL FIX)
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
 
-// 🔐 REQUEST INTERCEPTOR (AUTO TOKEN ATTACH)
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+    console.log("TOKEN:", token); // DEBUG
 
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+    if (token) {
+      // ✅ THIS LINE FIXES EVERYTHING
+      config.headers.Authorization = `Bearer ${token}`;
+    }
 
-  return config;
-});
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-
-// ⚠️ RESPONSE INTERCEPTOR (OPTIONAL)
+// ⚠️ RESPONSE INTERCEPTOR
 api.interceptors.response.use(
   (res) => res,
   (error) => {
     console.error("API ERROR:", error.response?.data || error.message);
 
-    // optional: auto logout on 401
     if (error.response?.status === 401) {
       localStorage.removeItem("token");
-      window.location.href = "/login";
+      localStorage.removeItem("user");
+
+      if (window.location.pathname !== "/login") {
+        window.location.href = "/login";
+      }
     }
 
     return Promise.reject(error);
