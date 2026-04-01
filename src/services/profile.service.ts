@@ -1,6 +1,7 @@
 import axios from "axios";
+import { api } from "../components/api/api";
 
-const API = "https://skillspheremain-server-1.onrender.com/api/profile";
+const API = `${api}/profile`;
 
 /* ================= CREATE PROFILE ================= */
 

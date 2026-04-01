@@ -4,6 +4,7 @@ import HomePage from '../pages/home/HomePage'
 import LoginPage from '../pages/auth/LoginPage'
 import RegisterPage from '../pages/auth/RegisterPage'
 import UserDetailFormPage from '../pages/userDetailForm/UserDetailFormPage'
+import DashboardPage from '../pages/dashboard/DashboardPage'
 
 const AllRoutes = () => {
   return (
@@ -13,6 +14,7 @@ const AllRoutes = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/userDetails" element={<UserDetailFormPage />} />
+      <Route path="/dashboard" element={<DashboardPage />} />
     </Routes>
   )
 }

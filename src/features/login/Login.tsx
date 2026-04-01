@@ -2,7 +2,7 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Login.module.scss";
-import { loginUser } from "../../services/authService";
+import { loginUser } from "../../services/auth.service";
 import { useAuth } from "../../context/AuthContext";
 
 interface LoginForm {

@@ -2,7 +2,7 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Register.module.scss";
-import { registerUser } from "../../services/authService";
+import { registerUser } from "../../services/auth.service";
 
 interface RegisterForm {
   name: string;
