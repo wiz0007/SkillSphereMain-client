@@ -1,32 +1,29 @@
-import React, { useState } from "react";
 import Navbar from "../../components/navbar/Navbar";
+import Dashboard from "../../components/dashboard/Dashboard";
 import Sidebar from "../../components/sidebar/Sidebar";
-import SkillDiscovery from "../../components/skillDiscovery/SkillDiscovery";
+import styles from "../Page.module.scss";
 
-import styles from "../Page.module.scss"
+import { useState } from "react";
 
-const HomePage: React.FC = () => {
+const DashboardPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const toggleSidebar = () => {
     setSidebarOpen((prev) => !prev);
   };
-
   return (
     <div className={styles.layout}>
       <Navbar toggleSidebar={toggleSidebar} />
-
       <Sidebar isCollapsed={!sidebarOpen} toggleSidebar={toggleSidebar} />
 
       <main
         className={`${styles.main} ${
           sidebarOpen ? styles.sidebarOpen : styles.sidebarClosed
         }`}
-      >
-        <SkillDiscovery />
-      </main>
+      ></main>
+      <Dashboard />
     </div>
   );
 };
 
-export default HomePage;
+export default DashboardPage;

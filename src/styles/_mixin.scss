@@ -18,3 +18,47 @@
   color: $color;
   font-family: 'Roboto', sans-serif;
 }
+
+@mixin respond($breakpoint) {
+  @if $breakpoint == sm {
+    @media (max-width: 640px) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == md {
+    @media (max-width: 768px) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == lg {
+    @media (max-width: 1024px) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == xl {
+    @media (max-width: 1280px) {
+      @content;
+    }
+  }
+}
+
+@mixin Card(
+  $bg: #ffffff,
+  $radius: 16px,
+  $shadow: 0 8px 20px rgba(0, 0, 0, 0.05)
+) {
+  background: $bg;
+  border-radius: $radius;
+  box-shadow: $shadow;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  }
+}

@@ -1,7 +1,9 @@
 import axios from "axios";
 
+import { api } from "../components/api/api";
+
 const API = axios.create({
-  baseURL: "https://skillspheremain-server-1.onrender.com/api",
+  baseURL: `${api}`,
 });
 
 export const completeProfile = async (data: any) => {
