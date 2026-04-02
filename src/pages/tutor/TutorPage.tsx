@@ -1,4 +1,4 @@
-import BecomeTutor from "../../components/UserOnboarding/BecomeTutor"
+import BecomeTutor from "../../components/becomeTutor/BecomeTutor";
 
 const TutorPage = () => {
   return (
