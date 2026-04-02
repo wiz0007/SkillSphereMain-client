@@ -26,7 +26,7 @@ export const getMyProfile = async () => {
 };
 
 /* ================= BECOME TUTOR ================= */
-export const becomeTutorAPI = async (data: any) => {
+export const becomeTutor = async (data: any) => {
   const response = await api.post("/profile/become-tutor", data);
   return response.data;
 };

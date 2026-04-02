@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./BecomeTutor.module.scss";
-import { becomeTutorAPI } from "../../services/profile.service";
+import { becomeTutor } from "../../services/profile.service";
 import { useAuth } from "../../context/AuthContext";
 
 const BecomeTutor: React.FC = () => {
@@ -46,7 +46,7 @@ const BecomeTutor: React.FC = () => {
         languages: form.languages.split(",").map((s) => s.trim()),
       };
 
-      const res = await becomeTutorAPI(payload);
+      const res = await becomeTutor(payload);
 
       setSuccess("🎉 You are now a tutor!");
 
