@@ -1,5 +1,15 @@
 import { api } from "../components/api/api";
 
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
 /* ================= CREATE PROFILE ================= */
 export const createProfile = async (data: any) => {
   const res = await api.post("/profile", data);
