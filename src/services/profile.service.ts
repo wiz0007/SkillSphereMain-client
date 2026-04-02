@@ -16,15 +16,8 @@ export const getMyProfile = async () => {
 };
 
 /* ================= BECOME TUTOR ================= */
-export const becomeTutor = async (data: {
-  category: string;
-  experience: number;
-  hourlyRate: number;
-}) => {
-  const res = await api.patch("/profile/become-tutor", data);
-
-  console.log("BECOME TUTOR RESPONSE:", res.data);
-
-  return res.data;
+export const becomeTutorAPI = async (data: any) => {
+  const response = await api.post("/profile/become-tutor", data);
+  return response.data;
 };
 

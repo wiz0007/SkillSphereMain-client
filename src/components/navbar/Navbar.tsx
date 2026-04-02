@@ -21,6 +21,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
   const isExploreActive =
     location.pathname === "/" || location.pathname === "/explore";
 
+  /* ================= SCROLL HIDE ================= */
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > lastScrollY.current && window.scrollY > 80) {
@@ -35,6 +36,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  /* ================= CLICK OUTSIDE ================= */
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
@@ -49,7 +51,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
   return (
     <>
       <nav className={`${styles.navbar} ${hideNav ? styles.hide : ""}`}>
-
+        
         {/* LEFT */}
         <div className={styles.leftSection}>
           <button className={styles.hamburger} onClick={toggleSidebar}>
@@ -81,7 +83,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
           <NavLink to="/sessions">Sessions</NavLink>
           <NavLink to="/dashboard">Dashboard</NavLink>
 
-          {/* ✅ Become Tutor */}
+          {/* ✅ Only show if NOT tutor */}
           {user && !user.isTutor && (
             <NavLink
               to="/become-tutor"
@@ -129,12 +131,25 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
 
               <span className={styles.username}>{user.name}</span>
 
+              {/* ✅ Tutor Badge */}
+              {user.isTutor && (
+                <span className={styles.tutorBadge}>Tutor</span>
+              )}
+
               <FiChevronDown />
 
               {profileOpen && (
                 <div className={styles.dropdown}>
                   <NavLink to="/profile">Profile</NavLink>
                   <NavLink to="/settings">Settings</NavLink>
+
+                  {/* ✅ Conditional inside dropdown */}
+                  {!user.isTutor && (
+                    <NavLink to="/become-tutor">
+                      Become Tutor
+                    </NavLink>
+                  )}
+
                   <button onClick={logout}>Logout</button>
                 </div>
               )}
@@ -144,7 +159,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
         </div>
       </nav>
 
-      {/* MOBILE */}
+      {/* MOBILE NAV */}
       <div className={styles.bottomNav}>
         <NavLink
           to="/explore"
@@ -158,7 +173,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
         <NavLink to="/sessions">Sessions</NavLink>
         <NavLink to="/dashboard">Dashboard</NavLink>
 
-        {/* ✅ Mobile Tutor */}
+        {/* ✅ Mobile Tutor CTA */}
         {user && !user.isTutor && (
           <NavLink to="/become-tutor">Tutor</NavLink>
         )}

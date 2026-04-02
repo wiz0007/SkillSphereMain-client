@@ -49,3 +49,48 @@
   text-align: center;
   padding: 3rem;
 }
+
+.tutorBadge {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  border-radius: 999px;
+  margin-left: 10px;
+}
+
+.tutorSection {
+  margin-top: 2rem;
+
+  h2 {
+    margin-bottom: 1rem;
+  }
+}
+
+.card {
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  transition: all 0.25s ease;
+
+  &:hover {
+    transform: translateY(-6px) scale(1.02);
+  }
+}
+
+.panel {
+  border-radius: 16px;
+  padding: 1rem;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+}
+
+.sessionItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #eee;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
