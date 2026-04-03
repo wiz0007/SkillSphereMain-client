@@ -92,7 +92,7 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* ================= TUTOR SECTION ================= */}
-      {user?.isTutor && <TutorSection sessions={sessions} />}
+      {user?.isTutor && <TutorSection  />}
     </div>
   );
 };
