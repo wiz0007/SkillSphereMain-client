@@ -5,7 +5,7 @@ import styles from "./Register.module.scss";
 import { registerUser } from "../../services/auth.service";
 
 interface RegisterForm {
-  name: string;
+  username: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -15,7 +15,7 @@ export function Register() {
   const navigate = useNavigate();
 
   const [form, setForm] = useState<RegisterForm>({
-    name: "",
+    username: "",
     email: "",
     password: "",
     confirmPassword: ""
@@ -50,7 +50,7 @@ export function Register() {
       setLoading(true);
 
       await registerUser({
-        name: form.name,
+        username: form.username,
         email: form.email,
         password: form.password
       });
@@ -80,10 +80,10 @@ export function Register() {
 
           <input
             type="text"
-            name="name"
-            placeholder="Full Name"
+            name="username"
+            placeholder="Username"
             required
-            value={form.name}
+            value={form.username}
             onChange={handleChange}
           />
 

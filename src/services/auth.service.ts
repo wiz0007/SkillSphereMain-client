@@ -9,7 +9,7 @@ export const loginUser = async (data: {
 };
 
 export const registerUser = async (data: {
-  name: string;
+  username: string;
   email: string;
   password: string;
 }) => {
