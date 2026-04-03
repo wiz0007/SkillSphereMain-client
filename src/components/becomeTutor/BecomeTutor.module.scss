@@ -43,9 +43,10 @@
 .form {
   @include Card();
   padding: 2rem;
+  color: black;
 
   h2 {
-    @include Text(1.4rem, #111);
+    @include Text(1.4rem, #0b0a0a);
     margin-bottom: 1.5rem;
   }
 }
