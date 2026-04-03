@@ -74,10 +74,11 @@
 }
 .form {
   padding: 2rem;
+  color: black;
 }
 .form h2 {
   font-size: 1.4rem;
-  color: #111;
+  color: #0b0a0a;
   font-family: "Roboto", sans-serif;
   margin-bottom: 1.5rem;
 }
