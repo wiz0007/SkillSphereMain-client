@@ -7,6 +7,7 @@ import UserDetailFormPage from '../pages/userDetailForm/UserDetailFormPage'
 import DashboardPage from '../pages/dashboard/DashboardPage'
 import TutorPage from '../pages/tutor/TutorPage'
 import ProfilePage from '../pages/profile/ProfilePage'
+import SessionPage from '../pages/session/SessionPage'
 
 const AllRoutes = () => {
   return (
@@ -19,6 +20,7 @@ const AllRoutes = () => {
       <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/become-tutor" element={<TutorPage />} />
       <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/sessions" element={<SessionPage />} />
     </Routes>
   )
 }

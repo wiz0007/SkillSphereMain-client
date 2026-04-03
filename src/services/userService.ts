@@ -1,4 +1,4 @@
-import { api } from "../components/api/api";
+import { api } from "../api/api";
 
 export const completeProfile = async (data: any) => {
   const res = await api.put("/users/onboarding", data);
