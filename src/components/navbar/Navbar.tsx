@@ -17,8 +17,6 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
   const profileRef = useRef<HTMLDivElement>(null);
   const lastScrollY = useRef(0);
 
-  console.log(user?.profilePhoto);
-
   const location = useLocation();
   const isExploreActive =
     location.pathname === "/" || location.pathname === "/explore";
