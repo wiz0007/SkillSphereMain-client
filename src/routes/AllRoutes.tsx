@@ -6,6 +6,7 @@ import RegisterPage from '../pages/auth/RegisterPage'
 import UserDetailFormPage from '../pages/userDetailForm/UserDetailFormPage'
 import DashboardPage from '../pages/dashboard/DashboardPage'
 import TutorPage from '../pages/tutor/TutorPage'
+import ProfilePage from '../pages/profile/ProfilePage'
 
 const AllRoutes = () => {
   return (
@@ -17,6 +18,7 @@ const AllRoutes = () => {
       <Route path="/userDetails" element={<UserDetailFormPage />} />
       <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/become-tutor" element={<TutorPage />} />
+      <Route path="/profile" element={<ProfilePage />} />
     </Routes>
   )
 }
