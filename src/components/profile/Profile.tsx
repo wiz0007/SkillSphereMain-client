@@ -2,15 +2,20 @@ import React, { useEffect, useState } from "react";
 import styles from "./Profile.module.scss";
 import { motion } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
-import { getMyProfile, updateProfile } from "../../services/profile.service";
+import {
+  getMyProfile,
+  updateProfile,
+} from "../../services/profile.service";
 import { uploadProfilePhoto } from "../../services/upload.service";
 
 const Profile: React.FC = () => {
-  const { setUser } = useAuth();
+  const { user, setUser } = useAuth();
 
   const [profile, setProfile] = useState<any>(null);
   const [edit, setEdit] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  const [skillInput, setSkillInput] = useState("");
 
   /* ================= FETCH ================= */
   useEffect(() => {
@@ -28,8 +33,42 @@ const Profile: React.FC = () => {
     fetchProfile();
   }, []);
 
+  /* ================= SKILLS ================= */
+
+  const addSkill = () => {
+    if (!skillInput.trim()) return;
+
+    setProfile((prev: any) => ({
+      ...prev,
+      tutorProfile: {
+        ...prev.tutorProfile,
+        skills: [
+          ...(prev.tutorProfile?.skills || []),
+          skillInput.trim(),
+        ],
+      },
+    }));
+
+    setSkillInput("");
+  };
+
+  const removeSkill = (skill: string) => {
+    setProfile((prev: any) => ({
+      ...prev,
+      tutorProfile: {
+        ...prev.tutorProfile,
+        skills: prev.tutorProfile.skills.filter(
+          (s: string) => s !== skill
+        ),
+      },
+    }));
+  };
+
   /* ================= PHOTO ================= */
-  const handlePhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
+
+  const handlePhoto = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -41,7 +80,7 @@ const Profile: React.FC = () => {
         profilePhoto: imageUrl,
       }));
 
-      setUser((prev) =>
+      setUser((prev: any) =>
         prev ? { ...prev, profilePhoto: imageUrl } : prev
       );
     } catch (err) {
@@ -50,11 +89,16 @@ const Profile: React.FC = () => {
   };
 
   /* ================= SAVE ================= */
+
   const handleSave = async () => {
     try {
       const updated = await updateProfile(profile);
       setProfile(updated);
       setEdit(false);
+
+      setUser((prev: any) =>
+        prev ? { ...prev, ...updated } : prev
+      );
     } catch (err) {
       console.error(err);
     }
@@ -65,26 +109,26 @@ const Profile: React.FC = () => {
 
   return (
     <div className={styles.container}>
-
-      {/* ================= HEADER ================= */}
-      <motion.div
-        className={styles.header}
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        {/* LEFT */}
+      {/* HEADER */}
+      <div className={styles.header}>
         <div className={styles.left}>
-          
           <div className={styles.photoWrapper}>
             <img
-              src={profile.profilePhoto || "https://i.pravatar.cc/150"}
+              src={
+                profile.profilePhoto ||
+                "https://i.pravatar.cc/150"
+              }
               alt="profile"
             />
 
             {edit && (
               <label className={styles.uploadOverlay}>
                 Change
-                <input type="file" onChange={handlePhoto} hidden />
+                <input
+                  type="file"
+                  hidden
+                  onChange={handlePhoto}
+                />
               </label>
             )}
           </div>
@@ -92,24 +136,40 @@ const Profile: React.FC = () => {
           <div className={styles.identity}>
             {edit ? (
               <input
-                value={profile.fullName || profile.name || ""}
+                value={profile.fullName || ""}
                 onChange={(e) =>
-                  setProfile({ ...profile, fullName: e.target.value })
+                  setProfile({
+                    ...profile,
+                    fullName: e.target.value,
+                  })
                 }
               />
             ) : (
-              <h2>{profile.fullName || profile.name}</h2>
+              <h2>{profile.fullName || user?.name}</h2>
             )}
 
-            {!edit && <p>{profile.bio}</p>}
+            {edit ? (
+              <textarea
+                value={profile.bio || ""}
+                onChange={(e) =>
+                  setProfile({
+                    ...profile,
+                    bio: e.target.value,
+                  })
+                }
+              />
+            ) : (
+              <p>{profile.bio || "No bio added"}</p>
+            )}
 
             {profile.isTutor && (
-              <span className={styles.tutorBadge}>Tutor</span>
+              <span className={styles.tutorBadge}>
+                Tutor
+              </span>
             )}
           </div>
         </div>
 
-        {/* RIGHT */}
         <div className={styles.right}>
           {edit ? (
             <>
@@ -122,14 +182,15 @@ const Profile: React.FC = () => {
               </button>
             </>
           ) : (
-            <button onClick={() => setEdit(true)}>Edit Profile</button>
+            <button onClick={() => setEdit(true)}>
+              Edit Profile
+            </button>
           )}
         </div>
-      </motion.div>
+      </div>
 
-      {/* ================= GRID ================= */}
+      {/* GRID */}
       <div className={styles.grid}>
-
         {/* LOCATION */}
         <motion.div className={styles.card} whileHover={{ y: -5 }}>
           <h3>Location</h3>
@@ -137,44 +198,120 @@ const Profile: React.FC = () => {
           {edit ? (
             <>
               <input
-                value={profile.country || ""}
-                onChange={(e) =>
-                  setProfile({ ...profile, country: e.target.value })
-                }
-              />
-
-              <input
+                placeholder="City"
                 value={profile.city || ""}
                 onChange={(e) =>
-                  setProfile({ ...profile, city: e.target.value })
+                  setProfile({
+                    ...profile,
+                    city: e.target.value,
+                  })
+                }
+              />
+              <input
+                placeholder="Country"
+                value={profile.country || ""}
+                onChange={(e) =>
+                  setProfile({
+                    ...profile,
+                    country: e.target.value,
+                  })
                 }
               />
             </>
           ) : (
             <p>
-              {profile.city || "—"}, {profile.country || "—"}
+              {profile.city}, {profile.country}
             </p>
           )}
         </motion.div>
 
         {/* TUTOR */}
         {profile.isTutor && (
-          <motion.div className={styles.card} whileHover={{ y: -5 }}>
+          <motion.div
+            className={styles.card}
+            whileHover={{ y: -5 }}
+          >
             <h3>Tutor Info</h3>
 
-            <p className={styles.headline}>
-              {profile.tutorProfile?.headline || "—"}
-            </p>
+            {/* HEADLINE */}
+            {edit ? (
+              <input
+                placeholder="Headline"
+                value={profile.tutorProfile?.headline || ""}
+                onChange={(e) =>
+                  setProfile({
+                    ...profile,
+                    tutorProfile: {
+                      ...profile.tutorProfile,
+                      headline: e.target.value,
+                    },
+                  })
+                }
+              />
+            ) : (
+              <p className={styles.headline}>
+                {profile.tutorProfile?.headline || "—"}
+              </p>
+            )}
 
-            <div className={styles.tags}>
-              {profile.tutorProfile?.skills?.map((s: string) => (
-                <span key={s}>{s}</span>
-              ))}
+            {/* SKILLS */}
+            <div className={styles.skillsContainer}>
+              <div className={styles.skillBox}>
+                {profile.tutorProfile?.skills?.map(
+                  (skill: string) => (
+                    <div key={skill} className={styles.skillTag}>
+                      {skill}
+                      {edit && (
+                        <span
+                          onClick={() =>
+                            removeSkill(skill)
+                          }
+                        >
+                          ×
+                        </span>
+                      )}
+                    </div>
+                  )
+                )}
+
+                {edit && (
+                  <input
+                    value={skillInput}
+                    placeholder="Add skill"
+                    onChange={(e) =>
+                      setSkillInput(e.target.value)
+                    }
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        addSkill();
+                      }
+                    }}
+                  />
+                )}
+              </div>
             </div>
 
-            <p className={styles.price}>
-              ₹{profile.tutorProfile?.hourlyRate || 0}/hr
-            </p>
+            {/* RATE */}
+            {edit ? (
+              <input
+                type="number"
+                value={profile.tutorProfile?.hourlyRate || ""}
+                onChange={(e) =>
+                  setProfile({
+                    ...profile,
+                    tutorProfile: {
+                      ...profile.tutorProfile,
+                      hourlyRate: Number(e.target.value),
+                    },
+                  })
+                }
+              />
+            ) : (
+              <p className={styles.price}>
+                ₹{profile.tutorProfile?.hourlyRate}/hr
+              </p>
+            )}
           </motion.div>
         )}
       </div>
