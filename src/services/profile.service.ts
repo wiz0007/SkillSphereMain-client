@@ -1,5 +1,6 @@
 import { api } from "../components/api/api";
 
+/* ================= INTERCEPTOR ================= */
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
 
@@ -13,9 +14,6 @@ api.interceptors.request.use((config) => {
 /* ================= CREATE PROFILE ================= */
 export const createProfile = async (data: any) => {
   const res = await api.post("/profile", data);
-
-  console.log("CREATE PROFILE RESPONSE:", res.data);
-
   return res.data;
 };
 
@@ -25,9 +23,14 @@ export const getMyProfile = async () => {
   return res.data;
 };
 
-/* ================= BECOME TUTOR ================= */
-export const becomeTutor = async (data: any) => {
-  const response = await api.post("/profile/become-tutor", data);
-  return response.data;
+/* ================= UPDATE PROFILE ================= */
+export const updateProfile = async (data: any) => {
+  const res = await api.put("/profile", data);
+  return res.data;
 };
 
+/* ================= BECOME TUTOR ================= */
+export const becomeTutor = async (data: any) => {
+  const res = await api.post("/profile/become-tutor", data);
+  return res.data;
+};
