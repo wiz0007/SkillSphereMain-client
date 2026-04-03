@@ -1,4 +1,4 @@
-import { api } from "../components/api/api";
+import { api } from "../api/api";
 
 export const uploadProfilePhoto = async (file: File): Promise<string> => {
   const formData = new FormData();

@@ -1,19 +1,21 @@
+import React, { useState } from "react";
 import Navbar from "../../components/navbar/Navbar";
-import Dashboard from "../../components/dashboard/Dashboard";
 import Sidebar from "../../components/sidebar/Sidebar";
-import styles from "../Page.module.scss";
+import Sessions from "../../components/sessions/Sessions";
 
-import { useState } from "react";
+import styles from "../Page.module.scss"
 
-const DashboardPage = () => {
+const SessionPage: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const toggleSidebar = () => {
     setSidebarOpen((prev) => !prev);
   };
+
   return (
     <div className={styles.layout}>
       <Navbar toggleSidebar={toggleSidebar} />
+
       <Sidebar isCollapsed={!sidebarOpen} toggleSidebar={toggleSidebar} />
 
       <main
@@ -21,10 +23,10 @@ const DashboardPage = () => {
           sidebarOpen ? styles.sidebarOpen : styles.sidebarClosed
         }`}
       >
-        <Dashboard />
+        <Sessions />
       </main>
     </div>
   );
 };
 
-export default DashboardPage;
+export default SessionPage;

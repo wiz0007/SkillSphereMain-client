@@ -1,4 +1,4 @@
-import { api } from "../components/api/api";
+import { api } from "../api/api";
 
 export const getMyActivity = async () => {
   const { data } = await api.get("/activity");

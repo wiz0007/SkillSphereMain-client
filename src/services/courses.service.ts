@@ -1,4 +1,4 @@
-import { api } from "../components/api/api";
+import { api } from "../api/api";
 
 /* ================= GET MY COURSES ================= */
 export const getMyCourses = async () => {
