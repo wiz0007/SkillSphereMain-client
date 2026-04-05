@@ -37,7 +37,7 @@ const SkillDiscovery: React.FC = () => {
 
     if (search) {
       result = result.filter((course) =>
-        course.title.toLowerCase().includes(search.toLowerCase())
+        course.title.toLowerCase().includes(search.toLowerCase()),
       );
     }
 
@@ -84,15 +84,11 @@ const SkillDiscovery: React.FC = () => {
       </div>
 
       {/* Loading */}
-      {loading && <div className={styles.loading}>Loading courses...</div>}
-
-      {/* Empty */}
-      {!loading && filteredCourses.length === 0 && (
+      {loading ? (
+        <div className={styles.loading}>Loading courses...</div>
+      ) : filteredCourses.length === 0 ? (
         <div className={styles.empty}>No courses found</div>
-      )}
-
-      {/* Grid */}
-      {!loading && filteredCourses.length > 0 && (
+      ) : (
         <div className={styles.grid}>
           {filteredCourses.map((course) => (
             <CourseCard key={course._id} course={course} />

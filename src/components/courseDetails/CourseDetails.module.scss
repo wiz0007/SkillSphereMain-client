@@ -191,3 +191,35 @@
   text-align: center;
   margin-top: 3rem;
 }
+
+/* ⭐ RATING ROW */
+.ratingRow {
+  margin-top: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* ⭐ STARS */
+.stars {
+  display: flex;
+  gap: 4px;
+
+  span {
+    font-size: 20px;
+    color: #ccc;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+}
+
+/* 🔥 FIXED SPECIFICITY */
+.stars span.active {
+  color: #f59e0b;
+}
+
+/* TEXT */
+.ratingText {
+  font-size: 0.9rem;
+  color: #475569;
+}

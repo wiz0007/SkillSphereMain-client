@@ -1,200 +1,147 @@
+@charset "UTF-8";
 @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
-.container {
-  padding: 2rem 3rem;
-  background: #f8fafc;
-}
-@media (max-width: 768px) {
-  .container {
-    padding: 1.5rem;
-  }
-}
-@media (max-width: 640px) {
-  .container {
-    padding: 1rem;
-  }
-}
-
-/* HERO */
-.hero {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 2rem;
-}
-@media (max-width: 1024px) {
-  .hero {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-@media (max-width: 768px) {
-  .hero {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* LEFT SIDE */
-.left h1 {
-  font-size: 2rem;
-  color: #0f172a;
-  font-family: "Roboto", sans-serif;
-  font-weight: 600;
-}
-@media (max-width: 640px) {
-  .left h1 {
-    font-size: 1.5rem;
-  }
-}
-.left .description {
-  margin-top: 1rem;
-  line-height: 1.6;
-  max-width: 700px;
-  font-size: 0.95rem;
-  color: #475569;
-  font-family: "Roboto", sans-serif;
-}
-@media (max-width: 640px) {
-  .left .description {
-    font-size: 0.85rem;
-  }
-}
-
-/* TAGS */
-.tags {
-  margin-top: 1rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-.tags span {
-  background: #e2e8f0;
-  padding: 0.3rem 0.7rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  white-space: nowrap;
-}
-
-/* SKILLS */
-.skills {
-  margin-top: 1rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-.skills span {
-  background: #eef2ff;
-  color: #4f46e5;
-  padding: 0.3rem 0.7rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-}
-
-/* RIGHT CARD */
-.right {
-  width: 100%;
-}
-@media (max-width: 768px) {
-  .right {
-    margin-top: 1rem;
-  }
-}
-
 .card {
+  width: 100%;
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 14px;
   background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
+  transition: 0.2s ease;
 }
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
-}
-.card {
-  padding: 1.5rem;
-  text-align: center;
-  position: sticky;
-  top: 100px;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 @media (max-width: 768px) {
   .card {
-    position: static;
+    flex-direction: column;
   }
 }
-.card h3 {
-  font-size: 1.5rem;
-  color: #0f172a;
-  font-family: "Roboto", sans-serif;
-  margin-bottom: 1rem;
+
+/* IMAGE */
+.image {
+  width: 160px;
+  height: 120px;
+  flex-shrink: 0;
 }
-.card .cta {
+.image img {
   width: 100%;
-  padding: 0.7rem;
-  border: none;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
   border-radius: 10px;
-  background: linear-gradient(135deg, #3b82f6, #6366f1);
-  color: white;
-  cursor: pointer;
-  margin-bottom: 1rem;
 }
-.card ul {
-  text-align: left;
-  font-size: 0.85rem;
-  color: #475569;
-}
-
-/* SECTIONS */
-.section {
-  margin-top: 2.5rem;
-}
-.section h2 {
-  font-size: 1.4rem;
-  color: #0f172a;
-  font-family: "Roboto", sans-serif;
-  margin-bottom: 1rem;
-}
-@media (max-width: 640px) {
-  .section h2 {
-    font-size: 1.2rem;
-  }
-}
-.section ul {
-  display: grid;
-  gap: 0.5rem;
-}
-@media (max-width: 640px) {
-  .section ul {
-    gap: 0.3rem;
+@media (max-width: 768px) {
+  .image {
+    width: 100%;
+    height: 180px;
   }
 }
 
-/* TUTOR */
-.tutor {
+/* CONTENT */
+.content {
+  flex: 1;
   display: flex;
-  gap: 1rem;
+  flex-direction: column;
+}
+
+/* TOP */
+.top {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
 }
-.tutor img {
-  height: 60px;
-  width: 60px;
-  -o-object-fit: contain;
-     object-fit: contain;
-  border-radius: 50%;
-}
-.tutor h4 {
-  font-size: 1rem;
-  color: #0f172a;
+.top h3 {
+  font-size: 1.2rem;
+  color: #1e293b;
   font-family: "Roboto", sans-serif;
+  font-weight: 600;
 }
-.tutor p {
-  font-size: 0.85rem;
+
+.save {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+/* DESCRIPTION */
+.desc {
+  margin-top: 0.4rem;
+  font-size: 0.9rem;
   color: #64748b;
   font-family: "Roboto", sans-serif;
 }
 
-/* STATES */
-.loading,
-.empty {
-  text-align: center;
-  margin-top: 3rem;
+/* META */
+.meta {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.meta span {
+  background: #e2e8f0;
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+}
+
+/* ⭐ RATING */
+.ratingRow {
+  margin-top: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.stars {
+  display: flex;
+  gap: 4px;
+}
+.stars span {
+  font-size: 18px;
+  color: #ccc;
+  cursor: pointer;
+}
+
+.stars span.active {
+  color: #f59e0b;
+}
+
+.active {
+  color: #f59e0b;
+}
+
+.ratingText {
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.loading {
+  font-size: 0.8rem;
+  color: #3b82f6;
+}
+
+/* BOTTOM */
+.bottom {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+}
+@media (max-width: 768px) {
+  .bottom {
+    margin-top: 1rem;
+  }
+}
+
+/* CTA */
+.cta {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  color: white;
+  cursor: pointer;
 }/*# sourceMappingURL=CourseCard.module.css.map */

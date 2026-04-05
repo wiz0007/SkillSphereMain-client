@@ -3,20 +3,54 @@ import { useParams } from "react-router-dom";
 
 import styles from "./CourseDetails.module.scss";
 
-import { getCourseById, type Course } from "../../services/courses.service";
+import {
+  getCourseById,
+  rateCourse,
+  type Course,
+} from "../../services/courses.service";
 
 const CourseDetails = () => {
   const { id } = useParams();
+
   const [course, setCourse] = useState<Course | null>(null);
   const [open, setOpen] = useState(false);
   const [saved, setSaved] = useState(false);
 
+  /* ⭐ RATING STATES */
+  const [hover, setHover] = useState(0);
+  const [userRating, setUserRating] = useState(0);
+  const [rating, setRating] = useState(0);
+  const [total, setTotal] = useState(0);
+
   useEffect(() => {
     if (!id) return;
-    getCourseById(id).then(setCourse);
+
+    getCourseById(id).then((data) => {
+      setCourse(data);
+      setRating(data.averageRating || 0);
+      setTotal(data.totalRatings || 0);
+    });
   }, [id]);
 
+  /* ⭐ HANDLE RATE */
+  const handleRate = async (value: number) => {
+    if (!id) return;
+
+    try {
+      setUserRating(value); // instant UI
+
+      const res = await rateCourse(id, value);
+
+      setRating(res.averageRating);
+      setTotal(res.totalRatings);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   if (!course) return <div className={styles.center}>Loading...</div>;
+
+  const activeValue = hover || userRating || Math.round(rating);
 
   return (
     <div className={styles.page}>
@@ -31,9 +65,25 @@ const CourseDetails = () => {
 
             <p className={styles.desc}>{course.description}</p>
 
-            {/* RATING */}
-            <div className={styles.rating}>
-              ⭐ 4.8 (120 students)
+            {/* ⭐ RATING */}
+            <div className={styles.ratingRow}>
+              <div className={styles.stars}>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <span
+                    key={star}
+                    onClick={() => handleRate(star)}
+                    onMouseEnter={() => setHover(star)}
+                    onMouseLeave={() => setHover(0)}
+                    className={star <= activeValue ? styles.active : ""}
+                  >
+                    ★
+                  </span>
+                ))}
+              </div>
+
+              <span className={styles.ratingText}>
+                {rating.toFixed(1)} ({total} ratings)
+              </span>
             </div>
 
             {/* BADGES */}

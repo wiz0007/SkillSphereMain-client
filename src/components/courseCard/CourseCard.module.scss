@@ -1,180 +1,145 @@
 @use "../../styles/mixin" as *;
 
-.container {
-  padding: 2rem 3rem;
-  background: #f8fafc;
-
-  @include respond(md) {
-    padding: 1.5rem;
-  }
-
-  @include respond(sm) {
-    padding: 1rem;
-  }
-}
-
-/* HERO */
-.hero {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 2rem;
-
-  @include respond(lg) {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  @include respond(md) {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* LEFT SIDE */
-.left {
-  h1 {
-    @include Text(2rem, #0f172a);
-    font-weight: 600;
-
-    @include respond(sm) {
-      font-size: 1.5rem;
-    }
-  }
-
-  .description {
-    margin-top: 1rem;
-    line-height: 1.6;
-    max-width: 700px;
-
-    @include Text(0.95rem, #475569);
-
-    @include respond(sm) {
-      font-size: 0.85rem;
-    }
-  }
-}
-
-/* TAGS */
-.tags {
-  margin-top: 1rem;
+.card {
+  width: 100%;
   display: flex;
+  gap: 1rem;
+  padding: 1rem;
+
+  border-radius: 14px;
+  background: #ffffff;
+  transition: 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  }
+
+  @include respond(md) {
+    flex-direction: column;
+  }
+}
+
+/* IMAGE */
+.image {
+  width: 160px;
+  height: 120px;
+  flex-shrink: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+  @include respond(md) {
+    width: 100%;
+    height: 180px;
+  }
+}
+
+/* CONTENT */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* TOP */
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h3 {
+    @include Text(1.2rem, #1e293b);
+    font-weight: 600;
+  }
+}
+
+.save {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+/* DESCRIPTION */
+.desc {
+  margin-top: 0.4rem;
+  @include Text(0.9rem, #64748b);
+}
+
+/* META */
+.meta {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.6rem;
   flex-wrap: wrap;
-  gap: 0.5rem;
 
   span {
     background: #e2e8f0;
-    padding: 0.3rem 0.7rem;
-    border-radius: 999px;
+    padding: 3px 8px;
+    border-radius: 20px;
     font-size: 0.75rem;
-    white-space: nowrap;
   }
 }
 
-/* SKILLS */
-.skills {
-  margin-top: 1rem;
+/* ⭐ RATING */
+.ratingRow {
+  margin-top: 0.6rem;
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.stars {
+  display: flex;
+  gap: 4px;
 
   span {
-    background: #eef2ff;
-    color: #4f46e5;
-    padding: 0.3rem 0.7rem;
-    border-radius: 999px;
-    font-size: 0.75rem;
+    font-size: 18px;
+    color: #ccc;
+    cursor: pointer;
   }
 }
 
-/* RIGHT CARD */
-.right {
-  width: 100%;
+.stars span.active {
+  color: #f59e0b;
+}
+
+.active {
+  color: #f59e0b;
+}
+
+.ratingText {
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.loading {
+  font-size: 0.8rem;
+  color: #3b82f6;
+}
+
+/* BOTTOM */
+.bottom {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
 
   @include respond(md) {
     margin-top: 1rem;
   }
 }
 
-.card {
-  @include Card();
-  padding: 1.5rem;
-  text-align: center;
-
-  position: sticky;
-  top: 100px;
-
-  @include respond(md) {
-    position: static;
-  }
-
-  h3 {
-    @include Text(1.5rem, #0f172a);
-    margin-bottom: 1rem;
-  }
-
-  .cta {
-    width: 100%;
-    padding: 0.7rem;
-    border: none;
-    border-radius: 10px;
-    background: linear-gradient(135deg, #3b82f6, #6366f1);
-    color: white;
-    cursor: pointer;
-    margin-bottom: 1rem;
-  }
-
-  ul {
-    text-align: left;
-    font-size: 0.85rem;
-    color: #475569;
-  }
-}
-
-/* SECTIONS */
-.section {
-  margin-top: 2.5rem;
-
-  h2 {
-    @include Text(1.4rem, #0f172a);
-    margin-bottom: 1rem;
-
-    @include respond(sm) {
-      font-size: 1.2rem;
-    }
-  }
-
-  ul {
-    display: grid;
-    gap: 0.5rem;
-
-    @include respond(sm) {
-      gap: 0.3rem;
-    }
-  }
-}
-
-/* TUTOR */
-.tutor {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  flex-wrap: wrap;
-
-  img {
-    @include Image(60px, 60px);
-    border-radius: 50%;
-  }
-
-  h4 {
-    @include Text(1rem, #0f172a);
-  }
-
-  p {
-    @include Text(0.85rem, #64748b);
-  }
-}
-
-/* STATES */
-.loading,
-.empty {
-  text-align: center;
-  margin-top: 3rem;
+/* CTA */
+.cta {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  color: white;
+  cursor: pointer;
 }
