@@ -7,11 +7,13 @@ export interface Course {
   title: string;
   description?: string;
   category?: string;
-  level?: "Beginner" | "Intermediate" | "Advanced";
+  level?: string;
   skills?: string[];
   price?: number;
   duration?: string;
-  tutor?: string;
+
+  averageRating: number;
+  totalRatings: number;
 }
 
 export interface CoursePayload {
@@ -107,4 +109,9 @@ export const deleteCourse = async (
   } catch (error: any) {
     return handleError(error, "deleteCourse");
   }
+};
+
+export const rateCourse = async (id: string, value: number) => {
+  const res = await api.post(`/courses/${id}/rate`, { value });
+  return res.data;
 };

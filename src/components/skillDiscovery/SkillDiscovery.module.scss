@@ -1,6 +1,7 @@
 @use "../../styles/mixin" as *;
 
 .container {
+  width: 100%;
   padding: 2rem 3rem;
   background: #f8fafc;
   min-height: 100vh;
@@ -8,12 +9,17 @@
   @include respond(md) {
     padding: 1.5rem;
   }
+
+  @include respond(sm) {
+    padding: 1rem;
+  }
 }
 
 /* HEADER */
 .header {
   @include Flex(row, space-between, center);
   margin-bottom: 2rem;
+  width: 100%;
 
   h2 {
     @include Text(1.8rem, #1e293b);
@@ -24,53 +30,42 @@
     padding: 0.7rem 1.2rem;
     border-radius: 999px;
     border: 1px solid #e2e8f0;
-    width: 280px;
+    width: 300px;
     background: #fff;
-    transition: 0.2s;
 
     @include Text(0.9rem, #334155);
 
     &:focus {
       outline: none;
       border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
     @include respond(sm) {
       width: 100%;
-      margin-top: 1rem;
     }
   }
 
   @include respond(sm) {
-    @include Flex(column, flex-start, stretch);
+    flex-direction: column;
+    align-items: stretch;
     gap: 1rem;
   }
 }
 
-/* FILTER BAR */
+/* FILTERS */
 .filters {
   @include Flex(row, flex-start, center);
   gap: 1rem;
   margin-bottom: 2rem;
+  width: 100%;
 
   select {
     padding: 0.6rem 1rem;
     border-radius: 999px;
     border: 1px solid #e2e8f0;
     background: #fff;
-    cursor: pointer;
 
     @include Text(0.85rem, #475569);
-
-    &:hover {
-      border-color: #cbd5f5;
-    }
-
-    &:focus {
-      outline: none;
-      border-color: #3b82f6;
-    }
   }
 
   @include respond(sm) {
@@ -78,15 +73,12 @@
   }
 }
 
-/* GRID */
+/* 🔥 IMPORTANT: FULL WIDTH LIST */
 .grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.8rem;
-
-  @include respond(sm) {
-    gap: 1.2rem;
-  }
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
 }
 
 /* STATES */
