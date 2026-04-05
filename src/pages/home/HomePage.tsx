@@ -1,32 +1,7 @@
-import React, { useState } from "react";
-import Navbar from "../../components/navbar/Navbar";
-import Sidebar from "../../components/sidebar/Sidebar";
 import SkillDiscovery from "../../components/skillDiscovery/SkillDiscovery";
 
-import styles from "../Page.module.scss"
-
-const HomePage: React.FC = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-
-  const toggleSidebar = () => {
-    setSidebarOpen((prev) => !prev);
-  };
-
-  return (
-    <div className={styles.layout}>
-      <Navbar toggleSidebar={toggleSidebar} />
-
-      <Sidebar isCollapsed={!sidebarOpen} toggleSidebar={toggleSidebar} />
-
-      <main
-        className={`${styles.main} ${
-          sidebarOpen ? styles.sidebarOpen : styles.sidebarClosed
-        }`}
-      >
-        <SkillDiscovery />
-      </main>
-    </div>
-  );
+const HomePage = () => {
+  return <SkillDiscovery />;
 };
 
 export default HomePage;
