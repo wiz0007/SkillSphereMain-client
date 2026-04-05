@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { motion } from "framer-motion";
+
 import styles from "./CourseDetails.module.scss";
 
 import { getCourseById, type Course } from "../../services/courses.service";
