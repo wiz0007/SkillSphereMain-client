@@ -1,0 +1,185 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+.page {
+  background: #f8fafc;
+}
+
+/* CONTAINER */
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 1rem;
+}
+
+/* HERO */
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+@media (min-width: 768px) {
+  .hero {
+    flex-direction: row;
+  }
+}
+
+/* LEFT */
+.left {
+  flex: 2;
+}
+.left h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.desc {
+  margin-top: 0.6rem;
+  color: #475569;
+}
+
+/* RATING */
+.rating {
+  margin-top: 0.5rem;
+  color: #f59e0b;
+  font-weight: 500;
+}
+
+/* BADGES */
+.badges {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.badges span {
+  background: #e2e8f0;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+/* SKILLS */
+.skills {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.skills span {
+  background: #eef2ff;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+/* SAVE */
+.save {
+  margin-top: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* RIGHT */
+.right {
+  flex: 1;
+}
+
+/* VIDEO */
+.video {
+  width: 100%;
+  aspect-ratio: 16/9;
+}
+.video iframe {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+}
+
+/* CARD */
+.card {
+  background: white;
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 12px;
+  text-align: center;
+}
+@media (min-width: 768px) {
+  .card {
+    position: sticky;
+    top: 100px;
+  }
+}
+.card button {
+  width: 100%;
+  padding: 0.7rem;
+  margin: 0.5rem 0;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  color: white;
+}
+
+/* SECTION */
+.section {
+  margin-top: 2rem;
+}
+
+/* REVIEW */
+.review {
+  background: white;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-top: 1rem;
+}
+
+/* MOBILE BAR */
+.mobileBar {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: white;
+  padding: 0.7rem;
+}
+.mobileBar button {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  color: white;
+}
+@media (min-width: 768px) {
+  .mobileBar {
+    display: none;
+  }
+}
+
+/* MODAL */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.modal input {
+  padding: 0.5rem;
+}
+.modal span {
+  cursor: pointer;
+  color: red;
+}
+
+.center {
+  text-align: center;
+  margin-top: 3rem;
+}/*# sourceMappingURL=CourseDetails.module.css.map */

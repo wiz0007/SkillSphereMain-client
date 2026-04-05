@@ -10,6 +10,7 @@ import TutorPage from "../pages/tutor/TutorPage";
 import ProfilePage from "../pages/profile/ProfilePage";
 import SessionPage from "../pages/session/SessionPage";
 import AddCoursePage from "../pages/addCourse/AddCoursePage";
+import CourseDetailsPage from "../pages/courseDetails/CourseDetailsPage";
 
 /* ================= LAYOUT ================= */
 import MainLayout from "../layout/MainLayout"; // ✅ you must create this
@@ -36,6 +37,7 @@ const AllRoutes = () => {
         {/* COURSE ROUTES */}
         <Route path="/add-course" element={<AddCoursePage />} />
         <Route path="/add-course/:id" element={<AddCoursePage />} />
+        <Route path="/course/:id" element={<CourseDetailsPage />} />
       </Route>
 
       {/* ================= FALLBACK ================= */}
