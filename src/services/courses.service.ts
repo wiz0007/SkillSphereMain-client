@@ -14,7 +14,23 @@ export interface Course {
 
   averageRating: number;
   totalRatings: number;
+
+  reviews: Review[];
 }
+
+export interface ReviewUser {
+  _id: string;
+  name: string;
+  avatar?: string;
+}
+
+export interface Review {
+  user: string | ReviewUser;
+  rating: number;
+  comment: string;
+  createdAt: string;
+}
+
 
 export interface CoursePayload {
   title: string;
@@ -113,5 +129,17 @@ export const deleteCourse = async (
 
 export const rateCourse = async (id: string, value: number) => {
   const res = await api.post(`/courses/${id}/rate`, { value });
+  return res.data;
+};
+
+export const addReview = async (
+  id: string,
+  rating: number,
+  comment: string
+) => {
+  const res = await api.post(`/courses/${id}/review`, {
+    rating,
+    comment,
+  });
   return res.data;
 };
