@@ -1,20 +1,33 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+/* ================= ROOT ================= */
 .dashboard {
   padding: 2rem;
   background: linear-gradient(135deg, #f9fafb, #eef2ff);
   min-height: 100vh;
+  width: 100%;
 }
 
+/* ================= HEADER ================= */
 .header {
   margin-bottom: 2rem;
 }
+.header h1 {
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+.header p {
+  color: #6b7280;
+  margin-top: 4px;
+}
 
+/* ================= STATS ================= */
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1rem;
 }
 
+/* ================= CARD ================= */
 .card {
   background: #ffffff;
   border-radius: 16px;
@@ -29,9 +42,25 @@
 }
 .card {
   padding: 1.5rem;
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  transition: all 0.25s ease;
   cursor: pointer;
 }
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+}
+.card h3 {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+.card p {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #111827;
+}
 
+/* ================= MAIN GRID ================= */
 .mainGrid {
   margin-top: 2rem;
   display: grid;
@@ -44,34 +73,42 @@
   }
 }
 
+/* ================= PANEL ================= */
 .panel {
-  background: #ffffff;
   border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
+  padding: 1.2rem;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
 }
-.panel:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
-}
-.panel {
-  padding: 1.5rem;
+.panel h2 {
+  margin-bottom: 0.8rem;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
+/* ================= SESSION ================= */
 .sessionItem {
   display: flex;
   justify-content: space-between;
-  padding: 0.8rem 0;
+  padding: 0.6rem 0;
   border-bottom: 1px solid #eee;
 }
+.sessionItem span {
+  font-size: 0.9rem;
+  color: #374151;
+}
+.sessionItem:last-child {
+  border-bottom: none;
+}
 
+/* ================= LOADER ================= */
 .loader {
   text-align: center;
   padding: 3rem;
+  color: #6b7280;
 }
 
+/* ================= TUTOR BADGE ================= */
 .tutorBadge {
   background: linear-gradient(135deg, #28a745, #20c997);
   color: white;
@@ -81,6 +118,7 @@
   margin-left: 10px;
 }
 
+/* ================= TUTOR SECTION ================= */
 .tutorSection {
   margin-top: 2rem;
 }
@@ -88,46 +126,53 @@
   margin-bottom: 1rem;
 }
 
-.card {
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  transition: all 0.25s ease;
-}
-.card:hover {
-  transform: translateY(-6px) scale(1.02);
-}
-
-.panel {
-  border-radius: 16px;
-  padding: 1rem;
-  background: #fff;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
-}
-
-.sessionItem {
+/* ================= TOOLBAR ================= */
+.toolbar {
   display: flex;
-  justify-content: space-between;
-  padding: 0.6rem 0;
-  border-bottom: 1px solid #eee;
+  gap: 10px;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
 }
-.sessionItem:last-child {
-  border-bottom: none;
-}
-
-.addBtn {
-  background: linear-gradient(135deg, #6366f1, #4f46e5);
-  color: white;
+.toolbar button {
   padding: 10px 16px;
   border-radius: 10px;
   border: none;
-  margin-bottom: 1rem;
   cursor: pointer;
   font-weight: 500;
+  transition: 0.2s;
+}
+
+/* ADD COURSE BUTTON */
+.addBtn {
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: white;
 }
 .addBtn:hover {
   opacity: 0.9;
 }
 
+/* BULK DELETE BUTTON */
+.bulkDelete {
+  background: #dc2626;
+  color: white;
+}
+.bulkDelete:hover {
+  background: #b91c1c;
+}
+
+/* ================= COURSE GRID ================= */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ================= COURSE LIST (OLD - optional fallback) ================= */
 .courseItem {
   display: flex;
   justify-content: space-between;

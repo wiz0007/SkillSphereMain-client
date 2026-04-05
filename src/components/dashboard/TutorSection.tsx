@@ -1,26 +1,44 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import styles from "../dashboard/Dashboard.module.scss";
 
 import {
   getMyCourses,
-  createCourse,
   deleteCourse,
 } from "../../services/courses.service";
 
-import CourseCard from "../courseCard/CourseCard";
-import AddCourse from "../../features/addCourse/AddCourse";
+import TutorCourseCard from "../tutorCourseCard/TutorCourseCard";
 
+/* ================= TYPES ================= */
+interface Course {
+  _id: string;
+  title: string;
+  description: string;
+  category: string;
+  level: string;
+  price: number;
+}
+
+/* ================= COMPONENT ================= */
 const TutorSection = () => {
-  const [courses, setCourses] = useState<any[]>([]);
-  const [selected, setSelected] = useState<string[]>([]);
-  const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
 
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  /* ================= FETCH ================= */
   const fetchCourses = async () => {
     try {
+      setLoading(true);
       const data = await getMyCourses();
       setCourses(Array.isArray(data) ? data : []);
-    } catch {
+    } catch (err) {
+      console.error("Fetch error:", err);
       setCourses([]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -37,38 +55,64 @@ const TutorSection = () => {
     );
   };
 
-  /* ================= CREATE ================= */
-  const handleSave = async (data: any) => {
-    await createCourse(data);
-    setShowModal(false);
-    fetchCourses();
+  /* ================= ADD ================= */
+  const handleAddCourse = () => {
+    navigate("/add-course");
   };
 
-  /* ================= SINGLE DELETE ================= */
+  /* ================= EDIT ================= */
+  const handleEdit = (course: Course) => {
+    navigate(`/add-course/${course._id}`, {
+      state: course, // prefill form
+    });
+  };
+
+  /* ================= DELETE SINGLE ================= */
   const handleDelete = async (id: string) => {
-    await deleteCourse(id);
-    fetchCourses();
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this course?"
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      await deleteCourse(id);
+      fetchCourses();
+    } catch (err) {
+      console.error("Delete error:", err);
+    }
   };
 
   /* ================= BULK DELETE ================= */
   const handleBulkDelete = async () => {
     if (!selected.length) return;
 
-    if (!confirm("Delete selected courses?")) return;
+    const confirmDelete = window.confirm(
+      `Delete ${selected.length} selected courses?`
+    );
 
-    await Promise.all(selected.map((id) => deleteCourse(id)));
+    if (!confirmDelete) return;
 
-    setSelected([]);
-    fetchCourses();
+    try {
+      await Promise.all(selected.map((id) => deleteCourse(id)));
+      setSelected([]);
+      fetchCourses();
+    } catch (err) {
+      console.error("Bulk delete error:", err);
+    }
   };
 
+  /* ================= UI ================= */
   return (
     <div className={styles.tutorSection}>
       <h2>🧑‍🏫 Your Courses</h2>
 
       {/* ACTION BAR */}
       <div className={styles.toolbar}>
-        <button onClick={() => setShowModal(true)}>
+        <button
+          className={styles.addBtn}
+          onClick={handleAddCourse}
+        >
           + Add Course
         </button>
 
@@ -82,27 +126,23 @@ const TutorSection = () => {
         )}
       </div>
 
-      {showModal && (
-        <AddCourse
-          onClose={() => setShowModal(false)}
-          onSave={handleSave}
-        />
-      )}
-
+      {/* CONTENT */}
       <div className={styles.panel}>
-        {courses.length === 0 ? (
+        {loading ? (
+          <p>Loading courses...</p>
+        ) : courses.length === 0 ? (
           <p>No courses yet</p>
         ) : (
           <div className={styles.grid}>
             {courses.map((course) => (
-              <CourseCard
+              <TutorCourseCard
                 key={course._id}
                 course={course}
-                mode="tutor"
                 selectable
                 selected={selected.includes(course._id)}
                 onSelect={toggleSelect}
                 onDelete={handleDelete}
+                onEdit={handleEdit}
               />
             ))}
           </div>
