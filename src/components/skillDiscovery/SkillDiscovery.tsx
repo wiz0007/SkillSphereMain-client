@@ -1,73 +1,101 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import styles from "./SkillDiscovery.module.scss";
-import SkillCard from "../skillCard/SkillCard";
-import SkillFilters from "./SkillFilters";
-import { skills } from "./skillData";
+import CourseCard from "../courseCard/CourseCard";
+import { getAllCourses, type Course } from "../../services/courses.service";
 
 const SkillDiscovery: React.FC = () => {
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [level, setLevel] = useState("");
-  const [sort, setSort] = useState("rating");
 
-  const filteredSkills = useMemo(() => {
-    let result = [...skills];
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const data = await getAllCourses();
+        setCourses(data);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
+  // Extract unique categories dynamically
+  const categories = useMemo(() => {
+    const set = new Set(courses.map((c) => c.category));
+    return Array.from(set);
+  }, [courses]);
+
+  const filteredCourses = useMemo(() => {
+    let result = [...courses];
 
     if (search) {
-      result = result.filter((skill) =>
-        skill.title.toLowerCase().includes(search.toLowerCase())
+      result = result.filter((course) =>
+        course.title.toLowerCase().includes(search.toLowerCase())
       );
     }
 
     if (category) {
-      result = result.filter((skill) => skill.category === category);
+      result = result.filter((course) => course.category === category);
     }
 
     if (level) {
-      result = result.filter((skill) => skill.level === level);
-    }
-
-    if (sort === "rating") {
-      result.sort((a, b) => b.rating - a.rating);
-    }
-
-    if (sort === "sessions") {
-      result.sort((a, b) => b.sessions - a.sessions);
+      result = result.filter((course) => course.level === level);
     }
 
     return result;
-  }, [search, category, level, sort]);
+  }, [courses, search, category, level]);
 
   return (
     <div className={styles.container}>
+      {/* Header */}
       <div className={styles.header}>
-        <h2>Discover Skills</h2>
+        <h2>Explore Courses</h2>
 
         <input
           type="text"
-          placeholder="Search skills..."
+          placeholder="Search courses..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
 
-      <SkillFilters
-        category={category}
-        setCategory={setCategory}
-        level={level}
-        setLevel={setLevel}
-        sort={sort}
-        setSort={setSort}
-      />
+      {/* Filters */}
+      <div className={styles.filters}>
+        <select value={category} onChange={(e) => setCategory(e.target.value)}>
+          <option value="">All Categories</option>
+          {categories.map((cat) => (
+            <option key={cat}>{cat}</option>
+          ))}
+        </select>
 
-      {filteredSkills.length === 0 ? (
-        <div className={styles.empty}>
-          <p>No skills found</p>
-        </div>
-      ) : (
+        <select value={level} onChange={(e) => setLevel(e.target.value)}>
+          <option value="">All Levels</option>
+          <option value="Beginner">Beginner</option>
+          <option value="Intermediate">Intermediate</option>
+          <option value="Advanced">Advanced</option>
+        </select>
+      </div>
+
+      {/* Loading */}
+      {loading && <div className={styles.loading}>Loading courses...</div>}
+
+      {/* Empty */}
+      {!loading && filteredCourses.length === 0 && (
+        <div className={styles.empty}>No courses found</div>
+      )}
+
+      {/* Grid */}
+      {!loading && filteredCourses.length > 0 && (
         <div className={styles.grid}>
-          {filteredSkills.map((skill) => (
-            <SkillCard key={skill.id} {...skill} />
+          {filteredCourses.map((course) => (
+            <CourseCard key={course._id} course={course} />
           ))}
         </div>
       )}

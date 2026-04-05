@@ -1,14 +1,15 @@
 import styles from "./TutorCourseCard.module.scss";
+import type { Course } from "../../services/courses.service";
 
 /* ================= TYPES ================= */
-interface Course {
-  _id: string;
-  title: string;
-  description: string;
-  category: string;
-  level: string;
-  price: number;
-}
+// interface Course {
+//   _id: string;
+//   title: string;
+//   description: string;
+//   category: string;
+//   level: string;
+//   price: number;
+// }
 
 interface Props {
   course: Course;

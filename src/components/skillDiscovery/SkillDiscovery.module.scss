@@ -1,54 +1,98 @@
 @use "../../styles/mixin" as *;
 
 .container {
-  width: 100%;
-}
+  padding: 2rem 3rem;
+  background: #f8fafc;
+  min-height: 100vh;
 
-.header {
-  margin-bottom: 20px;
-
-  @include Flex(row, space-between, center);
-  gap: 16px;
-
-  flex-wrap: wrap;
-}
-
-/* title */
-
-.header h2 {
-  @include Text(24px, #111827);
-  font-weight: 600;
-
-  white-space: nowrap; /* prevents "Discover Skills" from breaking */
-}
-
-/* search bar */
-
-.header input {
-  padding: 10px 14px;
-
-  border-radius: 10px;
-  border: 1px solid #e5e7eb;
-
-  width: 260px;
-  max-width: 100%;
-}
-.grid {
-  margin-top: 25px;
-
-  display: grid;
-
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-
-  gap: 25px;
-}
-
-.empty {
-  margin-top: 40px;
-
-  text-align: center;
-
-  p {
-    @include Text(16px, #6b7280);
+  @include respond(md) {
+    padding: 1.5rem;
   }
+}
+
+/* HEADER */
+.header {
+  @include Flex(row, space-between, center);
+  margin-bottom: 2rem;
+
+  h2 {
+    @include Text(1.8rem, #1e293b);
+    font-weight: 600;
+  }
+
+  input {
+    padding: 0.7rem 1.2rem;
+    border-radius: 999px;
+    border: 1px solid #e2e8f0;
+    width: 280px;
+    background: #fff;
+    transition: 0.2s;
+
+    @include Text(0.9rem, #334155);
+
+    &:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    @include respond(sm) {
+      width: 100%;
+      margin-top: 1rem;
+    }
+  }
+
+  @include respond(sm) {
+    @include Flex(column, flex-start, stretch);
+    gap: 1rem;
+  }
+}
+
+/* FILTER BAR */
+.filters {
+  @include Flex(row, flex-start, center);
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  select {
+    padding: 0.6rem 1rem;
+    border-radius: 999px;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    cursor: pointer;
+
+    @include Text(0.85rem, #475569);
+
+    &:hover {
+      border-color: #cbd5f5;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: #3b82f6;
+    }
+  }
+
+  @include respond(sm) {
+    flex-wrap: wrap;
+  }
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.8rem;
+
+  @include respond(sm) {
+    gap: 1.2rem;
+  }
+}
+
+/* STATES */
+.loading,
+.empty {
+  margin-top: 3rem;
+  text-align: center;
+  @include Text(1rem, #64748b);
 }

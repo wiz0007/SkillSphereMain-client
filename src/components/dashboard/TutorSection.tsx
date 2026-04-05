@@ -6,19 +6,20 @@ import styles from "../dashboard/Dashboard.module.scss";
 import {
   getMyCourses,
   deleteCourse,
+  type Course,
 } from "../../services/courses.service";
 
 import TutorCourseCard from "../tutorCourseCard/TutorCourseCard";
 
 /* ================= TYPES ================= */
-interface Course {
-  _id: string;
-  title: string;
-  description: string;
-  category: string;
-  level: string;
-  price: number;
-}
+// interface Course {
+//   _id: string;
+//   title: string;
+//   description: string;
+//   category: string;
+//   level: string;
+//   price: number;
+// }
 
 /* ================= COMPONENT ================= */
 const TutorSection = () => {
