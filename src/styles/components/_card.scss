@@ -1,0 +1,15 @@
+.card {
+  padding: 1.2rem;
+
+  @extend .glass;
+  @extend .hoverLift;
+
+  display: flex;
+  gap: 1rem;
+
+  border-radius: 16px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}

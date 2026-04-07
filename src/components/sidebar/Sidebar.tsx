@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./Sidebar.module.scss";
 import { sidebarItems } from "../sidebar/sidebarData";
+import { useNavigate, useLocation } from "react-router-dom";
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -8,7 +9,8 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar }) => {
-  const [active, setActive] = useState<number>(1);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <>
@@ -40,12 +42,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar }) => {
             <div
               key={item.id}
               className={`${styles.menuItem} ${
-                active === item.id ? styles.active : ""
+                location.pathname === item.route ? styles.active : ""
               }`}
-              onClick={() => setActive(item.id)}
+              onClick={() => navigate(item.route)}
             >
               <i className={`${item.icon} ${styles.icon}`} />
-
               <span className={styles.title}>{item.title}</span>
             </div>
           ))}

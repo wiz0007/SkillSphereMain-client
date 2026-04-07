@@ -1,0 +1,68 @@
+/* COLORS */
+/* BORDER */
+/* SHADOW */
+/* RADIUS */
+/* TRANSITIONS */
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* BODY */
+body {
+  font-family: "Inter", sans-serif;
+  background: linear-gradient(135deg, #eef2ff, #f8fafc);
+  color: #0f172a;
+}
+
+/* GLASS COMPONENT */
+.glass {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  transition: all 0.25s ease;
+}
+
+/* HOVER LIFT */
+.hoverLift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* BUTTON */
+.btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.25s ease;
+}
+.btn.primary {
+  background: linear-gradient(135deg, #6366f1, #3b82f6);
+  color: white;
+}
+.btn.success {
+  background: linear-gradient(135deg, #22c55e, #06b6d4);
+  color: white;
+}
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+/* INPUT */
+.input {
+  padding: 0.8rem;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(6px);
+  outline: none;
+}
+.input:focus {
+  border-color: #6366f1;
+}/*# sourceMappingURL=global.css.map */

@@ -11,6 +11,7 @@ import ProfilePage from "../pages/profile/ProfilePage";
 import SessionPage from "../pages/session/SessionPage";
 import AddCoursePage from "../pages/addCourse/AddCoursePage";
 import CourseDetailsPage from "../pages/courseDetails/CourseDetailsPage";
+import SavedCoursesPage from "../pages/savedCourses/SavedCoursesPage";
 
 /* ================= LAYOUT ================= */
 import MainLayout from "../layout/MainLayout"; // ✅ you must create this
@@ -38,6 +39,7 @@ const AllRoutes = () => {
         <Route path="/add-course" element={<AddCoursePage />} />
         <Route path="/add-course/:id" element={<AddCoursePage />} />
         <Route path="/course/:id" element={<CourseDetailsPage />} />
+        <Route path="/saved-courses" element={<SavedCoursesPage />} />
       </Route>
 
       {/* ================= FALLBACK ================= */}

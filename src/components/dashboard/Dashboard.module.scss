@@ -3,9 +3,14 @@
 /* ================= ROOT ================= */
 .dashboard {
   padding: 2rem;
-  background: linear-gradient(135deg, #f9fafb, #eef2ff);
   min-height: 100vh;
   width: 100%;
+
+  background: linear-gradient(135deg, #eef2ff, #f8fafc);
+
+  @include respond(sm) {
+    padding: 1rem;
+  }
 }
 
 /* ================= HEADER ================= */
@@ -15,12 +20,24 @@
   h1 {
     font-size: 1.6rem;
     font-weight: 600;
+    color: #0f172a;
   }
 
   p {
-    color: #6b7280;
+    color: #64748b;
     margin-top: 4px;
+    font-size: 0.9rem;
   }
+}
+
+/* ================= GLASS BASE ================= */
+.glass {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  transition: all 0.25s ease;
 }
 
 /* ================= STATS ================= */
@@ -32,26 +49,29 @@
 
 /* ================= CARD ================= */
 .card {
-  @include Card;
-  padding: 1.5rem;
-  border-radius: 16px;
-  backdrop-filter: blur(10px);
-  transition: all 0.25s ease;
+  @extend .glass;
+  padding: 1.4rem;
   cursor: pointer;
 
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
   &:hover {
-    transform: translateY(-6px) scale(1.02);
+    transform: translateY(-4px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
   }
 
   h3 {
-    color: #6b7280;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 500;
   }
 
   p {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     font-weight: 600;
-    color: #111827;
+    color: #0f172a;
   }
 }
 
@@ -69,15 +89,15 @@
 
 /* ================= PANEL ================= */
 .panel {
-  border-radius: 16px;
-  padding: 1.2rem;
-  background: #ffffff;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+  padding: 1.4rem;
+
+  @extend .glass;
 
   h2 {
-    margin-bottom: 0.8rem;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 600;
+    margin-bottom: 1rem;
+    color: #0f172a;
   }
 }
 
@@ -85,12 +105,14 @@
 .sessionItem {
   display: flex;
   justify-content: space-between;
-  padding: 0.6rem 0;
-  border-bottom: 1px solid #eee;
+  align-items: center;
+
+  padding: 0.7rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 
   span {
     font-size: 0.9rem;
-    color: #374151;
+    color: #334155;
   }
 
   &:last-child {
@@ -102,17 +124,17 @@
 .loader {
   text-align: center;
   padding: 3rem;
-  color: #6b7280;
+  color: #64748b;
 }
 
 /* ================= TUTOR BADGE ================= */
 .tutorBadge {
-  background: linear-gradient(135deg, #28a745, #20c997);
+  background: linear-gradient(135deg, #22c55e, #06b6d4);
   color: white;
   font-size: 0.7rem;
   padding: 3px 8px;
   border-radius: 999px;
-  margin-left: 10px;
+  margin-left: 8px;
 }
 
 /* ================= TUTOR SECTION ================= */
@@ -121,6 +143,7 @@
 
   h2 {
     margin-bottom: 1rem;
+    color: #0f172a;
   }
 }
 
@@ -130,29 +153,36 @@
   gap: 10px;
   margin-bottom: 1rem;
   flex-wrap: wrap;
+}
 
-  button {
-    padding: 10px 16px;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
-    font-weight: 500;
-    transition: 0.2s;
+/* ================= BUTTON BASE ================= */
+.btn {
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
   }
 }
 
-/* ADD COURSE BUTTON */
+/* ADD COURSE */
 .addBtn {
+  @extend .btn;
   background: linear-gradient(135deg, #6366f1, #4f46e5);
   color: white;
 
   &:hover {
-    opacity: 0.9;
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
   }
 }
 
-/* BULK DELETE BUTTON */
+/* BULK DELETE */
 .bulkDelete {
+  @extend .btn;
   background: #dc2626;
   color: white;
 
@@ -164,36 +194,39 @@
 /* ================= COURSE GRID ================= */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.2rem;
 
   @include respond(md) {
     grid-template-columns: 1fr;
   }
 }
 
-/* ================= COURSE LIST (OLD - optional fallback) ================= */
+/* ================= COURSE ITEM (FALLBACK) ================= */
 .courseItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   padding: 0.8rem 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 
   h4 {
     margin: 0;
+    font-weight: 500;
+    color: #0f172a;
   }
 
   button {
     margin-left: 10px;
-    padding: 5px 10px;
-    border-radius: 6px;
+    padding: 6px 10px;
+    border-radius: 8px;
     border: none;
     cursor: pointer;
-    background: #f3f4f6;
+    background: #f1f5f9;
 
     &:hover {
-      background: #e5e7eb;
+      background: #e2e8f0;
     }
   }
 }
