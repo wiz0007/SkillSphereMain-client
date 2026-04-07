@@ -1,12 +1,26 @@
-@charset "UTF-8";
 @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 /* ================= ROOT ================= */
 .container {
   max-width: 1100px;
   margin: auto;
   padding: 2rem;
-  background: #f9fafb;
   min-height: 100vh;
+  background: linear-gradient(135deg, #eef2ff, #f8fafc);
+}
+@media (max-width: 640px) {
+  .container {
+    padding: 1rem;
+  }
+}
+
+/* ================= GLASS ================= */
+.glass, .card {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  transition: all 0.25s ease;
 }
 
 /* ================= HEADER ================= */
@@ -43,28 +57,28 @@
   position: relative;
 }
 .photoWrapper img {
-  width: 120px;
-  height: 120px;
+  width: 110px;
+  height: 110px;
   border-radius: 50%;
   -o-object-fit: cover;
      object-fit: cover;
-  border: 3px solid #fff;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border: 3px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
-/* 🔥 Upload overlay */
+/* UPLOAD OVERLAY */
 .uploadOverlay {
   position: absolute;
   bottom: 0;
   width: 100%;
   text-align: center;
-  font-size: 0.75rem;
-  background: rgba(0, 0, 0, 0.65);
-  color: #fff;
+  font-size: 0.7rem;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
   padding: 6px;
   border-radius: 0 0 50% 50%;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: 0.2s;
 }
 .uploadOverlay:hover {
   background: rgba(0, 0, 0, 0.8);
@@ -72,17 +86,13 @@
 
 /* ================= IDENTITY ================= */
 .identity h2 {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: 600;
-  color: #111 !important;
-  -webkit-text-fill-color: #111 !important;
+  color: #0f172a;
 }
 .identity p {
   margin-top: 4px;
-  color: #4b5563;
-}
-.identity {
-  /* 🔥 INPUT FIX (main bug fix) */
+  color: #64748b;
 }
 .identity input,
 .identity textarea {
@@ -90,23 +100,23 @@
   border: none;
   border-bottom: 2px solid #e5e7eb;
   background: transparent;
-  color: #111 !important;
-  -webkit-text-fill-color: #111 !important;
-  font-size: 1rem;
+  color: #0f172a;
+  font-size: 0.95rem;
   padding: 6px 4px;
+  transition: 0.2s;
 }
 .identity input::-moz-placeholder, .identity textarea::-moz-placeholder {
-  color: #9ca3af;
+  color: #94a3b8;
 }
 .identity input::placeholder,
 .identity textarea::placeholder {
-  color: #9ca3af;
+  color: #94a3b8;
 }
 .identity input:focus,
 .identity textarea:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 6px 18px rgba(59, 130, 246, 0.15);
+  border-color: #6366f1;
+  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.15);
 }
 .identity textarea {
   resize: none;
@@ -116,10 +126,10 @@
 .tutorBadge {
   margin-top: 6px;
   display: inline-block;
-  background: linear-gradient(135deg, #22c55e, #10b981);
+  background: linear-gradient(135deg, #22c55e, #06b6d4);
   color: white;
   padding: 4px 12px;
-  border-radius: 20px;
+  border-radius: 999px;
   font-size: 0.7rem;
 }
 
@@ -129,18 +139,18 @@
   gap: 0.6rem;
 }
 .right button {
-  border: none;
   padding: 0.6rem 1.4rem;
-  border-radius: 10px;
+  border-radius: 999px;
+  border: none;
   cursor: pointer;
-  background: #2563eb;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
   color: white;
   font-weight: 500;
-  transition: 0.2s ease;
+  transition: 0.2s;
 }
 .right button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
 }
 .right .cancel {
   background: #6b7280;
@@ -166,35 +176,32 @@
 
 /* ================= CARD ================= */
 .card {
-  background: #ffffff;
-  border-radius: 16px;
   padding: 1.5rem;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-  transition: 0.2s ease;
 }
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.08);
+  transform: translateY(-3px);
 }
 .card h3 {
   margin-bottom: 0.8rem;
-  color: #111;
+  color: #0f172a;
+  font-size: 1rem;
 }
 .card input {
   width: 100%;
-  margin-bottom: 0.5rem;
-  padding: 0.5rem;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  color: #111 !important;
-  -webkit-text-fill-color: #111 !important;
+  margin-bottom: 0.6rem;
+  padding: 0.6rem;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
 }
 .card input:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: #6366f1;
 }
 .card p {
-  color: #374151;
+  color: #475569;
+  font-size: 0.9rem;
 }
 
 /* ================= SKILLS ================= */
@@ -207,16 +214,16 @@
   flex-wrap: wrap;
   gap: 0.5rem;
   padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #e5e7eb;
-  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.6);
 }
 
 .skillTag {
   background: linear-gradient(135deg, #3b82f6, #6366f1);
   color: white;
   padding: 6px 12px;
-  border-radius: 20px;
+  border-radius: 999px;
   font-size: 0.8rem;
   display: flex;
   align-items: center;
@@ -230,27 +237,28 @@
 .skillBox input {
   border: none;
   outline: none;
+  background: transparent;
   flex: 1;
   min-width: 120px;
-  color: #111 !important;
-  background: transparent;
+  font-size: 0.9rem;
+  color: #0f172a;
 }
 
 /* ================= TEXT ================= */
 .headline {
   font-weight: 500;
-  color: #111;
+  color: #0f172a;
 }
 
 .price {
   font-weight: 600;
   margin-top: 6px;
-  color: #111;
+  color: #0f172a;
 }
 
 /* ================= LOADER ================= */
 .loader {
   text-align: center;
   padding: 3rem;
-  color: #555;
+  color: #64748b;
 }/*# sourceMappingURL=Profile.module.css.map */
