@@ -1,106 +1,166 @@
 @use "../../styles/mixin" as *;
 
+/* ================= CONTAINER ================= */
 .container {
   padding: 2rem;
   max-width: 1100px;
   margin: auto;
+
+  background: linear-gradient(135deg, #eef2ff, #f8fafc);
+  min-height: 100vh;
+
+  @include respond(sm) {
+    padding: 1rem;
+  }
 }
 
+/* ================= GLASS ================= */
+.glass {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  transition: all 0.25s ease;
+}
+
+/* ================= HERO ================= */
 .hero {
-  @include Flex(column, center, center);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  margin-bottom: 2rem;
+
+  margin-bottom: 2.5rem;
 
   h1 {
-    @include Text(2rem, #111);
+    font-size: 2rem;
     font-weight: 600;
+    color: #0f172a;
   }
 
   p {
-    @include Text(1rem, #666);
     margin-top: 0.5rem;
+    color: #64748b;
+    font-size: 0.95rem;
+    max-width: 500px;
   }
 }
 
+/* ================= BENEFITS ================= */
 .benefits {
-  @include Flex(row, space-around, center);
-  margin-bottom: 2rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
 
-  div {
-    @include Card();
-    padding: 1rem;
-    @include Text(0.9rem, #333);
-    text-align: center;
-    flex: 1;
-  }
+  margin-bottom: 2rem;
 
   @include respond(md) {
-    flex-direction: column;
+    grid-template-columns: 1fr;
+  }
+
+  div {
+    @extend .glass;
+    padding: 1.2rem;
+    text-align: center;
+
+    font-size: 0.9rem;
+    color: #334155;
+
+    &:hover {
+      transform: translateY(-3px);
+    }
   }
 }
 
+/* ================= FORM ================= */
 .form {
-  @include Card();
+  @extend .glass;
   padding: 2rem;
-  color: black;
+
+  max-width: 600px;
+  margin: auto;
 
   h2 {
-    @include Text(1.4rem, #0b0a0a);
+    font-size: 1.3rem;
+    font-weight: 600;
     margin-bottom: 1.5rem;
+    color: #0f172a;
   }
 }
 
+/* ================= FIELD ================= */
 .field {
-  @include Flex(column, flex-start, flex-start);
+  display: flex;
+  flex-direction: column;
   margin-bottom: 1.2rem;
 
   label {
-    @include Text(0.9rem, #444);
+    font-size: 0.85rem;
+    color: #475569;
     margin-bottom: 0.4rem;
   }
 
   input,
   textarea {
     width: 100%;
-    padding: 0.7rem;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    font-family: "Roboto", sans-serif;
+    padding: 0.75rem;
+
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(6px);
+
+    font-size: 0.9rem;
+    font-family: "Inter", sans-serif;
+
+    transition: all 0.2s ease;
 
     &:focus {
       outline: none;
-      border-color: #007bff;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
     }
   }
 
   textarea {
-    min-height: 100px;
+    min-height: 110px;
     resize: none;
   }
 }
 
+/* ================= BUTTON ================= */
 .submitBtn {
   width: 100%;
-  padding: 0.9rem;
+  padding: 0.85rem;
+
   border: none;
-  border-radius: 10px;
-  background: #007bff;
+  border-radius: 999px;
+
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
   color: white;
+
   font-weight: 500;
   cursor: pointer;
 
+  transition: all 0.2s ease;
+
   &:hover {
-    background: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
   }
 }
 
+/* ================= STATES ================= */
 .error {
-  color: red;
+  color: #dc2626;
   margin-bottom: 1rem;
+  font-size: 0.85rem;
 }
 
 .success {
-  color: green;
+  color: #16a34a;
   margin-bottom: 1rem;
+  font-size: 0.85rem;
 }

@@ -1,82 +1,142 @@
 @use "../../styles/mixin" as *;
 
+/* ================= CONTAINER ================= */
 .container {
   h1 {
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
+    color: #0f172a;
   }
 }
 
 /* ================= TABS ================= */
 .tabs {
-  @include Flex(row, flex-start, center);
+  display: flex;
   gap: 10px;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
 
   button {
-    padding: 8px 14px;
+    padding: 8px 16px;
     border-radius: 999px;
     border: none;
-    background: #e5e7eb;
+
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(6px);
+
+    color: #475569;
     cursor: pointer;
+
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 0.8);
+    }
   }
 }
 
 .active {
-  background: #6366f1 !important;
-  color: white;
+  background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
+  color: white !important;
 }
 
 /* ================= GRID ================= */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.2rem;
 }
 
 /* ================= CARD ================= */
 .card {
-  @include Card;
-  padding: 1rem;
+  padding: 1.2rem;
+
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+
+  transition: 0.25s ease;
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
 
   h3 {
-    margin-bottom: 6px;
+    font-size: 1rem;
+    color: #0f172a;
   }
 
   p {
     font-size: 0.85rem;
-    color: #6b7280;
+    color: #64748b;
   }
 }
 
 /* ================= STATUS ================= */
 .status {
-  display: inline-block;
   margin-top: 6px;
-  padding: 3px 8px;
-  border-radius: 6px;
-  background: #e0e7ff;
+  padding: 4px 10px;
+
+  border-radius: 999px;
+  font-size: 0.75rem;
+
+  background: rgba(99, 102, 241, 0.15);
+  color: #6366f1;
+
+  display: inline-block;
+  width: fit-content;
 }
 
 /* ================= ACTIONS ================= */
 .actions {
-  margin-top: 10px;
+  margin-top: auto;
   display: flex;
   gap: 8px;
 }
 
+/* PRIMARY BUTTON */
 .primary {
   flex: 1;
-  background: #6366f1;
-  color: white;
   border: none;
   padding: 8px;
-  border-radius: 8px;
+
+  border-radius: 999px;
+
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: white;
+
+  cursor: pointer;
+  transition: 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(99, 102, 241, 0.3);
+  }
 }
 
+/* DANGER BUTTON */
 .danger {
   flex: 1;
-  background: #fee2e2;
   border: none;
   padding: 8px;
-  border-radius: 8px;
+
+  border-radius: 999px;
+
+  background: #fee2e2;
+  color: #dc2626;
+
+  cursor: pointer;
+
+  &:hover {
+    background: #fecaca;
+  }
 }
