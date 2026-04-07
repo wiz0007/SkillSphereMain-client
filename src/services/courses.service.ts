@@ -143,3 +143,23 @@ export const addReview = async (
   });
   return res.data;
 };
+
+
+export const getSavedCourses = async () => {
+  const res = await api.get("/courses/saved");
+  return res.data;
+};
+
+/* SAVE */
+export const saveCourse = async (courseId: string) => {
+  const res = await api.post(`/courses/${courseId}/save`);
+  return res.data;
+};
+
+/* UNSAVE */
+export const unsaveCourse = async (courseId: string) => {
+  const res = await api.delete(`/courses/${courseId}/save`);
+  return res.data;
+};
+
+/* GET SAVED */

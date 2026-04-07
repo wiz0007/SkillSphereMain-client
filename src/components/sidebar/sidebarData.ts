@@ -20,9 +20,9 @@ export const sidebarItems: SidebarItem[] = [
   },
   {
     id: 3,
-    title: "My Skills",
+    title: "Saved Courses",
     icon: "ri-lightbulb-line",
-    route: "/skills",
+    route: "/saved-courses",
   },
   {
     id: 4,

@@ -1,0 +1,71 @@
+@use "./theme" as *;
+
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* BODY */
+body {
+  font-family: "Inter", sans-serif;
+  background: linear-gradient(135deg, #eef2ff, #f8fafc);
+  color: $text-main;
+}
+
+/* GLASS COMPONENT */
+.glass {
+  background: $bg-glass;
+  backdrop-filter: blur(14px);
+  border: 1px solid $border-light;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-soft;
+  transition: $transition;
+}
+
+/* HOVER LIFT */
+.hoverLift {
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: $shadow-hover;
+  }
+}
+
+/* BUTTON */
+.btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: $transition;
+
+  &.primary {
+    background: linear-gradient(135deg, $primary, $secondary);
+    color: white;
+  }
+
+  &.success {
+    background: linear-gradient(135deg, #22c55e, #06b6d4);
+    color: white;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* INPUT */
+.input {
+  padding: 0.8rem;
+  border-radius: $radius-md;
+  border: 1px solid #e2e8f0;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(6px);
+  outline: none;
+
+  &:focus {
+    border-color: $primary;
+  }
+}
