@@ -12,10 +12,10 @@ export interface Course {
   price?: number;
   duration?: string;
 
-  averageRating: number;
-  totalRatings: number;
+  averageRating?: number;
+  totalRatings?: number;
 
-  reviews: Review[];
+  reviews?: Review[];
 }
 
 export interface ReviewUser {

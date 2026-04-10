@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import styles from "../dashboard/Dashboard.module.scss";
 
 import {
@@ -10,20 +9,11 @@ import {
 } from "../../services/courses.service";
 
 import TutorCourseCard from "../tutorCourseCard/TutorCourseCard";
+import { useAuth } from "../../context/AuthContext";
 
-/* ================= TYPES ================= */
-// interface Course {
-//   _id: string;
-//   title: string;
-//   description: string;
-//   category: string;
-//   level: string;
-//   price: number;
-// }
-
-/* ================= COMPONENT ================= */
 const TutorSection = () => {
   const navigate = useNavigate();
+  const { user, loading: authLoading } = useAuth();
 
   const [courses, setCourses] = useState<Course[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
@@ -38,14 +28,13 @@ const TutorSection = () => {
     } catch (err) {
       console.error("Fetch error:", err);
       setCourses([]);
-    } finally {
-      setLoading(false);
     }
   };
 
   useEffect(() => {
+    if (authLoading || !user?.isTutor) return;
     fetchCourses();
-  }, []);
+  }, [user, authLoading]);
 
   /* ================= SELECT ================= */
   const toggleSelect = (id: string) => {
@@ -56,19 +45,18 @@ const TutorSection = () => {
     );
   };
 
-  /* ================= ADD ================= */
+  /* ================= ACTIONS ================= */
+
   const handleAddCourse = () => {
     navigate("/add-course");
   };
 
-  /* ================= EDIT ================= */
   const handleEdit = (course: Course) => {
     navigate(`/add-course/${course._id}`, {
-      state: course, // prefill form
+      state: course,
     });
   };
 
-  /* ================= DELETE SINGLE ================= */
   const handleDelete = async (id: string) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this course?"
@@ -84,7 +72,6 @@ const TutorSection = () => {
     }
   };
 
-  /* ================= BULK DELETE ================= */
   const handleBulkDelete = async () => {
     if (!selected.length) return;
 
@@ -104,11 +91,11 @@ const TutorSection = () => {
   };
 
   /* ================= UI ================= */
+
   return (
     <div className={styles.tutorSection}>
       <h2>🧑‍🏫 Your Courses</h2>
 
-      {/* ACTION BAR */}
       <div className={styles.toolbar}>
         <button
           className={styles.addBtn}
@@ -127,7 +114,6 @@ const TutorSection = () => {
         )}
       </div>
 
-      {/* CONTENT */}
       <div className={styles.panel}>
         {loading ? (
           <p>Loading courses...</p>

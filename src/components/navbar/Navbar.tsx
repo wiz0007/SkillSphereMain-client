@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import styles from "./Navbar.module.scss";
-import { FiBell, FiMessageSquare, FiChevronDown } from "react-icons/fi";
+import { FiMessageSquare, FiChevronDown } from "react-icons/fi";
 import { useAuth } from "../../context/AuthContext";
+import NavbarBell from "./NavbarBell";
 
 interface NavbarProps {
   toggleSidebar: () => void;
@@ -99,8 +100,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
         <div className={styles.actions}>
 
           <div className={styles.iconWrapper}>
-            <FiBell className={styles.icon} />
-            <span className={styles.badge}></span>
+            <NavbarBell />
           </div>
 
           <div className={styles.iconWrapper}>

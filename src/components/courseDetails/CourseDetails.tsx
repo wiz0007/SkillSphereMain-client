@@ -1,4 +1,5 @@
 import { useParams } from "react-router-dom";
+import { useState } from "react";
 import styles from "./CourseDetails.module.scss";
 
 import CourseHero from "./CourseHero";
@@ -6,9 +7,12 @@ import CourseSidebar from "./CourseSidebar";
 import ReviewSection from "./ReviewSection";
 import { useCourseDetails } from "./useCourseDetails";
 import { useSaveCourse } from "./useSaveCourse";
+import RequestSession from "../requestSession/RequestSession";
 
 const CourseDetails = () => {
   const { id } = useParams();
+
+  const [open, setOpen] = useState(false);
 
   const {
     course,
@@ -44,7 +48,7 @@ const CourseDetails = () => {
             onSave={() => handleSave(id!)}
           />
 
-          <CourseSidebar course={course} onOpen={() => {}} />
+          <CourseSidebar course={course} onOpen={() => setOpen(true)} />
         </div>
 
         <ReviewSection
@@ -57,6 +61,9 @@ const CourseDetails = () => {
           submitLoading={submitLoading}
           error={error}
         />
+        {open && (
+          <RequestSession course={course} onClose={() => setOpen(false)} />
+        )}
       </div>
     </div>
   );

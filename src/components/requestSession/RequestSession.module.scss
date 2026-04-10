@@ -1,0 +1,49 @@
+@use "../../styles/mixin" as *;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+
+  @include Flex(row, center, center);
+}
+
+.modal {
+  @include Card();
+  width: 420px;
+  padding: 24px;
+
+  @include Flex(column, flex-start, stretch);
+  gap: 16px;
+}
+
+.field {
+  @include Flex(column, flex-start, flex-start);
+  gap: 6px;
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+  }
+}
+
+.price {
+  @include Flex(row, space-between, center);
+}
+
+button {
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: black;
+  color: white;
+}
+
+.cancel {
+  background: #eee;
+  color: #333;
+}

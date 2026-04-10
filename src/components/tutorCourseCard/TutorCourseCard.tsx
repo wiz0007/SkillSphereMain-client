@@ -1,16 +1,6 @@
 import styles from "./TutorCourseCard.module.scss";
 import type { Course } from "../../services/courses.service";
 
-/* ================= TYPES ================= */
-// interface Course {
-//   _id: string;
-//   title: string;
-//   description: string;
-//   category: string;
-//   level: string;
-//   price: number;
-// }
-
 interface Props {
   course: Course;
 
@@ -22,7 +12,6 @@ interface Props {
   onEdit: (course: Course) => void;
 }
 
-/* ================= COMPONENT ================= */
 const TutorCourseCard: React.FC<Props> = ({
   course,
   selectable = false,
@@ -42,22 +31,25 @@ const TutorCourseCard: React.FC<Props> = ({
         <input
           type="checkbox"
           checked={selected}
-          onChange={() => onSelect?.(course._id)}
+          onChange={(e) => {
+            e.stopPropagation();
+            if (onSelect) onSelect(course._id);
+          }}
         />
       )}
 
       {/* CATEGORY */}
       <span className={styles.category}>
-        {course.category}
+        {course.category || "General"}
       </span>
 
       {/* TITLE */}
-      <h3>{course.title}</h3>
+      <h3>{course.title || "Untitled Course"}</h3>
 
-      {/* LEVEL + PRICE */}
+      {/* META */}
       <div className={styles.meta}>
-        <span>{course.level}</span>
-        <span>₹{course.price}/hr</span>
+        <span>{course.level || "All Levels"}</span>
+        <span>₹{course.price ?? 0}/hr</span>
       </div>
 
       {/* ACTIONS */}
@@ -71,7 +63,12 @@ const TutorCourseCard: React.FC<Props> = ({
 
         <button
           className={styles.delete}
-          onClick={() => onDelete(course._id)}
+          onClick={() => {
+            const confirmDelete = window.confirm(
+              "Delete this course?"
+            );
+            if (confirmDelete) onDelete(course._id);
+          }}
         >
           Delete
         </button>

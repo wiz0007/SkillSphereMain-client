@@ -1,12 +1,17 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
-interface User {
-  isTutor: any;
+export interface User {
   _id: string;
   name: string;
   email: string;
   profilePhoto?: string;
   profileCompleted?: boolean;
+  isTutor: boolean;
 }
 
 interface AuthContextType {
@@ -16,7 +21,9 @@ interface AuthContextType {
   logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType | undefined>(
+  undefined
+);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -24,26 +31,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // ✅ Load user from localStorage
+  // ✅ Load user from storage
   useEffect(() => {
     try {
-      const storedUser = localStorage.getItem("user");
+      const stored = localStorage.getItem("user");
 
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
+      if (stored) {
+        const parsed: User = JSON.parse(stored);
+
+        if (parsed?._id) {
+          setUser({
+            ...parsed,
+            _id: String(parsed._id),
+          });
+        } else {
+          localStorage.removeItem("user");
+        }
       }
-    } catch (error) {
-      console.error("Invalid user data in localStorage");
+    } catch {
       localStorage.removeItem("user");
     } finally {
       setLoading(false);
     }
   }, []);
 
-  // ✅ Sync user to localStorage
+  // ✅ Sync user to storage
   useEffect(() => {
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
+    } else {
+      localStorage.removeItem("user");
     }
   }, [user]);
 
@@ -51,25 +68,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
-
-    // cleaner navigation
     window.location.href = "/login";
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, setUser, logout }}>
+    <AuthContext.Provider
+      value={{ user, loading, setUser, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
-// ✅ hook
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-
-  if (!context) {
+  const ctx = useContext(AuthContext);
+  if (!ctx) {
     throw new Error("useAuth must be used inside AuthProvider");
   }
-
-  return context;
+  return ctx;
 };

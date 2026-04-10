@@ -113,4 +113,19 @@
 }
 .danger:hover {
   background: #fecaca;
+}
+
+.waiting {
+  background: #eee;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.time {
+  font-size: 14px;
+  color: #555;
+}
+
+.completed {
+  color: #888;
 }/*# sourceMappingURL=Sessions.module.css.map */

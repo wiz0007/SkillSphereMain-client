@@ -2,8 +2,11 @@ import React, { useEffect, useMemo, useState } from "react";
 import styles from "./SkillDiscovery.module.scss";
 import CourseCard from "../courseCard/CourseCard";
 import { getAllCourses, type Course } from "../../services/courses.service";
+import { useAuth } from "../../context/AuthContext";
 
 const SkillDiscovery: React.FC = () => {
+  const { user, loading: authLoading } = useAuth();
+
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -12,6 +15,8 @@ const SkillDiscovery: React.FC = () => {
   const [level, setLevel] = useState("");
 
   useEffect(() => {
+    if (authLoading || !user?._id) return;
+
     const fetchCourses = async () => {
       try {
         const data = await getAllCourses();
@@ -24,37 +29,55 @@ const SkillDiscovery: React.FC = () => {
     };
 
     fetchCourses();
-  }, []);
+  }, [user, authLoading]);
 
-  // Extract unique categories dynamically
+  /* ================= CATEGORIES ================= */
+
   const categories = useMemo(() => {
-    const set = new Set(courses.map((c) => c.category));
-    return Array.from(set);
+    return Array.from(
+      new Set(courses.map((c) => c.category).filter(Boolean))
+    );
   }, [courses]);
+
+  /* ================= FILTER ================= */
 
   const filteredCourses = useMemo(() => {
     let result = [...courses];
 
     if (search) {
       result = result.filter((course) =>
-        course.title.toLowerCase().includes(search.toLowerCase()),
+        (course.title || "")
+          .toLowerCase()
+          .includes(search.toLowerCase())
       );
     }
 
     if (category) {
-      result = result.filter((course) => course.category === category);
+      result = result.filter(
+        (course) => course.category === category
+      );
     }
 
     if (level) {
-      result = result.filter((course) => course.level === level);
+      result = result.filter(
+        (course) => course.level === level
+      );
     }
 
     return result;
   }, [courses, search, category, level]);
 
+  /* ================= LOADING ================= */
+
+  if (authLoading || !user) {
+    return <div className={styles.loading}>Loading...</div>;
+  }
+
+  /* ================= UI ================= */
+
   return (
     <div className={styles.container}>
-      {/* Header */}
+      {/* HEADER */}
       <div className={styles.header}>
         <h2>Explore Courses</h2>
 
@@ -66,16 +89,24 @@ const SkillDiscovery: React.FC = () => {
         />
       </div>
 
-      {/* Filters */}
+      {/* FILTERS */}
       <div className={styles.filters}>
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        >
           <option value="">All Categories</option>
           {categories.map((cat) => (
-            <option key={cat}>{cat}</option>
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
           ))}
         </select>
 
-        <select value={level} onChange={(e) => setLevel(e.target.value)}>
+        <select
+          value={level}
+          onChange={(e) => setLevel(e.target.value)}
+        >
           <option value="">All Levels</option>
           <option value="Beginner">Beginner</option>
           <option value="Intermediate">Intermediate</option>
@@ -83,7 +114,7 @@ const SkillDiscovery: React.FC = () => {
         </select>
       </div>
 
-      {/* Loading */}
+      {/* CONTENT */}
       {loading ? (
         <div className={styles.loading}>Loading courses...</div>
       ) : filteredCourses.length === 0 ? (
