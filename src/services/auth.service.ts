@@ -16,3 +16,20 @@ export const registerUser = async (data: {
   const res = await api.post("/auth/register", data);
   return res.data;
 };
+
+// ✅ NEW
+export const verifyOTP = async (data: {
+  userId: string;
+  otp: string;
+}) => {
+  const res = await api.post("/auth/verify-otp", data);
+  return res.data;
+};
+
+// ✅ OPTIONAL (resend)
+export const resendOTP = async (data: {
+  userId: string;
+}) => {
+  const res = await api.post("/auth/resend-otp", data);
+  return res.data;
+};
