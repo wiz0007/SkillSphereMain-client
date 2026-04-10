@@ -1,4 +1,4 @@
-import { Register } from '../../features/register/Register'
+import Register from "../../features/register/Register"
 import { AuthNavbar } from '../../components/AuthNavbar/AuthNavbar'
 
 const RegisterPage = () => {

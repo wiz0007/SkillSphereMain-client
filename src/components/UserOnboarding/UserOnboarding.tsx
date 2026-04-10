@@ -6,25 +6,27 @@ import BasicProfileSection from "./BasicProfileSection";
 import { useOnboardingForm } from "./userOnboardingForm";
 import { useAuth } from "../../context/AuthContext";
 
-export default function UserOnboarding() {
+function UserOnboarding() {
   const navigate = useNavigate();
   const { form, handleChange, setForm } = useOnboardingForm();
   const { user, loading: authLoading, setUser } = useAuth();
 
   const [timezone, setTimezone] = useState("");
 
-  /* ✅ AUTH GUARD */
+  /* ================= AUTH GUARD ================= */
   useEffect(() => {
     if (!authLoading && !user) {
       navigate("/login");
     }
-  }, [user, authLoading]);
+  }, [user, authLoading, navigate]);
 
+  /* ================= TIMEZONE ================= */
   useEffect(() => {
     setTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone);
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  /* ================= SUBMIT ================= */
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     const payload = {
@@ -35,8 +37,7 @@ export default function UserOnboarding() {
     try {
       await createProfile(payload);
 
-      // ✅ SAFE AUTH UPDATE
-      setUser((prev) =>
+      setUser((prev: any) =>
         prev
           ? {
               ...prev,
@@ -53,10 +54,12 @@ export default function UserOnboarding() {
     }
   };
 
+  /* ================= LOADING ================= */
   if (authLoading || !user) {
     return <div className={styles.container}>Loading...</div>;
   }
 
+  /* ================= UI ================= */
   return (
     <div className={styles.container}>
       <form className={styles.form} onSubmit={handleSubmit}>
@@ -77,3 +80,5 @@ export default function UserOnboarding() {
     </div>
   );
 }
+
+export default UserOnboarding;

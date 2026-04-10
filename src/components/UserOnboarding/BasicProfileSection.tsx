@@ -6,12 +6,14 @@ import { uploadProfilePhoto } from "../../services/upload.service";
 interface Props {
   form: FormState;
   handleChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => void;
   setForm: React.Dispatch<React.SetStateAction<FormState>>;
 }
 
-export default function BasicProfileSection({
+function BasicProfileSection({
   form,
   handleChange,
   setForm,
@@ -62,23 +64,40 @@ export default function BasicProfileSection({
               <span>Click to Upload</span>
             )}
 
-            <input type="file" accept="image/*" onChange={handleImageUpload} />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+            />
           </label>
         </div>
 
         <div className={`${styles.field} ${styles.fullWidth}`}>
           <label>Short Bio *</label>
-          <textarea name="bio" value={form.bio} onChange={handleChange} />
+          <textarea
+            name="bio"
+            value={form.bio}
+            onChange={handleChange}
+          />
         </div>
 
         <div className={styles.field}>
           <label>Date of Birth</label>
-          <input type="date" name="dob" value={form.dob} onChange={handleChange} />
+          <input
+            type="date"
+            name="dob"
+            value={form.dob}
+            onChange={handleChange}
+          />
         </div>
 
         <div className={styles.field}>
           <label>Gender</label>
-          <select name="gender" value={form.gender} onChange={handleChange}>
+          <select
+            name="gender"
+            value={form.gender}
+            onChange={handleChange}
+          >
             <option value="">Select</option>
             <option>Male</option>
             <option>Female</option>
@@ -88,22 +107,38 @@ export default function BasicProfileSection({
 
         <div className={styles.field}>
           <label>Phone *</label>
-          <input name="phone" value={form.phone} onChange={handleChange} />
+          <input
+            name="phone"
+            value={form.phone}
+            onChange={handleChange}
+          />
         </div>
 
         <div className={styles.field}>
           <label>Country *</label>
-          <input name="country" value={form.country} onChange={handleChange} />
+          <input
+            name="country"
+            value={form.country}
+            onChange={handleChange}
+          />
         </div>
 
         <div className={styles.field}>
           <label>State *</label>
-          <input name="state" value={form.state} onChange={handleChange} />
+          <input
+            name="state"
+            value={form.state}
+            onChange={handleChange}
+          />
         </div>
 
         <div className={styles.field}>
           <label>City *</label>
-          <input name="city" value={form.city} onChange={handleChange} />
+          <input
+            name="city"
+            value={form.city}
+            onChange={handleChange}
+          />
         </div>
 
         <div className={styles.field}>
@@ -118,3 +153,5 @@ export default function BasicProfileSection({
     </section>
   );
 }
+
+export default BasicProfileSection;
