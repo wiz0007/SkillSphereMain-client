@@ -8,21 +8,84 @@ import {
 } from "../../services/profile.service";
 import { uploadProfilePhoto } from "../../services/upload.service";
 
+const CACHE_KEY = "profile_cache";
+const CACHE_TTL = 5 * 60 * 1000;
+
+/* ================= TYPES ================= */
+
+interface TutorProfile {
+  headline?: string;
+  skills?: string[];
+  hourlyRate?: number;
+}
+
+interface ProfileData {
+  fullName?: string;
+  bio?: string;
+  profilePhoto?: string;
+  city?: string;
+  country?: string;
+  isTutor?: boolean;
+  tutorProfile?: TutorProfile;
+}
+
+/* ================= COMPONENT ================= */
+
 const Profile: React.FC = () => {
   const { user, setUser } = useAuth();
 
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<ProfileData | null>(null);
   const [edit, setEdit] = useState(false);
   const [loading, setLoading] = useState(true);
-
   const [skillInput, setSkillInput] = useState("");
 
+  /* ================= CACHE ================= */
+
+  const getCache = (): ProfileData | null => {
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      if (!raw) return null;
+
+      const parsed = JSON.parse(raw);
+
+      if (Date.now() - parsed.timestamp > CACHE_TTL) {
+        localStorage.removeItem(CACHE_KEY);
+        return null;
+      }
+
+      return parsed.data;
+    } catch {
+      return null;
+    }
+  };
+
+  const setCache = (data: ProfileData) => {
+    localStorage.setItem(
+      CACHE_KEY,
+      JSON.stringify({
+        data,
+        timestamp: Date.now(),
+      })
+    );
+  };
+
   /* ================= FETCH ================= */
+
   useEffect(() => {
+    if (!user?._id) return;
+
+    const cached = getCache();
+
+    if (cached) {
+      setProfile(cached);
+      setLoading(false);
+    }
+
     const fetchProfile = async () => {
       try {
         const data = await getMyProfile();
         setProfile(data);
+        setCache(data);
       } catch (err) {
         console.error(err);
       } finally {
@@ -31,37 +94,47 @@ const Profile: React.FC = () => {
     };
 
     fetchProfile();
-  }, []);
+  }, [user]);
 
   /* ================= SKILLS ================= */
 
   const addSkill = () => {
-    if (!skillInput.trim()) return;
+    if (!skillInput.trim() || !profile) return;
 
-    setProfile((prev: any) => ({
-      ...prev,
+    const newSkill = skillInput.trim();
+
+    // prevent duplicates
+    if (profile.tutorProfile?.skills?.includes(newSkill)) {
+      setSkillInput("");
+      return;
+    }
+
+    setProfile({
+      ...profile,
       tutorProfile: {
-        ...prev.tutorProfile,
+        ...profile.tutorProfile,
         skills: [
-          ...(prev.tutorProfile?.skills || []),
-          skillInput.trim(),
+          ...(profile.tutorProfile?.skills || []),
+          newSkill,
         ],
       },
-    }));
+    });
 
     setSkillInput("");
   };
 
   const removeSkill = (skill: string) => {
-    setProfile((prev: any) => ({
-      ...prev,
+    if (!profile?.tutorProfile) return;
+
+    setProfile({
+      ...profile,
       tutorProfile: {
-        ...prev.tutorProfile,
-        skills: prev.tutorProfile.skills.filter(
-          (s: string) => s !== skill
+        ...profile.tutorProfile,
+        skills: profile.tutorProfile.skills?.filter(
+          (s) => s !== skill
         ),
       },
-    }));
+    });
   };
 
   /* ================= PHOTO ================= */
@@ -70,17 +143,17 @@ const Profile: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file || !profile) return;
 
     try {
       const imageUrl = await uploadProfilePhoto(file);
 
-      setProfile((prev: any) => ({
-        ...prev,
-        profilePhoto: imageUrl,
-      }));
+      const updated = { ...profile, profilePhoto: imageUrl };
 
-      setUser((prev: any) =>
+      setProfile(updated);
+      setCache(updated);
+
+      setUser((prev) =>
         prev ? { ...prev, profilePhoto: imageUrl } : prev
       );
     } catch (err) {
@@ -91,18 +164,32 @@ const Profile: React.FC = () => {
   /* ================= SAVE ================= */
 
   const handleSave = async () => {
+    if (!profile) return;
+
     try {
       const updated = await updateProfile(profile);
+
       setProfile(updated);
+      setCache(updated);
       setEdit(false);
 
-      setUser((prev: any) =>
-        prev ? { ...prev, ...updated } : prev
+      setUser((prev) =>
+        prev
+          ? {
+              ...prev,
+              name: updated.fullName || prev.name,
+              profilePhoto:
+                updated.profilePhoto || prev.profilePhoto,
+              isTutor: updated.isTutor ?? prev.isTutor,
+            }
+          : prev
       );
     } catch (err) {
       console.error(err);
     }
   };
+
+  /* ================= UI ================= */
 
   if (loading) return <div className={styles.loader}>Loading...</div>;
   if (!profile) return null;
@@ -174,10 +261,7 @@ const Profile: React.FC = () => {
           {edit ? (
             <>
               <button onClick={handleSave}>Save</button>
-              <button
-                className={styles.cancel}
-                onClick={() => setEdit(false)}
-              >
+              <button onClick={() => setEdit(false)}>
                 Cancel
               </button>
             </>
@@ -227,13 +311,9 @@ const Profile: React.FC = () => {
 
         {/* TUTOR */}
         {profile.isTutor && (
-          <motion.div
-            className={styles.card}
-            whileHover={{ y: -5 }}
-          >
+          <motion.div className={styles.card}>
             <h3>Tutor Info</h3>
 
-            {/* HEADLINE */}
             {edit ? (
               <input
                 placeholder="Headline"
@@ -249,30 +329,22 @@ const Profile: React.FC = () => {
                 }
               />
             ) : (
-              <p className={styles.headline}>
-                {profile.tutorProfile?.headline || "—"}
-              </p>
+              <p>{profile.tutorProfile?.headline || "—"}</p>
             )}
 
             {/* SKILLS */}
             <div className={styles.skillsContainer}>
               <div className={styles.skillBox}>
-                {profile.tutorProfile?.skills?.map(
-                  (skill: string) => (
-                    <div key={skill} className={styles.skillTag}>
-                      {skill}
-                      {edit && (
-                        <span
-                          onClick={() =>
-                            removeSkill(skill)
-                          }
-                        >
-                          ×
-                        </span>
-                      )}
-                    </div>
-                  )
-                )}
+                {profile.tutorProfile?.skills?.map((skill) => (
+                  <div key={skill} className={styles.skillTag}>
+                    {skill}
+                    {edit && (
+                      <span onClick={() => removeSkill(skill)}>
+                        ×
+                      </span>
+                    )}
+                  </div>
+                ))}
 
                 {edit && (
                   <input
@@ -292,7 +364,6 @@ const Profile: React.FC = () => {
               </div>
             </div>
 
-            {/* RATE */}
             {edit ? (
               <input
                 type="number"
@@ -308,9 +379,7 @@ const Profile: React.FC = () => {
                 }
               />
             ) : (
-              <p className={styles.price}>
-                ₹{profile.tutorProfile?.hourlyRate}/hr
-              </p>
+              <p>₹{profile.tutorProfile?.hourlyRate}/hr</p>
             )}
           </motion.div>
         )}

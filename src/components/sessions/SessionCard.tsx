@@ -1,34 +1,78 @@
 import styles from "./Sessions.module.scss";
+import { api } from "../../api/api";
 
-const SessionCard = ({ session }: any) => {
+const SessionCard = ({ session, onUpdate }: any) => {
+  const updateStatus = async (status: string) => {
+    try {
+      await api.patch(`/sessions/${session._id}`, { status });
+
+      // ✅ update UI without reload
+      onUpdate(session._id, status);
+    } catch (err: any) {
+      alert(err?.response?.data?.message || "Error updating");
+    }
+  };
+
+  const formattedDate = new Date(session.date).toLocaleString();
+
   return (
     <div className={styles.card}>
       <h3>{session.title}</h3>
 
       <p>
-        {session.role === "tutor"
-          ? `Student: ${session.with}`
-          : `Tutor: ${session.with}`}
+        {session.isTutor
+          ? `Student: ${session.student?.name}`
+          : `Tutor: ${session.tutor?.name}`}
       </p>
 
-      <p>{new Date(session.date).toLocaleString()}</p>
+      <p className={styles.time}>🕒 {formattedDate}</p>
 
       <span className={styles.status}>{session.status}</span>
 
-      {/* ACTIONS */}
       <div className={styles.actions}>
-        {session.status === "upcoming" && (
+        {session.type === "received" && session.isTutor && (
           <>
-            <button className={styles.primary}>Join</button>
-            <button className={styles.danger}>Cancel</button>
+            <button
+              className={styles.primary}
+              onClick={() => updateStatus("accepted")}
+            >
+              Accept
+            </button>
+
+            <button
+              className={styles.danger}
+              onClick={() => updateStatus("cancelled")}
+            >
+              Reject
+            </button>
           </>
         )}
 
-        {session.status === "requests" && (
+        {session.type === "sent" && (
+          <button disabled className={styles.waiting}>
+            Waiting for Approval
+          </button>
+        )}
+
+        {session.type === "upcoming" && (
           <>
-            <button className={styles.primary}>Accept</button>
-            <button className={styles.danger}>Reject</button>
+            <button className={styles.primary}>Join</button>
+
+            <button
+              className={styles.danger}
+              onClick={() => updateStatus("cancelled")}
+            >
+              Cancel
+            </button>
           </>
+        )}
+
+        {session.type === "completed" && (
+          <span className={styles.completed}>
+            {session.status === "completed"
+              ? "Session Completed"
+              : "Session Cancelled"}
+          </span>
         )}
       </div>
     </div>

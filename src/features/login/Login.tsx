@@ -52,12 +52,13 @@ export function Login() {
 
       const { token, user } = data;
 
+      // ✅ ONLY store token here
       localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
 
+      // ✅ Let AuthContext handle user persistence
       setUser(user);
 
-      // Redirect logic
+      // ✅ Redirect logic
       if (user.profileCompleted) {
         navigate("/");
       } else {

@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import styles from "./BecomeTutor.module.scss";
 import { becomeTutor } from "../../services/profile.service";
 import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+
+/* ================= COMPONENT ================= */
 
 const BecomeTutor: React.FC = () => {
   const { setUser } = useAuth();
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     headline: "",
@@ -17,48 +21,74 @@ const BecomeTutor: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+
+  // ✅ success modal control
+  const [showSuccess, setShowSuccess] = useState(false);
 
   /* ================= HANDLE CHANGE ================= */
+
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
   /* ================= SUBMIT ================= */
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     setLoading(true);
     setError("");
-    setSuccess("");
 
     try {
       const payload = {
         headline: form.headline,
-        experience: Number(form.experience),
+        experience: Number(form.experience) || 0,
         hourlyRate: Number(form.hourlyRate),
 
-        // 🔥 Convert to arrays
-        skills: form.skills.split(",").map((s) => s.trim()),
-        categories: form.categories.split(",").map((s) => s.trim()),
-        languages: form.languages.split(",").map((s) => s.trim()),
+        skills: form.skills
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+
+        categories: form.categories
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+
+        languages: form.languages
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
       };
 
-      const res = await becomeTutor(payload);
+      await becomeTutor(payload);
 
-      setSuccess("🎉 You are now a tutor!");
+      // ✅ Update auth (triggers navbar refresh automatically)
+      setUser((prev) =>
+        prev
+          ? {
+              ...prev,
+              isTutor: true,
+            }
+          : prev
+      );
 
-      // 👉 Update auth state
+      // ✅ Show success modal
+      setShowSuccess(true);
 
-      setUser({
-        ...res.data,
-      });
-
-      console.log(res);
+      // ✅ Redirect after delay
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1800);
     } catch (err: any) {
-      setError(err.response?.data?.message || "Something went wrong");
+      setError(
+        err?.response?.data?.message || "Something went wrong"
+      );
     } finally {
       setLoading(false);
     }
@@ -77,7 +107,6 @@ const BecomeTutor: React.FC = () => {
         <h2>Your Tutor Profile</h2>
 
         {error && <p className={styles.error}>{error}</p>}
-        {success && <p className={styles.success}>{success}</p>}
 
         <div className={styles.field}>
           <label>Headline</label>
@@ -106,7 +135,11 @@ const BecomeTutor: React.FC = () => {
 
         <div className={styles.field}>
           <label>Experience (years)</label>
-          <input name="experience" type="number" onChange={handleChange} />
+          <input
+            name="experience"
+            type="number"
+            onChange={handleChange}
+          />
         </div>
 
         <div className={styles.field}>
@@ -132,6 +165,18 @@ const BecomeTutor: React.FC = () => {
           {loading ? "Submitting..." : "Become Tutor 🚀"}
         </button>
       </form>
+
+      {/* ================= SUCCESS MODAL ================= */}
+
+      {showSuccess && (
+        <div className={styles.successOverlay}>
+          <div className={styles.successModal}>
+            <div className={styles.checkmark}>✓</div>
+            <h2>You are now a Tutor!</h2>
+            <p>Redirecting to dashboard...</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

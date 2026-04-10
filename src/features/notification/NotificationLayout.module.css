@@ -1,0 +1,30 @@
+.container {
+  padding: 20px;
+}
+
+.card {
+  padding: 15px;
+  border-radius: 10px;
+  background: white;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.unread {
+  background: #f5faff;
+  border-left: 4px solid #007bff;
+}
+
+.unread {
+  border-left: 4px solid #007bff;
+  background: #f5f9ff;
+}
+
+.message {
+  font-weight: 500;
+}
+
+.time {
+  font-size: 12px;
+  color: #888;
+}/*# sourceMappingURL=NotificationLayout.module.css.map */

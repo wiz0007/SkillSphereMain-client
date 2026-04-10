@@ -5,7 +5,9 @@ import { uploadProfilePhoto } from "../../services/upload.service";
 
 interface Props {
   form: FormState;
-  handleChange: (e: any) => void;
+  handleChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => void;
   setForm: React.Dispatch<React.SetStateAction<FormState>>;
 }
 
@@ -16,28 +18,24 @@ export default function BasicProfileSection({
 }: Props) {
   const [preview, setPreview] = useState<string | null>(null);
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // preview image
     setPreview(URL.createObjectURL(file));
 
-    // upload to cloudinary
-    const imageUrl = await uploadProfilePhoto(file);
+    try {
+      const imageUrl = await uploadProfilePhoto(file);
 
-    console.log("IMAGE URL:", imageUrl); // must show URL
-
-    setForm((prev) => {
-      const updated = {
+      setForm((prev) => ({
         ...prev,
         profilePhoto: imageUrl,
-      };
-
-      console.log("FORM AFTER IMAGE:", updated); // 🔥 MUST show URL
-
-      return updated;
-    });
+      }));
+    } catch {
+      alert("Image upload failed");
+    }
   };
 
   return (
@@ -75,12 +73,7 @@ export default function BasicProfileSection({
 
         <div className={styles.field}>
           <label>Date of Birth</label>
-          <input
-            type="date"
-            name="dob"
-            value={form.dob}
-            onChange={handleChange}
-          />
+          <input type="date" name="dob" value={form.dob} onChange={handleChange} />
         </div>
 
         <div className={styles.field}>

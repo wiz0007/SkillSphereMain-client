@@ -12,6 +12,7 @@ import SessionPage from "../pages/session/SessionPage";
 import AddCoursePage from "../pages/addCourse/AddCoursePage";
 import CourseDetailsPage from "../pages/courseDetails/CourseDetailsPage";
 import SavedCoursesPage from "../pages/savedCourses/SavedCoursesPage";
+import NotificationPage from "../pages/notification/NotificationPage";
 
 /* ================= LAYOUT ================= */
 import MainLayout from "../layout/MainLayout"; // ✅ you must create this
@@ -23,12 +24,12 @@ const AllRoutes = () => {
 
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/userDetails" element={<UserDetailFormPage />} />
 
       {/* ================= PROTECTED / APP ROUTES ================= */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/explore" element={<HomePage />} />
-        <Route path="/userDetails" element={<UserDetailFormPage />} />
 
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/sessions" element={<SessionPage />} />
@@ -40,6 +41,9 @@ const AllRoutes = () => {
         <Route path="/add-course/:id" element={<AddCoursePage />} />
         <Route path="/course/:id" element={<CourseDetailsPage />} />
         <Route path="/saved-courses" element={<SavedCoursesPage />} />
+
+        {/* NOTIFICATIONS */}
+        <Route path="/notifications" element={<NotificationPage />} />
       </Route>
 
       {/* ================= FALLBACK ================= */}

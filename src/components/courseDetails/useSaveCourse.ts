@@ -4,12 +4,17 @@ import {
   unsaveCourse,
   getSavedCourses,
 } from "../../services/courses.service";
+import { useAuth } from "../../context/AuthContext";
 
 export const useSaveCourse = () => {
+  const { user, loading: authLoading } = useAuth();
+
   const [savedCourses, setSavedCourses] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (authLoading || !user?._id) return; // ✅ WAIT FOR AUTH
+
     const fetchSaved = async () => {
       try {
         const data = await getSavedCourses();
@@ -22,35 +27,35 @@ export const useSaveCourse = () => {
     };
 
     fetchSaved();
-  }, []);
+  }, [user, authLoading]);
 
   const isSaved = (id: string) => savedCourses.includes(id);
 
   const handleSave = async (courseId: string) => {
-  const alreadySaved = savedCourses.includes(courseId);
+    const alreadySaved = savedCourses.includes(courseId);
 
-  try {
-    // ✅ Optimistic update FIRST
-    if (alreadySaved) {
+    try {
+      // ✅ Optimistic update
+      if (alreadySaved) {
+        setSavedCourses((prev) =>
+          prev.filter((id) => id !== courseId)
+        );
+        await unsaveCourse(courseId);
+      } else {
+        setSavedCourses((prev) => [...prev, courseId]);
+        await saveCourse(courseId);
+      }
+    } catch (err) {
+      console.error(err);
+
+      // ❗ rollback
       setSavedCourses((prev) =>
-        prev.filter((id) => id !== courseId)
+        alreadySaved
+          ? [...prev, courseId]
+          : prev.filter((id) => id !== courseId)
       );
-      await unsaveCourse(courseId);
-    } else {
-      setSavedCourses((prev) => [...prev, courseId]);
-      await saveCourse(courseId);
     }
-  } catch (err) {
-    console.error(err);
-
-    // ❗ rollback if API fails
-    setSavedCourses((prev) =>
-      alreadySaved
-        ? [...prev, courseId]
-        : prev.filter((id) => id !== courseId)
-    );
-  }
-};
+  };
 
   return { isSaved, handleSave, loading };
 };

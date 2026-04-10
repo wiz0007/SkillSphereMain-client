@@ -12,15 +12,19 @@ export function useOnboardingForm() {
     preferredLanguage: "English",
     dob: "",
     gender: "",
-    profilePhoto: ""
+    profilePhoto: "",
   });
 
-  const handleChange = (e: any) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
 
     setForm((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
