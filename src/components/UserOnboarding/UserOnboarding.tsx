@@ -1,128 +1,79 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./UserOnboarding.module.scss";
-import type { FormState } from "./onboarding.types";
-import { uploadProfilePhoto } from "../../services/upload.service";
+import { createProfile } from "../../services/profile.service";
+import BasicProfileSection from "./BasicProfileSection";
+import { useOnboardingForm } from "./userOnboardingForm";
+import { useAuth } from "../../context/AuthContext";
 
-interface Props {
-  form: FormState;
-  handleChange: (e: any) => void;
-  setForm: React.Dispatch<React.SetStateAction<FormState>>;
-}
+export default function UserOnboarding() {
+  const navigate = useNavigate();
+  const { form, handleChange, setForm } = useOnboardingForm();
+  const { user, loading: authLoading, setUser } = useAuth();
 
-export default function BasicProfileSection({
-  form,
-  handleChange,
-  setForm,
-}: Props) {
-  const [preview, setPreview] = useState<string | null>(null);
+  const [timezone, setTimezone] = useState("");
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  /* ✅ AUTH GUARD */
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate("/login");
+    }
+  }, [user, authLoading]);
 
-    // preview image
-    setPreview(URL.createObjectURL(file));
+  useEffect(() => {
+    setTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone);
+  }, []);
 
-    // upload to cloudinary
-    const imageUrl = await uploadProfilePhoto(file);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-    console.log("IMAGE URL:", imageUrl); // must show URL
+    const payload = {
+      ...form,
+      timezone,
+    };
 
-    setForm((prev) => {
-      const updated = {
-        ...prev,
-        profilePhoto: imageUrl,
-      };
+    try {
+      await createProfile(payload);
 
-      console.log("FORM AFTER IMAGE:", updated); // 🔥 MUST show URL
+      // ✅ SAFE AUTH UPDATE
+      setUser((prev) =>
+        prev
+          ? {
+              ...prev,
+              name: payload.fullName || prev.name,
+              profilePhoto: payload.profilePhoto || prev.profilePhoto,
+              profileCompleted: true,
+            }
+          : prev
+      );
 
-      return updated;
-    });
+      navigate("/");
+    } catch (error) {
+      console.error("Profile creation failed:", error);
+    }
   };
 
+  if (authLoading || !user) {
+    return <div className={styles.container}>Loading...</div>;
+  }
+
   return (
-    <section className={styles.section}>
-      <h2>Basic Profile</h2>
+    <div className={styles.container}>
+      <form className={styles.form} onSubmit={handleSubmit}>
+        <header className={styles.header}>
+          <h1>Complete Your Profile</h1>
+        </header>
 
-      <div className={styles.grid}>
-        <div className={styles.field}>
-          <label>Full Name *</label>
-          <input
-            name="fullName"
-            value={form.fullName}
-            onChange={handleChange}
-          />
-        </div>
+        <BasicProfileSection
+          form={form}
+          handleChange={handleChange}
+          setForm={setForm}
+        />
 
-        <div className={styles.uploadField}>
-          <label>Profile Photo</label>
-
-          <label className={styles.uploadBox}>
-            {preview ? (
-              <img src={preview} alt="preview" />
-            ) : (
-              <span>Click to Upload</span>
-            )}
-
-            <input type="file" accept="image/*" onChange={handleImageUpload} />
-          </label>
-        </div>
-
-        <div className={`${styles.field} ${styles.fullWidth}`}>
-          <label>Short Bio *</label>
-          <textarea name="bio" value={form.bio} onChange={handleChange} />
-        </div>
-
-        <div className={styles.field}>
-          <label>Date of Birth</label>
-          <input
-            type="date"
-            name="dob"
-            value={form.dob}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className={styles.field}>
-          <label>Gender</label>
-          <select name="gender" value={form.gender} onChange={handleChange}>
-            <option value="">Select</option>
-            <option>Male</option>
-            <option>Female</option>
-            <option>Other</option>
-          </select>
-        </div>
-
-        <div className={styles.field}>
-          <label>Phone *</label>
-          <input name="phone" value={form.phone} onChange={handleChange} />
-        </div>
-
-        <div className={styles.field}>
-          <label>Country *</label>
-          <input name="country" value={form.country} onChange={handleChange} />
-        </div>
-
-        <div className={styles.field}>
-          <label>State *</label>
-          <input name="state" value={form.state} onChange={handleChange} />
-        </div>
-
-        <div className={styles.field}>
-          <label>City *</label>
-          <input name="city" value={form.city} onChange={handleChange} />
-        </div>
-
-        <div className={styles.field}>
-          <label>Preferred Language</label>
-          <input
-            name="preferredLanguage"
-            value={form.preferredLanguage}
-            onChange={handleChange}
-          />
-        </div>
-      </div>
-    </section>
+        <button className={styles.submitBtn}>
+          Save Profile
+        </button>
+      </form>
+    </div>
   );
 }
-
