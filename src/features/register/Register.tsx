@@ -1,4 +1,9 @@
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import React, {
+  useState,
+  useEffect,
+  type ChangeEvent,
+  type FormEvent,
+} from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Register.module.scss";
@@ -6,6 +11,7 @@ import {
   registerUser,
   verifyOTP,
   resendOTP,
+  checkUsername,
 } from "../../services/auth.service";
 
 interface RegisterForm {
@@ -29,22 +35,75 @@ const Register: React.FC = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [isOtpStep, setIsOtpStep] = useState(false);
 
+  const [usernameStatus, setUsernameStatus] = useState<
+    "idle" | "checking" | "available" | "taken"
+  >("idle");
+
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const passwordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+  /* 🔥 COOLDOWN STATE */
+  const [cooldown, setCooldown] = useState(0);
+
+  /* ================= PASSWORD RULES ================= */
+
+  const checks = {
+    length: form.password.length >= 8,
+    upper: /[A-Z]/.test(form.password),
+    lower: /[a-z]/.test(form.password),
+    number: /\d/.test(form.password),
+    special: /[@$!%*?&]/.test(form.password),
+  };
+
+  const isPasswordValid = Object.values(checks).every(Boolean);
+  const isMatch =
+    form.confirmPassword && form.password === form.confirmPassword;
+
+  /* ================= USERNAME CHECK ================= */
+
+  useEffect(() => {
+    if (!form.username) {
+      setUsernameStatus("idle");
+      return;
+    }
+
+    setUsernameStatus("checking");
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await checkUsername(form.username);
+        setUsernameStatus(res.available ? "available" : "taken");
+      } catch {
+        setUsernameStatus("idle");
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [form.username]);
+
+  /* ================= COOLDOWN TIMER ================= */
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+
+    const interval = setInterval(() => {
+      setCooldown((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [cooldown]);
+
+  /* ================= HANDLERS ================= */
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   /* ================= REGISTER ================= */
@@ -53,17 +112,17 @@ const Register: React.FC = () => {
     e.preventDefault();
     setError("");
 
-    if (form.password !== form.confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
+    if (!isPasswordValid)
+      return setError("Password does not meet requirements");
 
-    if (!passwordRegex.test(form.password)) {
-      setError(
-        "Password must contain uppercase, lowercase, number & special character"
-      );
-      return;
-    }
+    if (!isMatch)
+      return setError("Passwords do not match");
+
+    if (!acceptedTerms)
+      return setError("Please accept Terms & Conditions");
+
+    if (usernameStatus !== "available")
+      return setError("Username not available");
 
     try {
       setLoading(true);
@@ -75,7 +134,10 @@ const Register: React.FC = () => {
       });
 
       setUserId(res.userId);
-      setIsOtpStep(true); // ✅ switch to OTP
+      setIsOtpStep(true);
+
+      /* 🔥 START COOLDOWN */
+      setCooldown(30);
 
     } catch (err: any) {
       setError(err?.response?.data?.message || "Registration failed");
@@ -84,25 +146,16 @@ const Register: React.FC = () => {
     }
   };
 
-  /* ================= VERIFY OTP ================= */
+  /* ================= OTP ================= */
 
   const handleVerifyOtp = async () => {
-    if (!otp) {
-      setError("Enter OTP");
-      return;
-    }
+    if (!otp) return setError("Enter OTP");
 
     try {
       setLoading(true);
-
-      await verifyOTP({
-        userId: userId!,
-        otp,
-      });
-
+      await verifyOTP({ userId: userId!, otp });
       alert("Account verified!");
       navigate("/login");
-
     } catch (err: any) {
       setError(err?.response?.data?.message || "Invalid OTP");
     } finally {
@@ -110,12 +163,16 @@ const Register: React.FC = () => {
     }
   };
 
-  /* ================= RESEND OTP ================= */
-
   const handleResend = async () => {
+    if (cooldown > 0) return;
+
     try {
       await resendOTP({ userId: userId! });
       alert("OTP resent");
+
+      /* 🔥 RESET COOLDOWN */
+      setCooldown(30);
+
     } catch {
       alert("Failed to resend OTP");
     }
@@ -135,75 +192,105 @@ const Register: React.FC = () => {
           <form onSubmit={handleSubmit} className={styles.form}>
 
             <input
-              type="text"
               name="username"
               placeholder="Username"
-              required
               value={form.username}
               onChange={handleChange}
+              required
             />
+
+            <p className={styles.status}>
+              {usernameStatus === "checking" && "Checking..."}
+              {usernameStatus === "available" && "✅ Available"}
+              {usernameStatus === "taken" && "❌ Username taken"}
+            </p>
 
             <input
-              type="email"
               name="email"
               placeholder="Email Address"
-              required
               value={form.email}
               onChange={handleChange}
+              required
             />
 
-            {/* Password */}
             <div className={styles.passwordContainer}>
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
                 placeholder="Password"
-                required
                 value={form.password}
                 onChange={handleChange}
               />
-
               <span
                 className={styles.eye}
-                onClick={() => setShowPassword((prev) => !prev)}
+                onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <FiEyeOff /> : <FiEye />}
               </span>
             </div>
 
-            {/* Confirm Password */}
+            <div className={styles.passwordRules}>
+              <p className={checks.length ? styles.valid : ""}>✔ At least 8 characters</p>
+              <p className={checks.upper ? styles.valid : ""}>✔ One uppercase letter</p>
+              <p className={checks.lower ? styles.valid : ""}>✔ One lowercase letter</p>
+              <p className={checks.number ? styles.valid : ""}>✔ One number</p>
+              <p className={checks.special ? styles.valid : ""}>✔ One special character</p>
+            </div>
+
             <div className={styles.passwordContainer}>
               <input
                 type={showConfirm ? "text" : "password"}
                 name="confirmPassword"
                 placeholder="Confirm Password"
-                required
                 value={form.confirmPassword}
                 onChange={handleChange}
               />
-
               <span
                 className={styles.eye}
-                onClick={() => setShowConfirm((prev) => !prev)}
+                onClick={() => setShowConfirm(!showConfirm)}
               >
                 {showConfirm ? <FiEyeOff /> : <FiEye />}
               </span>
             </div>
 
-            <button type="submit" disabled={loading}>
+            {form.confirmPassword && (
+              <p className={isMatch ? styles.valid : styles.error}>
+                {isMatch ? "✔ Passwords match" : "✖ Passwords do not match"}
+              </p>
+            )}
+
+            <div className={styles.terms}>
+              <input
+                type="checkbox"
+                checked={acceptedTerms}
+                onChange={(e) => setAcceptedTerms(e.target.checked)}
+              />
+              <label onClick={() => setShowTerms(true)}>
+                I agree to Terms & Conditions
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              disabled={
+                loading ||
+                !isPasswordValid ||
+                !isMatch ||
+                !acceptedTerms ||
+                usernameStatus !== "available"
+              }
+            >
               {loading ? "Creating..." : "Sign Up"}
             </button>
 
           </form>
         ) : (
-          /* OTP SECTION */
           <div className={styles.form}>
 
             <input
-              type="text"
-              placeholder="Enter OTP"
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
+              placeholder="Enter OTP"
             />
 
             <button onClick={handleVerifyOtp} disabled={loading}>
@@ -212,10 +299,12 @@ const Register: React.FC = () => {
 
             <button
               type="button"
-              className={styles.resend}
               onClick={handleResend}
+              disabled={cooldown > 0}
             >
-              Resend OTP
+              {cooldown > 0
+                ? `Resend in ${cooldown}s`
+                : "Resend OTP"}
             </button>
 
           </div>
@@ -223,9 +312,20 @@ const Register: React.FC = () => {
 
         {!isOtpStep && (
           <p>
-            Already have an account?{" "}
-            <Link to="/login">Login</Link>
+            Already have an account? <Link to="/login">Login</Link>
           </p>
+        )}
+
+        {showTerms && (
+          <div className={styles.modal}>
+            <div className={styles.modalContent}>
+              <h2>Terms & Conditions</h2>
+              <p>Put your legal content here...</p>
+              <button onClick={() => setShowTerms(false)}>
+                Close
+              </button>
+            </div>
+          </div>
         )}
 
       </div>

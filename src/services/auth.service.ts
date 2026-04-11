@@ -33,3 +33,8 @@ export const resendOTP = async (data: {
   const res = await api.post("/auth/resend-otp", data);
   return res.data;
 };
+
+export const checkUsername = async (username: string) => {
+  const res = await api.get(`/auth/check-username/${username}`);
+  return res.data;
+};
