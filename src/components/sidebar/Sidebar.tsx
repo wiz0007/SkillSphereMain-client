@@ -35,7 +35,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       >
         {/* HEADER */}
         <div className={styles.logoArea}>
-          <span className={styles.logo}>SkillX</span>
+          <span className={styles.logo}>SS</span>
 
           <button
             className={styles.toggleBtn}
