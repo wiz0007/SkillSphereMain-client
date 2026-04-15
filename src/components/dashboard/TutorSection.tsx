@@ -23,11 +23,14 @@ const TutorSection = () => {
   const fetchCourses = async () => {
     try {
       setLoading(true);
+
       const data = await getMyCourses();
       setCourses(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Fetch error:", err);
       setCourses([]);
+    } finally {
+      setLoading(false); // ✅ REQUIRED
     }
   };
 
@@ -39,9 +42,7 @@ const TutorSection = () => {
   /* ================= SELECT ================= */
   const toggleSelect = (id: string) => {
     setSelected((prev) =>
-      prev.includes(id)
-        ? prev.filter((i) => i !== id)
-        : [...prev, id]
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
     );
   };
 
@@ -59,7 +60,7 @@ const TutorSection = () => {
 
   const handleDelete = async (id: string) => {
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this course?"
+      "Are you sure you want to delete this course?",
     );
 
     if (!confirmDelete) return;
@@ -76,7 +77,7 @@ const TutorSection = () => {
     if (!selected.length) return;
 
     const confirmDelete = window.confirm(
-      `Delete ${selected.length} selected courses?`
+      `Delete ${selected.length} selected courses?`,
     );
 
     if (!confirmDelete) return;
@@ -97,18 +98,12 @@ const TutorSection = () => {
       <h2>🧑‍🏫 Your Courses</h2>
 
       <div className={styles.toolbar}>
-        <button
-          className={styles.addBtn}
-          onClick={handleAddCourse}
-        >
+        <button className={styles.addBtn} onClick={handleAddCourse}>
           + Add Course
         </button>
 
         {selected.length > 0 && (
-          <button
-            className={styles.bulkDelete}
-            onClick={handleBulkDelete}
-          >
+          <button className={styles.bulkDelete} onClick={handleBulkDelete}>
             Delete Selected ({selected.length})
           </button>
         )}

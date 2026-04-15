@@ -1,4 +1,4 @@
-import { useState, type Key } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import styles from "./AddCourse.module.scss";
@@ -13,23 +13,20 @@ const AddCourse = () => {
   const { state } = useLocation();
   const { id } = useParams();
 
-  /* ================= FORM STATE ================= */
   const [form, setForm] = useState({
     title: state?.title || "",
     description: state?.description || "",
     category: state?.category || "",
-    level: state?.level || "beginner",
+    level: state?.level || "Beginner", // ✅ FIXED
     skills: state?.skills?.join(",") || "",
     price: state?.price || "",
     duration: state?.duration || "",
   });
 
-  /* ================= CHANGE ================= */
   const handleChange = (e: any) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  /* ================= SUBMIT ================= */
   const handleSubmit = async () => {
     const payload = {
       ...form,
@@ -42,10 +39,8 @@ const AddCourse = () => {
 
     try {
       if (id) {
-        // 🔥 EDIT
         await updateCourse(id, payload);
       } else {
-        // 🔥 CREATE
         await createCourse(payload);
       }
 
@@ -59,29 +54,24 @@ const AddCourse = () => {
     <div className={styles.layout}>
       <div className={styles.container}>
         
-        {/* ================= LEFT FORM ================= */}
+        {/* FORM */}
         <div className={styles.formSection}>
           <h1>{id ? "Edit Course" : "Create Your Course"}</h1>
 
-          {/* TITLE */}
           <label>Course Title</label>
           <input
             name="title"
-            placeholder="e.g. React Mastery"
             value={form.title}
             onChange={handleChange}
           />
 
-          {/* DESCRIPTION */}
           <label>Description</label>
           <textarea
             name="description"
-            placeholder="Explain what students will learn..."
             value={form.description}
             onChange={handleChange}
           />
 
-          {/* CATEGORY */}
           <label>Category</label>
           <select
             name="category"
@@ -94,28 +84,24 @@ const AddCourse = () => {
             <option value="Marketing">Marketing</option>
           </select>
 
-          {/* LEVEL */}
           <label>Level</label>
           <select
             name="level"
             value={form.level}
             onChange={handleChange}
           >
-            <option value="beginner">Beginner</option>
-            <option value="intermediate">Intermediate</option>
-            <option value="advanced">Advanced</option>
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
           </select>
 
-          {/* SKILLS */}
           <label>Skills (comma separated)</label>
           <input
             name="skills"
-            placeholder="React, Hooks, Redux"
             value={form.skills}
             onChange={handleChange}
           />
 
-          {/* PRICE */}
           <label>Price (₹/hour)</label>
           <input
             name="price"
@@ -124,11 +110,9 @@ const AddCourse = () => {
             onChange={handleChange}
           />
 
-          {/* DURATION */}
           <label>Session Duration</label>
           <input
             name="duration"
-            placeholder="e.g. 1 hour"
             value={form.duration}
             onChange={handleChange}
           />
@@ -138,7 +122,7 @@ const AddCourse = () => {
           </button>
         </div>
 
-        {/* ================= RIGHT PREVIEW ================= */}
+        {/* PREVIEW */}
         <div className={styles.preview}>
           <h2>Live Preview</h2>
 
@@ -156,7 +140,7 @@ const AddCourse = () => {
             <div className={styles.skills}>
               {form.skills
                 ?.split(",")
-                .map((s: string, i: Key | null | undefined) =>
+                .map((s: string, i: number) =>
                   s.trim() ? <span key={i}>{s.trim()}</span> : null
                 )}
             </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Profile.module.scss";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
 import {
   getMyProfile,
@@ -8,15 +8,20 @@ import {
 } from "../../services/profile.service";
 import { uploadProfilePhoto } from "../../services/upload.service";
 
-const CACHE_KEY = "profile_cache";
-const CACHE_TTL = 5 * 60 * 1000;
-
 /* ================= TYPES ================= */
 
 interface TutorProfile {
   headline?: string;
+  bio?: string;
   skills?: string[];
-  hourlyRate?: number;
+  categories?: string[];
+  experience?: number;
+  experienceDetails?: string;
+  education?: string;
+  portfolioLinks?: string[];
+  languages?: string[];
+  availability?: boolean;
+  teachingMode?: string;
 }
 
 interface ProfileData {
@@ -32,60 +37,20 @@ interface ProfileData {
 /* ================= COMPONENT ================= */
 
 const Profile: React.FC = () => {
-  const { user, setUser } = useAuth();
+  const { setUser } = useAuth();
 
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [edit, setEdit] = useState(false);
   const [loading, setLoading] = useState(true);
   const [skillInput, setSkillInput] = useState("");
 
-  /* ================= CACHE ================= */
-
-  const getCache = (): ProfileData | null => {
-    try {
-      const raw = localStorage.getItem(CACHE_KEY);
-      if (!raw) return null;
-
-      const parsed = JSON.parse(raw);
-
-      if (Date.now() - parsed.timestamp > CACHE_TTL) {
-        localStorage.removeItem(CACHE_KEY);
-        return null;
-      }
-
-      return parsed.data;
-    } catch {
-      return null;
-    }
-  };
-
-  const setCache = (data: ProfileData) => {
-    localStorage.setItem(
-      CACHE_KEY,
-      JSON.stringify({
-        data,
-        timestamp: Date.now(),
-      })
-    );
-  };
-
   /* ================= FETCH ================= */
 
   useEffect(() => {
-    if (!user?._id) return;
-
-    const cached = getCache();
-
-    if (cached) {
-      setProfile(cached);
-      setLoading(false);
-    }
-
     const fetchProfile = async () => {
       try {
         const data = await getMyProfile();
         setProfile(data);
-        setCache(data);
       } catch (err) {
         console.error(err);
       } finally {
@@ -94,7 +59,7 @@ const Profile: React.FC = () => {
     };
 
     fetchProfile();
-  }, [user]);
+  }, []);
 
   /* ================= SKILLS ================= */
 
@@ -103,7 +68,6 @@ const Profile: React.FC = () => {
 
     const newSkill = skillInput.trim();
 
-    // prevent duplicates
     if (profile.tutorProfile?.skills?.includes(newSkill)) {
       setSkillInput("");
       return;
@@ -145,20 +109,13 @@ const Profile: React.FC = () => {
     const file = e.target.files?.[0];
     if (!file || !profile) return;
 
-    try {
-      const imageUrl = await uploadProfilePhoto(file);
+    const imageUrl = await uploadProfilePhoto(file);
 
-      const updated = { ...profile, profilePhoto: imageUrl };
+    setProfile({ ...profile, profilePhoto: imageUrl });
 
-      setProfile(updated);
-      setCache(updated);
-
-      setUser((prev) =>
-        prev ? { ...prev, profilePhoto: imageUrl } : prev
-      );
-    } catch (err) {
-      console.error(err);
-    }
+    setUser((prev) =>
+      prev ? { ...prev, profilePhoto: imageUrl } : prev
+    );
   };
 
   /* ================= SAVE ================= */
@@ -167,10 +124,38 @@ const Profile: React.FC = () => {
     if (!profile) return;
 
     try {
-      const updated = await updateProfile(profile);
+      const payload = {
+        fullName: profile.fullName,
+        bio: profile.bio,
+        city: profile.city,
+        country: profile.country,
+        profilePhoto: profile.profilePhoto,
+
+        tutorProfile: profile.isTutor
+          ? {
+              headline: profile.tutorProfile?.headline,
+              bio: profile.tutorProfile?.bio,
+              skills: profile.tutorProfile?.skills || [],
+              categories: profile.tutorProfile?.categories || [],
+              experience: profile.tutorProfile?.experience || 0,
+              experienceDetails:
+                profile.tutorProfile?.experienceDetails || "",
+              education: profile.tutorProfile?.education || "",
+              portfolioLinks:
+                profile.tutorProfile?.portfolioLinks || [],
+              languages:
+                profile.tutorProfile?.languages || [],
+              availability:
+                profile.tutorProfile?.availability ?? false,
+              teachingMode:
+                profile.tutorProfile?.teachingMode || "Online",
+            }
+          : undefined,
+      };
+
+      const updated = await updateProfile(payload);
 
       setProfile(updated);
-      setCache(updated);
       setEdit(false);
 
       setUser((prev) =>
@@ -191,36 +176,35 @@ const Profile: React.FC = () => {
 
   /* ================= UI ================= */
 
-  if (loading) return <div className={styles.loader}>Loading...</div>;
+  if (loading) return <div>Loading...</div>;
   if (!profile) return null;
 
   return (
-    <div className={styles.container}>
+    <motion.div
+      className={styles.container}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    >
       {/* HEADER */}
       <div className={styles.header}>
-        <div className={styles.left}>
+        <div className={styles.profileBlock}>
           <div className={styles.photoWrapper}>
             <img
               src={
                 profile.profilePhoto ||
                 "https://i.pravatar.cc/150"
               }
-              alt="profile"
             />
 
             {edit && (
               <label className={styles.uploadOverlay}>
                 Change
-                <input
-                  type="file"
-                  hidden
-                  onChange={handlePhoto}
-                />
+                <input type="file" hidden onChange={handlePhoto} />
               </label>
             )}
           </div>
 
-          <div className={styles.identity}>
+          <div>
             {edit ? (
               <input
                 value={profile.fullName || ""}
@@ -232,32 +216,20 @@ const Profile: React.FC = () => {
                 }
               />
             ) : (
-              <h2>{profile.fullName || user?.name}</h2>
+              <h2>{profile.fullName}</h2>
             )}
 
-            {edit ? (
-              <textarea
-                value={profile.bio || ""}
-                onChange={(e) =>
-                  setProfile({
-                    ...profile,
-                    bio: e.target.value,
-                  })
-                }
-              />
-            ) : (
-              <p>{profile.bio || "No bio added"}</p>
-            )}
+            <p>
+              {profile.city}, {profile.country}
+            </p>
 
             {profile.isTutor && (
-              <span className={styles.tutorBadge}>
-                Tutor
-              </span>
+              <span className={styles.badge}>Tutor</span>
             )}
           </div>
         </div>
 
-        <div className={styles.right}>
+        <div>
           {edit ? (
             <>
               <button onClick={handleSave}>Save</button>
@@ -273,118 +245,101 @@ const Profile: React.FC = () => {
         </div>
       </div>
 
-      {/* GRID */}
-      <div className={styles.grid}>
-        {/* LOCATION */}
-        <motion.div className={styles.card} whileHover={{ y: -5 }}>
-          <h3>Location</h3>
-
-          {edit ? (
-            <>
-              <input
-                placeholder="City"
-                value={profile.city || ""}
-                onChange={(e) =>
-                  setProfile({
-                    ...profile,
-                    city: e.target.value,
-                  })
-                }
-              />
-              <input
-                placeholder="Country"
-                value={profile.country || ""}
-                onChange={(e) =>
-                  setProfile({
-                    ...profile,
-                    country: e.target.value,
-                  })
-                }
-              />
-            </>
-          ) : (
-            <p>
-              {profile.city}, {profile.country}
-            </p>
-          )}
-        </motion.div>
-
-        {/* TUTOR */}
-        {profile.isTutor && (
-          <motion.div className={styles.card}>
-            <h3>Tutor Info</h3>
-
-            {edit ? (
-              <input
-                placeholder="Headline"
-                value={profile.tutorProfile?.headline || ""}
-                onChange={(e) =>
-                  setProfile({
-                    ...profile,
-                    tutorProfile: {
-                      ...profile.tutorProfile,
-                      headline: e.target.value,
-                    },
-                  })
-                }
-              />
-            ) : (
-              <p>{profile.tutorProfile?.headline || "—"}</p>
-            )}
-
-            {/* SKILLS */}
-            <div className={styles.skillsContainer}>
-              <div className={styles.skillBox}>
-                {profile.tutorProfile?.skills?.map((skill) => (
-                  <div key={skill} className={styles.skillTag}>
-                    {skill}
-                    {edit && (
-                      <span onClick={() => removeSkill(skill)}>
-                        ×
-                      </span>
-                    )}
-                  </div>
-                ))}
-
-                {edit && (
-                  <input
-                    value={skillInput}
-                    placeholder="Add skill"
-                    onChange={(e) =>
-                      setSkillInput(e.target.value)
-                    }
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        addSkill();
-                      }
-                    }}
-                  />
-                )}
-              </div>
-            </div>
-
-            {edit ? (
-              <input
-                type="number"
-                value={profile.tutorProfile?.hourlyRate || ""}
-                onChange={(e) =>
-                  setProfile({
-                    ...profile,
-                    tutorProfile: {
-                      ...profile.tutorProfile,
-                      hourlyRate: Number(e.target.value),
-                    },
-                  })
-                }
-              />
-            ) : (
-              <p>₹{profile.tutorProfile?.hourlyRate}/hr</p>
-            )}
-          </motion.div>
+      {/* BIO */}
+      <motion.div className={styles.card} whileHover={{ y: -4 }}>
+        <h3>About</h3>
+        {edit ? (
+          <textarea
+            value={profile.bio || ""}
+            onChange={(e) =>
+              setProfile({ ...profile, bio: e.target.value })
+            }
+          />
+        ) : (
+          <p>{profile.bio}</p>
         )}
-      </div>
-    </div>
+      </motion.div>
+
+      {/* TUTOR */}
+      {profile.isTutor && (
+        <motion.div className={styles.card}>
+          <h3>Tutor Profile</h3>
+
+          {/* HEADLINE */}
+          {edit ? (
+            <input
+              value={profile.tutorProfile?.headline || ""}
+              onChange={(e) =>
+                setProfile({
+                  ...profile,
+                  tutorProfile: {
+                    ...profile.tutorProfile,
+                    headline: e.target.value,
+                  },
+                })
+              }
+            />
+          ) : (
+            <p>{profile.tutorProfile?.headline}</p>
+          )}
+
+          {/* SKILLS */}
+          <div className={styles.skills}>
+            <AnimatePresence>
+              {profile.tutorProfile?.skills?.map((skill) => (
+                <motion.div
+                  key={skill}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  className={styles.skillTag}
+                >
+                  {skill}
+                  {edit && (
+                    <span onClick={() => removeSkill(skill)}>
+                      ×
+                    </span>
+                  )}
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+
+          {/* ADD SKILL */}
+          {edit && (
+            <div className={styles.addSkill}>
+              <input
+                value={skillInput}
+                onChange={(e) => setSkillInput(e.target.value)}
+                placeholder="Add skill"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") addSkill();
+                }}
+              />
+              <button onClick={addSkill}>Add</button>
+            </div>
+          )}
+
+          {/* INFO */}
+          <p>
+            <strong>Experience:</strong>{" "}
+            {profile.tutorProfile?.experience} yrs
+          </p>
+
+          <p>
+            <strong>Mode:</strong>{" "}
+            {profile.tutorProfile?.teachingMode}
+          </p>
+
+          <p>
+            <strong>Available:</strong>{" "}
+            {profile.tutorProfile?.availability
+              ? "Yes"
+              : "No"}
+          </p>
+        </motion.div>
+      )}
+    </motion.div>
   );
 };
 

@@ -4,7 +4,8 @@ import { becomeTutor } from "../../services/profile.service";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-/* ================= COMPONENT ================= */
+import SkillsInput from "./SkillsInput";
+import CategorySelect from "./CategorySelect";
 
 const BecomeTutor: React.FC = () => {
   const { setUser } = useAuth();
@@ -12,27 +13,32 @@ const BecomeTutor: React.FC = () => {
 
   const [form, setForm] = useState({
     headline: "",
-    skills: "",
-    categories: "",
+    bio: "",
+    skills: [] as string[],
+    categories: [] as string[],
     experience: "",
-    hourlyRate: "",
+    experienceDetails: "",
+    education: "",
+    portfolioLinks: "",
     languages: "",
+    availability: null as boolean | null,
+    teachingMode: "",
   });
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  // ✅ success modal control
   const [showSuccess, setShowSuccess] = useState(false);
 
   /* ================= HANDLE CHANGE ================= */
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
+    const { name, value } = e.target;
+
     setForm((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: value,
     }));
   };
 
@@ -44,31 +50,69 @@ const BecomeTutor: React.FC = () => {
     setLoading(true);
     setError("");
 
+    /* ================= VALIDATION ================= */
+
+    if (!form.headline.trim()) {
+      setError("Headline is required");
+      setLoading(false);
+      return;
+    }
+
+    if (!form.bio || form.bio.length < 20) {
+      setError("Bio must be at least 20 characters");
+      setLoading(false);
+      return;
+    }
+
+    if (form.skills.length < 2) {
+      setError("Add at least 2 skills");
+      setLoading(false);
+      return;
+    }
+
+    if (form.categories.length === 0) {
+      setError("Select at least 1 category");
+      setLoading(false);
+      return;
+    }
+
+    if (form.availability === null) {
+      setError("Please select availability");
+      setLoading(false);
+      return;
+    }
+
+    /* ================= PAYLOAD ================= */
+
+    const payload = {
+      headline: form.headline,
+      bio: form.bio,
+
+      skills: form.skills,
+      categories: form.categories,
+
+      experience: Number(form.experience) || 0,
+      experienceDetails: form.experienceDetails,
+
+      education: form.education,
+
+      portfolioLinks: form.portfolioLinks
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
+
+      languages: form.languages
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
+
+      availability: form.availability,
+      teachingMode: form.teachingMode || "Online",
+    };
+
     try {
-      const payload = {
-        headline: form.headline,
-        experience: Number(form.experience) || 0,
-        hourlyRate: Number(form.hourlyRate),
-
-        skills: form.skills
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean),
-
-        categories: form.categories
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean),
-
-        languages: form.languages
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean),
-      };
-
       await becomeTutor(payload);
 
-      // ✅ Update auth (triggers navbar refresh automatically)
       setUser((prev) =>
         prev
           ? {
@@ -78,10 +122,8 @@ const BecomeTutor: React.FC = () => {
           : prev
       );
 
-      // ✅ Show success modal
       setShowSuccess(true);
 
-      // ✅ Redirect after delay
       setTimeout(() => {
         navigate("/dashboard");
       }, 1800);
@@ -108,31 +150,50 @@ const BecomeTutor: React.FC = () => {
 
         {error && <p className={styles.error}>{error}</p>}
 
+        {/* HEADLINE */}
         <div className={styles.field}>
           <label>Headline</label>
-          <input name="headline" onChange={handleChange} required />
+          <input
+            name="headline"
+            onChange={handleChange}
+            required
+          />
         </div>
 
+        {/* BIO */}
+        <div className={styles.field}>
+          <label>Bio</label>
+          <textarea
+            name="bio"
+            placeholder="Describe your teaching style, experience, and strengths"
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* SKILLS */}
         <div className={styles.field}>
           <label>Skills</label>
-          <input
-            name="skills"
-            placeholder="React, Node, Python"
-            onChange={handleChange}
-            required
+          <SkillsInput
+            value={form.skills}
+            onChange={(skills) =>
+              setForm((prev) => ({ ...prev, skills }))
+            }
           />
         </div>
 
+        {/* CATEGORIES */}
         <div className={styles.field}>
           <label>Categories</label>
-          <input
-            name="categories"
-            placeholder="Web Dev, AI"
-            onChange={handleChange}
-            required
+          <CategorySelect
+            value={form.categories}
+            onChange={(categories) =>
+              setForm((prev) => ({ ...prev, categories }))
+            }
           />
         </div>
 
+        {/* EXPERIENCE */}
         <div className={styles.field}>
           <label>Experience (years)</label>
           <input
@@ -142,16 +203,37 @@ const BecomeTutor: React.FC = () => {
           />
         </div>
 
+        {/* EXPERIENCE DETAILS */}
         <div className={styles.field}>
-          <label>Hourly Rate (₹)</label>
-          <input
-            name="hourlyRate"
-            type="number"
+          <label>Experience Details</label>
+          <textarea
+            name="experienceDetails"
+            placeholder="Worked at X, built Y, mentored Z students..."
             onChange={handleChange}
-            required
           />
         </div>
 
+        {/* EDUCATION */}
+        <div className={styles.field}>
+          <label>Education</label>
+          <input
+            name="education"
+            placeholder="Degree, University, or Self-taught"
+            onChange={handleChange}
+          />
+        </div>
+
+        {/* PORTFOLIO */}
+        <div className={styles.field}>
+          <label>Portfolio / Professional Links</label>
+          <input
+            name="portfolioLinks"
+            placeholder="GitHub, LinkedIn, Portfolio URL"
+            onChange={handleChange}
+          />
+        </div>
+
+        {/* LANGUAGES */}
         <div className={styles.field}>
           <label>Languages</label>
           <input
@@ -161,13 +243,67 @@ const BecomeTutor: React.FC = () => {
           />
         </div>
 
-        <button type="submit" disabled={loading}>
+        {/* AVAILABILITY */}
+        <div className={styles.field}>
+          <label>Currently Available?</label>
+
+          <div style={{ display: "flex", gap: "1rem" }}>
+            <label>
+              <input
+                type="radio"
+                checked={form.availability === true}
+                onChange={() =>
+                  setForm((prev) => ({
+                    ...prev,
+                    availability: true,
+                  }))
+                }
+              />
+              Yes
+            </label>
+
+            <label>
+              <input
+                type="radio"
+                checked={form.availability === false}
+                onChange={() =>
+                  setForm((prev) => ({
+                    ...prev,
+                    availability: false,
+                  }))
+                }
+              />
+              No
+            </label>
+          </div>
+        </div>
+
+        {/* TEACHING MODE */}
+        <div className={styles.field}>
+          <label>Teaching Mode</label>
+          <select
+            name="teachingMode"
+            value={form.teachingMode}
+            onChange={handleChange}
+          >
+            <option value="">Select mode</option>
+            <option value="Online">Online</option>
+            <option value="Offline">Offline</option>
+            <option value="Both">Both</option>
+          </select>
+        </div>
+
+        {/* SUBMIT */}
+        <button
+          type="submit"
+          className={styles.submitBtn}
+          disabled={loading}
+        >
           {loading ? "Submitting..." : "Become Tutor 🚀"}
         </button>
       </form>
 
-      {/* ================= SUCCESS MODAL ================= */}
-
+      {/* SUCCESS MODAL */}
       {showSuccess && (
         <div className={styles.successOverlay}>
           <div className={styles.successModal}>
