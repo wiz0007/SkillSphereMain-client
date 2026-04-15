@@ -1,0 +1,55 @@
+.wrapper {
+  position: relative;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.6);
+}
+.tags input {
+  border: none;
+  outline: none;
+  flex: 1;
+  min-width: 120px;
+  background: transparent;
+  color: #0f172a;
+}
+
+.tag {
+  background: #6366f1;
+  color: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.tag button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.dropdown {
+  position: absolute;
+  width: 100%;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-top: 0.3rem;
+  z-index: 10;
+}
+.dropdown div {
+  padding: 0.5rem;
+  cursor: pointer;
+}
+.dropdown div:hover {
+  background: #f1f5f9;
+}/*# sourceMappingURL=SkillsInput.module.css.map */
