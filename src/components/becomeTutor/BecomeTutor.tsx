@@ -155,6 +155,7 @@ const BecomeTutor: React.FC = () => {
           <label>Headline</label>
           <input
             name="headline"
+            value={form.headline}
             onChange={handleChange}
             required
           />
@@ -165,6 +166,7 @@ const BecomeTutor: React.FC = () => {
           <label>Bio</label>
           <textarea
             name="bio"
+            value={form.bio}
             placeholder="Describe your teaching style, experience, and strengths"
             onChange={handleChange}
             required

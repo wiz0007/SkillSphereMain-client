@@ -46,7 +46,7 @@
   -o-object-fit: cover;
      object-fit: cover;
   border: 3px solid white;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 .uploadOverlay {
@@ -55,7 +55,7 @@
   width: 100%;
   text-align: center;
   font-size: 0.7rem;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.65);
   color: white;
   padding: 6px;
   border-radius: 0 0 50% 50%;
@@ -73,7 +73,7 @@
 }
 
 .badge {
-  margin-top: 5px;
+  margin-top: 6px;
   display: inline-block;
   background: linear-gradient(135deg, #22c55e, #06b6d4);
   color: white;
@@ -84,7 +84,7 @@
 
 /* ================= BUTTON ================= */
 .header button {
-  padding: 0.6rem 1.3rem;
+  padding: 0.6rem 1.4rem;
   border-radius: 999px;
   border: none;
   cursor: pointer;
@@ -95,13 +95,13 @@
 }
 .header button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
 }
 
 /* ================= CARD ================= */
 .card {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(14px);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(16px);
   border-radius: 18px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
@@ -113,22 +113,24 @@
   transform: translateY(-4px);
 }
 .card h3 {
-  margin-bottom: 0.8rem;
-  font-size: 1rem;
+  margin-bottom: 0.7rem;
+  font-size: 0.95rem;
   font-weight: 600;
+  color: #6366f1;
 }
 .card p {
-  color: #475569;
+  color: #1e293b;
   font-size: 0.9rem;
+  line-height: 1.5;
 }
 .card input,
 .card textarea {
   width: 100%;
   margin-bottom: 0.6rem;
-  padding: 0.6rem;
+  padding: 0.65rem;
   border-radius: 10px;
   border: 1px solid #e2e8f0;
-  background: white;
+  background: #ffffff;
   color: #0f172a;
   font-size: 0.9rem;
 }
@@ -137,6 +139,22 @@
   outline: none;
   border-color: #6366f1;
   box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+}
+.card textarea {
+  min-height: 100px;
+  resize: none;
+}
+
+/* ================= TUTOR GRID ================= */
+.tutorGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+@media (max-width: 768px) {
+  .tutorGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ================= SKILLS ================= */
@@ -174,27 +192,44 @@
 }
 .addSkill input {
   flex: 1;
-  padding: 0.5rem;
+  padding: 0.55rem 0.8rem;
   border-radius: 999px;
   border: 1px solid #e2e8f0;
 }
 .addSkill button {
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1.1rem;
   border-radius: 999px;
   border: none;
-  background: #6366f1;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
   color: white;
   cursor: pointer;
+  transition: 0.2s;
+}
+.addSkill button:hover {
+  transform: scale(1.05);
 }
 
 /* ================= TEXT ================= */
 .headline {
   font-weight: 500;
   margin-bottom: 0.4rem;
+  color: #111827;
 }
 
+/* ================= LOADER ================= */
 .loader {
   text-align: center;
   padding: 3rem;
   color: #64748b;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 640px) {
+  .card {
+    padding: 1rem;
+  }
+  .photoWrapper img {
+    width: 80px;
+    height: 80px;
+  }
 }/*# sourceMappingURL=Profile.module.css.map */
