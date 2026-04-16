@@ -34,6 +34,14 @@ interface ProfileData {
   tutorProfile?: TutorProfile;
 }
 
+/* ================= ANIMATION ================= */
+
+const skillVariants = {
+  hidden: { opacity: 0, scale: 0.6, y: 10 },
+  visible: { opacity: 1, scale: 1, y: 0 },
+  exit: { opacity: 0, scale: 0.6, y: -10 },
+};
+
 /* ================= COMPONENT ================= */
 
 const Profile: React.FC = () => {
@@ -67,38 +75,43 @@ const Profile: React.FC = () => {
     if (!skillInput.trim() || !profile) return;
 
     const newSkill = skillInput.trim();
+    const currentSkills = profile.tutorProfile?.skills || [];
 
-    if (profile.tutorProfile?.skills?.includes(newSkill)) {
+    if (currentSkills.includes(newSkill)) {
       setSkillInput("");
       return;
     }
 
-    setProfile({
-      ...profile,
-      tutorProfile: {
-        ...profile.tutorProfile,
-        skills: [
-          ...(profile.tutorProfile?.skills || []),
-          newSkill,
-        ],
-      },
-    });
+    setProfile((prev) =>
+      prev
+        ? {
+            ...prev,
+            tutorProfile: {
+              ...prev.tutorProfile,
+              skills: [...currentSkills, newSkill],
+            },
+          }
+        : prev
+    );
 
     setSkillInput("");
   };
 
   const removeSkill = (skill: string) => {
-    if (!profile?.tutorProfile) return;
-
-    setProfile({
-      ...profile,
-      tutorProfile: {
-        ...profile.tutorProfile,
-        skills: profile.tutorProfile.skills?.filter(
-          (s) => s !== skill
-        ),
-      },
-    });
+    setProfile((prev) =>
+      prev
+        ? {
+            ...prev,
+            tutorProfile: {
+              ...prev.tutorProfile,
+              skills:
+                prev.tutorProfile?.skills?.filter(
+                  (s) => s !== skill
+                ) || [],
+            },
+          }
+        : prev
+    );
   };
 
   /* ================= PHOTO ================= */
@@ -133,18 +146,14 @@ const Profile: React.FC = () => {
 
         tutorProfile: profile.isTutor
           ? {
-              headline: profile.tutorProfile?.headline,
-              bio: profile.tutorProfile?.bio,
+              ...profile.tutorProfile,
               skills: profile.tutorProfile?.skills || [],
-              categories: profile.tutorProfile?.categories || [],
-              experience: profile.tutorProfile?.experience || 0,
-              experienceDetails:
-                profile.tutorProfile?.experienceDetails || "",
-              education: profile.tutorProfile?.education || "",
-              portfolioLinks:
-                profile.tutorProfile?.portfolioLinks || [],
+              categories:
+                profile.tutorProfile?.categories || [],
               languages:
                 profile.tutorProfile?.languages || [],
+              portfolioLinks:
+                profile.tutorProfile?.portfolioLinks || [],
               availability:
                 profile.tutorProfile?.availability ?? false,
               teachingMode:
@@ -157,18 +166,6 @@ const Profile: React.FC = () => {
 
       setProfile(updated);
       setEdit(false);
-
-      setUser((prev) =>
-        prev
-          ? {
-              ...prev,
-              name: updated.fullName || prev.name,
-              profilePhoto:
-                updated.profilePhoto || prev.profilePhoto,
-              isTutor: updated.isTutor ?? prev.isTutor,
-            }
-          : prev
-      );
     } catch (err) {
       console.error(err);
     }
@@ -180,11 +177,7 @@ const Profile: React.FC = () => {
   if (!profile) return null;
 
   return (
-    <motion.div
-      className={styles.container}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-    >
+    <motion.div className={styles.container}>
       {/* HEADER */}
       <div className={styles.header}>
         <div className={styles.profileBlock}>
@@ -245,99 +238,132 @@ const Profile: React.FC = () => {
         </div>
       </div>
 
-      {/* BIO */}
-      <motion.div className={styles.card} whileHover={{ y: -4 }}>
+      {/* ABOUT */}
+      <div className={styles.card}>
         <h3>About</h3>
-        {edit ? (
-          <textarea
-            value={profile.bio || ""}
-            onChange={(e) =>
-              setProfile({ ...profile, bio: e.target.value })
-            }
-          />
-        ) : (
-          <p>{profile.bio}</p>
-        )}
-      </motion.div>
+        <p>{profile.bio}</p>
+      </div>
 
-      {/* TUTOR */}
+      {/* ================= TUTOR ================= */}
       {profile.isTutor && (
-        <motion.div className={styles.card}>
-          <h3>Tutor Profile</h3>
-
-          {/* HEADLINE */}
-          {edit ? (
-            <input
-              value={profile.tutorProfile?.headline || ""}
-              onChange={(e) =>
-                setProfile({
-                  ...profile,
-                  tutorProfile: {
-                    ...profile.tutorProfile,
-                    headline: e.target.value,
-                  },
-                })
-              }
-            />
-          ) : (
+        <div className={styles.tutorGrid}>
+          {/* LEFT */}
+          <div className={styles.card}>
+            <h3>Headline</h3>
             <p>{profile.tutorProfile?.headline}</p>
-          )}
 
-          {/* SKILLS */}
-          <div className={styles.skills}>
-            <AnimatePresence>
-              {profile.tutorProfile?.skills?.map((skill) => (
-                <motion.div
-                  key={skill}
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  exit={{ scale: 0 }}
-                  className={styles.skillTag}
-                >
-                  {skill}
-                  {edit && (
-                    <span onClick={() => removeSkill(skill)}>
-                      ×
-                    </span>
-                  )}
-                </motion.div>
+            <h3>Tutor Bio</h3>
+            <p>{profile.tutorProfile?.bio}</p>
+
+            <h3>Skills</h3>
+            <div className={styles.skills}>
+              <AnimatePresence>
+                {profile.tutorProfile?.skills?.map((skill) => (
+                  <motion.div
+                    key={skill}
+                    variants={skillVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    layout
+                    className={styles.skillTag}
+                  >
+                    {skill}
+                    {edit && (
+                      <span onClick={() => removeSkill(skill)}>
+                        ×
+                      </span>
+                    )}
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+
+            {edit && (
+              <div className={styles.addSkill}>
+                <input
+                  value={skillInput}
+                  onChange={(e) =>
+                    setSkillInput(e.target.value)
+                  }
+                  placeholder="Add skill"
+                  onKeyDown={(e) =>
+                    e.key === "Enter" && addSkill()
+                  }
+                />
+                <button onClick={addSkill}>Add</button>
+              </div>
+            )}
+
+            <h3>Categories</h3>
+            <div className={styles.skills}>
+              {profile.tutorProfile?.categories?.map((cat) => (
+                <span key={cat} className={styles.skillTag}>
+                  {cat}
+                </span>
               ))}
-            </AnimatePresence>
+            </div>
           </div>
 
-          {/* ADD SKILL */}
-          {edit && (
-            <div className={styles.addSkill}>
-              <input
-                value={skillInput}
-                onChange={(e) => setSkillInput(e.target.value)}
-                placeholder="Add skill"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") addSkill();
-                }}
-              />
-              <button onClick={addSkill}>Add</button>
+          {/* RIGHT */}
+          <div className={styles.card}>
+            <h3>Experience</h3>
+            <p>
+              {profile.tutorProfile?.experience || 0} years
+            </p>
+            <p>{profile.tutorProfile?.experienceDetails}</p>
+
+            <h3>Education</h3>
+            <p>
+              {profile.tutorProfile?.education ||
+                "Not specified"}
+            </p>
+
+            <h3>Languages</h3>
+            <div className={styles.skills}>
+              {profile.tutorProfile?.languages?.map((lang) => (
+                <span key={lang} className={styles.skillTag}>
+                  {lang}
+                </span>
+              ))}
             </div>
-          )}
 
-          {/* INFO */}
-          <p>
-            <strong>Experience:</strong>{" "}
-            {profile.tutorProfile?.experience} yrs
-          </p>
+            <h3>Availability</h3>
+            <p>
+              {profile.tutorProfile?.availability
+                ? "Available"
+                : "Not Available"}
+            </p>
 
-          <p>
-            <strong>Mode:</strong>{" "}
-            {profile.tutorProfile?.teachingMode}
-          </p>
+            <p>
+              Mode: {profile.tutorProfile?.teachingMode}
+            </p>
+          </div>
 
-          <p>
-            <strong>Available:</strong>{" "}
-            {profile.tutorProfile?.availability
-              ? "Yes"
-              : "No"}
-          </p>
-        </motion.div>
+          {/* FULL WIDTH */}
+          <div
+            className={styles.card}
+            style={{ gridColumn: "span 2" }}
+          >
+            <h3>Portfolio / Links</h3>
+
+            {profile.tutorProfile?.portfolioLinks?.length ? (
+              <ul>
+                {profile.tutorProfile.portfolioLinks.map(
+                  (link) => (
+                    <li key={link}>
+                      <a href={link} target="_blank">
+                        {link}
+                      </a>
+                    </li>
+                  )
+                )}
+              </ul>
+            ) : (
+              <p>No links added</p>
+            )}
+          </div>
+        </div>
       )}
     </motion.div>
   );

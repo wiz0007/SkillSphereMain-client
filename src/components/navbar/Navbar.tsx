@@ -130,7 +130,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
               />
               
 
-              <span className={styles.username}>{user.name}</span>
+              <span className={styles.username}>{user.username}</span>
 
               {/* ✅ Tutor Badge */}
               {user.isTutor && (
