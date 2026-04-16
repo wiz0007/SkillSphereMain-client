@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styles from "./CourseDetails.module.scss";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const CourseHero = ({
   course,
@@ -11,6 +12,8 @@ const CourseHero = ({
   saved,
   onSave,
 }: any) => {
+  const navigate = useNavigate();
+
   const avg = course.averageRating || 0;
   const total = course.totalRatings || 0;
   const active = hover || userRating || Math.round(avg);
@@ -25,6 +28,23 @@ const CourseHero = ({
   return (
     <div className={styles.left}>
       <h1>{course.title}</h1>
+
+      {/* 🔥 TUTOR INFO (NEW) */}
+      <div
+        className={styles.tutor}
+        onClick={() =>
+          navigate(`/public-profile/${course.tutor?._id}`)
+        }
+      >
+        <img
+          src={
+            course.tutor?.profilePhoto ||
+            `https://ui-avatars.com/api/?name=${course.tutor?.username}`
+          }
+          alt={course.tutor?.username}
+        />
+        <span>@{course.tutor?.username}</span>
+      </div>
 
       <p className={styles.desc}>{course.description}</p>
 
@@ -57,7 +77,6 @@ const CourseHero = ({
       </div>
 
       {/* SAVE */}
-
       <button
         className={`${styles.saveBtn} ${saved ? styles.saved : ""} ${
           animate ? styles.animate : ""
