@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+/* ================= CARD ================= */
 .card {
   width: 100%;
   display: flex;
@@ -7,11 +8,12 @@
   border-radius: 16px;
   background: #ffffff;
   border: 1px solid #e5e7eb;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
 }
 .card:hover {
   border-color: #d1d5db;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
 }
 @media (max-width: 768px) {
   .card {
@@ -24,7 +26,7 @@
   }
 }
 
-/* IMAGE */
+/* ================= IMAGE ================= */
 .image {
   width: 160px;
   height: 100px;
@@ -45,7 +47,7 @@
   }
 }
 
-/* CONTENT */
+/* ================= CONTENT ================= */
 .content {
   flex: 1;
   display: flex;
@@ -53,7 +55,7 @@
   min-width: 0;
 }
 
-/* TOP */
+/* ================= TOP ================= */
 .top {
   display: flex;
   justify-content: space-between;
@@ -77,12 +79,45 @@
   border-radius: 8px;
   padding: 6px;
   cursor: pointer;
+  transition: 0.2s;
 }
 .save:hover {
   background: #e2e8f0;
+  transform: scale(1.1);
 }
 
-/* DESCRIPTION */
+/* ================= TUTOR ================= */
+.tutor {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+  cursor: pointer;
+}
+.tutor img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border: 1px solid #e5e7eb;
+  transition: 0.2s;
+}
+.tutor span {
+  font-size: 0.8rem;
+  color: #334155;
+  font-weight: 500;
+  transition: 0.2s;
+}
+.tutor span:hover {
+  color: #6366f1;
+  text-decoration: underline;
+}
+.tutor:hover img {
+  transform: scale(1.05);
+}
+
+/* ================= DESCRIPTION ================= */
 .desc {
   margin-top: 0.3rem;
   font-size: 0.85rem;
@@ -94,7 +129,7 @@
   overflow: hidden;
 }
 
-/* META */
+/* ================= META ================= */
 .meta {
   margin-top: 0.5rem;
   display: flex;
@@ -103,13 +138,18 @@
 }
 .meta span {
   background: #f1f5f9;
-  padding: 4px 8px;
+  padding: 4px 10px;
   border-radius: 999px;
   font-size: 0.7rem;
   color: #334155;
+  transition: 0.2s;
+}
+.meta span:hover {
+  background: #e0e7ff;
+  color: #4338ca;
 }
 
-/* RATING */
+/* ================= RATING ================= */
 .ratingRow {
   margin-top: 0.5rem;
   display: flex;
@@ -122,6 +162,10 @@
   font-size: 16px;
   color: #cbd5f5;
   cursor: pointer;
+  transition: 0.2s;
+}
+.stars span:hover {
+  transform: scale(1.2);
 }
 
 .stars span.active {
@@ -133,7 +177,7 @@
   color: #475569;
 }
 
-/* CTA */
+/* ================= CTA ================= */
 .bottom {
   margin-top: auto;
   display: flex;
@@ -146,19 +190,43 @@
 }
 
 .cta {
-  padding: 0.5rem 1rem;
+  padding: 0.55rem 1.2rem;
   border-radius: 10px;
   border: none;
-  background: #111827;
+  background: linear-gradient(135deg, #111827, #1f2937);
   color: white;
   font-size: 0.85rem;
+  font-weight: 500;
   cursor: pointer;
+  transition: all 0.25s ease;
 }
 .cta:hover {
-  background: #1f2937;
+  background: linear-gradient(135deg, #1f2937, #374151);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 @media (max-width: 640px) {
   .cta {
     width: 100%;
   }
+}
+
+.tutor {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+.tutor img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border: 1px solid #e5e7eb;
+}
+.tutor span {
+  font-size: 0.8rem;
+  color: #475569;
+  font-weight: 500;
 }/*# sourceMappingURL=CourseCard.module.css.map */

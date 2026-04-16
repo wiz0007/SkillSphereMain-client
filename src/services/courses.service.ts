@@ -1,6 +1,11 @@
 import { api } from "../api/api";
 
 /* ================= TYPES ================= */
+export interface Tutor {
+  _id: string;
+  username: string;
+  profilePhoto?: string | null;
+}
 
 export interface Course {
   _id: string;
@@ -11,6 +16,8 @@ export interface Course {
   skills?: string[];
   price?: number;
   duration?: string;
+
+  tutor: Tutor; // ✅ ADD THIS
 
   averageRating?: number;
   totalRatings?: number;

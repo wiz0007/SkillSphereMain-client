@@ -42,30 +42,35 @@ const SkillDiscovery: React.FC = () => {
   /* ================= FILTER ================= */
 
   const filteredCourses = useMemo(() => {
-    let result = [...courses];
+  let result = [...courses];
 
-    if (search) {
-      result = result.filter((course) =>
-        (course.title || "")
-          .toLowerCase()
-          .includes(search.toLowerCase())
-      );
-    }
+  /* ❌ REMOVE USER'S OWN COURSES */
+  result = result.filter(
+    (course) => course.tutor?._id !== user?._id
+  );
 
-    if (category) {
-      result = result.filter(
-        (course) => course.category === category
-      );
-    }
+  if (search) {
+    result = result.filter((course) =>
+      (course.title || "")
+        .toLowerCase()
+        .includes(search.toLowerCase())
+    );
+  }
 
-    if (level) {
-      result = result.filter(
-        (course) => course.level === level
-      );
-    }
+  if (category) {
+    result = result.filter(
+      (course) => course.category === category
+    );
+  }
 
-    return result;
-  }, [courses, search, category, level]);
+  if (level) {
+    result = result.filter(
+      (course) => course.level === level
+    );
+  }
+
+  return result;
+}, [courses, search, category, level, user]);
 
   /* ================= LOADING ================= */
 

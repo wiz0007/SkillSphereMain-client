@@ -13,6 +13,7 @@ import AddCoursePage from "../pages/addCourse/AddCoursePage";
 import CourseDetailsPage from "../pages/courseDetails/CourseDetailsPage";
 import SavedCoursesPage from "../pages/savedCourses/SavedCoursesPage";
 import NotificationPage from "../pages/notification/NotificationPage";
+import PublicProfilePage from "../pages/publicProfile/PublicProfilePage";
 
 /* ================= LAYOUT ================= */
 import MainLayout from "../layout/MainLayout"; // ✅ you must create this
@@ -44,6 +45,8 @@ const AllRoutes = () => {
 
         {/* NOTIFICATIONS */}
         <Route path="/notifications" element={<NotificationPage />} />
+        
+        <Route path="/public-profile/:userId" element={<PublicProfilePage />} />
       </Route>
 
       {/* ================= FALLBACK ================= */}

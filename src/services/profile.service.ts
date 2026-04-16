@@ -34,3 +34,8 @@ export const becomeTutor = async (data: any) => {
   const res = await api.post("/profile/become-tutor", data);
   return res.data;
 };
+
+export const getPublicProfile = async (userId: string) => {
+  const res = await api.get(`/profile/public/${userId}`);
+  return res.data;
+};
