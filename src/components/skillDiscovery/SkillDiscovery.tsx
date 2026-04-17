@@ -44,9 +44,11 @@ const SkillDiscovery: React.FC = () => {
   const filteredCourses = useMemo(() => {
   let result = [...courses];
 
-  /* ❌ REMOVE USER'S OWN COURSES */
+  if (!user?._id) return result;
+
   result = result.filter(
-    (course) => course.tutor?._id !== user?._id
+    (course) =>
+      String(course.tutor?._id) !== String(user._id)
   );
 
   if (search) {
