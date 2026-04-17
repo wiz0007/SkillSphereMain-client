@@ -1,21 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./SavedCourses.module.scss";
-import { getSavedCourses } from "../../services/courses.service";
+import { getSavedCourses, type Course } from "../../services/courses.service";
 import CourseCard from "../courseCard/CourseCard";
 import { useAuth } from "../../context/AuthContext";
 
-/* ================= TYPES ================= */
-
-interface Course {
-  _id: string;
-  title: string;
-  thumbnail?: string;
-  instructor?: {
-    name: string;
-  };
-  price?: number;
-}
 
 /* ================= COMPONENT ================= */
 
