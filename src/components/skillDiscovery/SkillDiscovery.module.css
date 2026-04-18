@@ -40,32 +40,91 @@
   font-weight: 600;
   color: #0f172a;
 }
-.header input {
-  padding: 0.7rem 1.2rem;
-  border-radius: 999px;
-  border: 1px solid #e2e8f0;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(6px);
-  width: 300px;
-  font-size: 0.9rem;
-  color: #334155;
-  transition: 0.2s;
-}
-.header input:focus {
-  outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
-}
-@media (max-width: 640px) {
-  .header input {
-    width: 100%;
-  }
-}
 @media (max-width: 640px) {
   .header {
     flex-direction: column;
     align-items: stretch;
   }
+}
+
+/* ================= SEARCH ================= */
+.searchWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 300px;
+}
+@media (max-width: 640px) {
+  .searchWrapper {
+    width: 100%;
+  }
+}
+.searchWrapper label {
+  font-size: 0.85rem;
+  color: #475569;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+}
+
+.searchBox {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(6px);
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  padding: 10px 14px;
+  transition: all 0.25s ease;
+}
+.searchBox:focus-within {
+  border-color: #6366f1;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+.searchBox input {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  font-size: 0.9rem;
+  color: #0f172a;
+  font-family: "Roboto", sans-serif;
+  /* ✅ FIXED PLACEHOLDER */
+}
+.searchBox input::-moz-placeholder {
+  color: #94a3b8;
+  opacity: 1;
+}
+.searchBox input::placeholder {
+  color: #94a3b8;
+  opacity: 1;
+}
+.searchBox input {
+  /* optional subtle effect */
+}
+.searchBox input:focus::-moz-placeholder {
+  color: #cbd5f5;
+}
+.searchBox input:focus::placeholder {
+  color: #cbd5f5;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  font-size: 1rem;
+  transition: color 0.2s ease;
+}
+.searchBox:focus-within .icon {
+  color: #6366f1;
+}
+.icon:hover {
+  cursor: pointer;
 }
 
 /* ================= FILTERS ================= */
@@ -95,7 +154,6 @@
 }
 
 /* ================= GRID ================= */
-/* 🔥 LIST STYLE (like LinkedIn / Udemy) */
 .grid {
   width: 100%;
   display: flex;
@@ -112,8 +170,7 @@
   color: #64748b;
 }
 
-/* ================= OPTIONAL (GRID MODE FUTURE) ================= */
-/* if you ever switch to grid layout */
+/* ================= OPTIONAL GRID ================= */
 .gridCards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
