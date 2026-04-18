@@ -30,7 +30,7 @@ export const NotificationProvider = ({ children }: any) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [count, setCount] = useState(0);
 
-  // ✅ Fetch both list + count
+  /* ================= FETCH ================= */
   const fetchAll = async () => {
     try {
       const [n, c] = await Promise.all([
@@ -45,18 +45,23 @@ export const NotificationProvider = ({ children }: any) => {
     }
   };
 
+  /* ================= SOCKET ================= */
   useEffect(() => {
     if (!user?._id) return;
 
     fetchAll();
 
-    // ✅ socket listener (SINGLE SOURCE)
+    /* 🔥 CRITICAL: REGISTER USER */
+    socket.emit("register", user._id);
+
     const handler = (data: any) => {
+      console.log("📡 SOCKET RECEIVED:", data);
+
       const newNotification: Notification = {
-        _id: Date.now().toString(),
+        _id: data._id || Date.now().toString(),
         message: data.message || data.action,
         action: data.action,
-        createdAt: new Date().toISOString(),
+        createdAt: data.createdAt || new Date().toISOString(),
         entityId: data.entityId,
         isRead: false,
       };
@@ -72,7 +77,7 @@ export const NotificationProvider = ({ children }: any) => {
     };
   }, [user]);
 
-  // ✅ Optimistic update when marking read
+  /* ================= MARK READ ================= */
   const markLocalAsRead = (id: string) => {
     setNotifications((prev) =>
       prev.map((n) =>
@@ -97,7 +102,7 @@ export const NotificationProvider = ({ children }: any) => {
   );
 };
 
-// ✅ Hook
+/* ================= HOOK ================= */
 export const useNotifications = () => {
   const ctx = useContext(NotificationContext);
   if (!ctx) {
