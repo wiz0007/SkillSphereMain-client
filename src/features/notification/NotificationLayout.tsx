@@ -2,17 +2,25 @@ import { useNavigate } from "react-router-dom";
 import { markAsRead } from "../../services/activity.service";
 import styles from "./NotificationLayout.module.scss";
 import { useNotifications } from "../../context/NotificationContext";
+import { useEffect } from "react";
 
 const NotificationsLayout = () => {
-  const { notifications, markLocalAsRead } = useNotifications();
+  const { notifications, markLocalAsRead, refresh } = useNotifications();
   const navigate = useNavigate();
+
+  /* 🔥 FORCE FETCH */
+  useEffect(() => {
+    refresh();
+  }, []);
+
+  console.log("NOTIFICATIONS PAGE:", notifications);
 
   const handleClick = async (n: any) => {
     if (!n?._id) return;
 
     try {
       await markAsRead(n._id);
-      markLocalAsRead(n._id); // 🔥 instant UI update
+      markLocalAsRead(n._id);
     } catch (err) {
       console.error(err);
     }
@@ -39,9 +47,12 @@ const NotificationsLayout = () => {
               !n.isRead ? styles.unread : ""
             }`}
           >
-            <p>{n.message || n.action}</p>
+            <p>{n.message ?? n.action ?? "New notification"}</p>
+
             <span>
-              {new Date(n.createdAt).toLocaleString()}
+              {n.createdAt
+                ? new Date(n.createdAt).toLocaleString()
+                : ""}
             </span>
           </div>
         ))
