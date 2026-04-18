@@ -1,14 +1,29 @@
 .container {
-  padding: 20px;
+  h1 {
+    color: #111; // strong heading contrast
+  }
 }
 
 .card {
-  padding: 15px;
-  border-radius: 10px;
-  background: white;
-  margin-bottom: 10px;
+  background: #fff; // ensure solid background
+  border-radius: 12px;
+  padding: 16px;
   cursor: pointer;
+
+  /* subtle shadow for visibility */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  p {
+    color: #222;        // ✅ FIX: main text visible
+    font-weight: 500;
+  }
+
+  span {
+    color: #666;        // timestamp slightly muted but readable
+    font-size: 12px;
+  }
 }
+
 
 .unread {
   background: #f5faff;
