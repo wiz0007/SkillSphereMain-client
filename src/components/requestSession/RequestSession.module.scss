@@ -28,22 +28,20 @@
     padding: 10px;
     border-radius: 8px;
     border: 1px solid #ddd;
+
+    /* ✅ FIX VISIBILITY */
+    background: #fff;       // ensure solid background
+    color: #111;            // dark readable text
+
+    /* optional: improve UX */
+    outline: none;
+
+    &::placeholder {
+      color: #888;
+    }
+
+    &:focus {
+      border-color: #000;
+    }
   }
-}
-
-.price {
-  @include Flex(row, space-between, center);
-}
-
-button {
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  background: black;
-  color: white;
-}
-
-.cancel {
-  background: #eee;
-  color: #333;
 }
