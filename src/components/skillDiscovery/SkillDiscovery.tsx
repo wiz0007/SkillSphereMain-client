@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { FiSearch } from "react-icons/fi";
 import styles from "./SkillDiscovery.module.scss";
 import CourseCard from "../courseCard/CourseCard";
 import { getAllCourses, type Course } from "../../services/courses.service";
@@ -34,45 +35,36 @@ const SkillDiscovery: React.FC = () => {
   /* ================= CATEGORIES ================= */
 
   const categories = useMemo(() => {
-    return Array.from(
-      new Set(courses.map((c) => c.category).filter(Boolean))
-    );
+    return Array.from(new Set(courses.map((c) => c.category).filter(Boolean)));
   }, [courses]);
 
   /* ================= FILTER ================= */
 
   const filteredCourses = useMemo(() => {
-  let result = [...courses];
+    let result = [...courses];
 
-  if (!user?._id) return result;
+    if (!user?._id) return result;
 
-  result = result.filter(
-    (course) =>
-      String(course.tutor?._id) !== String(user._id)
-  );
-
-  if (search) {
-    result = result.filter((course) =>
-      (course.title || "")
-        .toLowerCase()
-        .includes(search.toLowerCase())
-    );
-  }
-
-  if (category) {
     result = result.filter(
-      (course) => course.category === category
+      (course) => String(course.tutor?._id) !== String(user._id),
     );
-  }
 
-  if (level) {
-    result = result.filter(
-      (course) => course.level === level
-    );
-  }
+    if (search) {
+      result = result.filter((course) =>
+        (course.title || "").toLowerCase().includes(search.toLowerCase()),
+      );
+    }
 
-  return result;
-}, [courses, search, category, level, user]);
+    if (category) {
+      result = result.filter((course) => course.category === category);
+    }
+
+    if (level) {
+      result = result.filter((course) => course.level === level);
+    }
+
+    return result;
+  }, [courses, search, category, level, user]);
 
   /* ================= LOADING ================= */
 
@@ -88,20 +80,25 @@ const SkillDiscovery: React.FC = () => {
       <div className={styles.header}>
         <h2>Explore Courses</h2>
 
-        <input
-          type="text"
-          placeholder="Search courses..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+        <div className={styles.searchWrapper}>
+          <div className={styles.searchBox}>
+            <span className={styles.icon}>
+              <FiSearch />
+            </span>
+
+            <input
+              type="text"
+              placeholder="Search courses..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+        </div>
       </div>
 
       {/* FILTERS */}
       <div className={styles.filters}>
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        >
+        <select value={category} onChange={(e) => setCategory(e.target.value)}>
           <option value="">All Categories</option>
           {categories.map((cat) => (
             <option key={cat} value={cat}>
@@ -110,10 +107,7 @@ const SkillDiscovery: React.FC = () => {
           ))}
         </select>
 
-        <select
-          value={level}
-          onChange={(e) => setLevel(e.target.value)}
-        >
+        <select value={level} onChange={(e) => setLevel(e.target.value)}>
           <option value="">All Levels</option>
           <option value="Beginner">Beginner</option>
           <option value="Intermediate">Intermediate</option>
