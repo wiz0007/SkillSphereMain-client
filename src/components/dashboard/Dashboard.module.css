@@ -4,7 +4,7 @@
   padding: 2rem;
   min-height: 100vh;
   width: 100%;
-  background: linear-gradient(135deg, #eef2ff, #f8fafc);
+  background: #f8fafc;
 }
 @media (max-width: 640px) {
   .dashboard {
@@ -17,7 +17,7 @@
   margin-bottom: 2rem;
 }
 .header h1 {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   font-weight: 600;
   color: #0f172a;
 }
@@ -25,16 +25,6 @@
   color: #64748b;
   margin-top: 4px;
   font-size: 0.9rem;
-}
-
-/* ================= GLASS BASE ================= */
-.glass, .panel, .card {
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-  transition: all 0.25s ease;
 }
 
 /* ================= STATS ================= */
@@ -46,15 +36,19 @@
 
 /* ================= CARD ================= */
 .card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
   padding: 1.4rem;
-  cursor: pointer;
   display: flex;
   flex-direction: column;
   gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
 }
 .card h3 {
   font-size: 0.85rem;
@@ -62,7 +56,7 @@
   font-weight: 500;
 }
 .card p {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 600;
   color: #0f172a;
 }
@@ -82,10 +76,13 @@
 
 /* ================= PANEL ================= */
 .panel {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
   padding: 1.4rem;
 }
 .panel h2 {
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 600;
   margin-bottom: 1rem;
   color: #0f172a;
@@ -96,8 +93,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.7rem 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #f1f5f9;
 }
 .sessionItem span {
   font-size: 0.9rem;
@@ -116,7 +113,7 @@
 
 /* ================= TUTOR BADGE ================= */
 .tutorBadge {
-  background: linear-gradient(135deg, #22c55e, #06b6d4);
+  background: #2ec4b6;
   color: white;
   font-size: 0.7rem;
   padding: 3px 8px;
@@ -156,23 +153,17 @@
 
 /* ADD COURSE */
 .addBtn {
-  background: linear-gradient(135deg, #6366f1, #4f46e5);
-  color: white;
-}
-.addBtn:hover {
-  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+  background: #ffb703;
+  color: black;
 }
 
 /* BULK DELETE */
 .bulkDelete {
-  background: #dc2626;
+  background: #ef4444;
   color: white;
 }
-.bulkDelete:hover {
-  background: #b91c1c;
-}
 
-/* ================= COURSE GRID ================= */
+/* ================= GRID ================= */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -182,29 +173,4 @@
   .grid {
     grid-template-columns: 1fr;
   }
-}
-
-/* ================= COURSE ITEM (FALLBACK) ================= */
-.courseItem {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.8rem 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-}
-.courseItem h4 {
-  margin: 0;
-  font-weight: 500;
-  color: #0f172a;
-}
-.courseItem button {
-  margin-left: 10px;
-  padding: 6px 10px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  background: #f1f5f9;
-}
-.courseItem button:hover {
-  background: #e2e8f0;
 }/*# sourceMappingURL=Dashboard.module.css.map */

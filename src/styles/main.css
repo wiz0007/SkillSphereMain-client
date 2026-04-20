@@ -1,0 +1,66 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.grid {
+  display: grid;
+  gap: 24px;
+}
+.grid--cards {
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+.card {
+  background: #FFFFFF;
+  border-radius: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  padding: 16px;
+  transition: all 0.2s ease-in-out;
+}
+.card:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.btn-primary {
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  border: none;
+  background: #1E2A38;
+  color: white;
+}
+
+.btn-cta {
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  border: none;
+  background: #FFB703;
+  color: black;
+  font-weight: 600;
+}
+
+.btn-outline {
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  border: none;
+  background: transparent;
+  border: 1px solid #E2E8F0;
+}
+
+.tag {
+  padding: 4px 10px;
+  font-size: 0.875rem;
+  border-radius: 999px;
+  background: rgba(46, 196, 182, 0.1);
+  color: #2EC4B6;
+}/*# sourceMappingURL=main.css.map */

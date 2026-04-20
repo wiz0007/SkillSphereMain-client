@@ -5,8 +5,6 @@ import { useNotifications } from "../../context/NotificationContext";
 
 const NavbarBell = () => {
   const navigate = useNavigate();
-
-  // ✅ CENTRALIZED STATE
   const { count } = useNotifications();
 
   return (
@@ -17,7 +15,9 @@ const NavbarBell = () => {
       <FiBell className={styles.icon} />
 
       {count > 0 && (
-        <span className={styles.badge}>{count}</span>
+        <span className={styles.badge}>
+          {count > 9 ? "9+" : count}
+        </span>
       )}
     </div>
   );

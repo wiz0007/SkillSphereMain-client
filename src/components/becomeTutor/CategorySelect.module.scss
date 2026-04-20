@@ -1,136 +1,85 @@
+@use "../../styles/abstracts" as *;
+
 .wrapper {
   position: relative;
 }
 
-/* ================= SELECT BOX ================= */
+/* SELECT BOX */
 
 .selector {
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 0.5rem;
+  @include flex(center, space-between);
 
-  background: rgba(255, 255, 255, 0.95);
-  color: #0f172a;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $space-2;
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  background: $color-surface;
 }
 
-/* ================= TAGS + INPUT ================= */
+/* TAGS */
 
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: $space-1;
   flex: 1;
 
   input {
     border: none;
     outline: none;
-    background: transparent;
-
     flex: 1;
-    min-width: 120px;
-
-    font-size: 0.9rem;
-    color: #0f172a;
-    caret-color: #0f172a;
-
-    &::placeholder {
-      color: #94a3b8;
-    }
+    background: transparent;
+    font-size: $font-sm;
   }
 }
 
 .tag {
-  background: #6366f1;
-  color: white;
-
-  padding: 0.3rem 0.6rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
+  @include tag;
 
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 4px;
 
   button {
     background: none;
     border: none;
-    color: white;
     cursor: pointer;
   }
 }
 
-/* ================= CHEVRON ================= */
-
-.chevron {
-  margin-left: 8px;
-  font-size: 0.8rem;
-  color: #475569;
-  transition: transform 0.2s ease;
-}
-
-.rotate {
-  transform: rotate(180deg);
-}
-
-/* ================= DROPDOWN ================= */
+/* DROPDOWN */
 
 .dropdown {
   position: absolute;
   width: 100%;
-  background: white;
 
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  background: $color-surface;
+  border: 1px solid $color-border;
 
-  margin-top: 0.3rem;
-  z-index: 30;
+  border-radius: $radius-md;
+  margin-top: 4px;
 
-  max-height: 240px;
-  overflow-y: auto;
-
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  box-shadow: $shadow-md;
+  z-index: 10;
 }
 
-/* ================= OPTION ================= */
+/* OPTION */
 
 .option {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  @include flex(center, space-between);
 
-  padding: 0.6rem;
+  padding: $space-2;
   cursor: pointer;
-  color: #0f172a;
 
   &:hover {
-    background: #f1f5f9;
+    background: rgba($color-accent, 0.08);
   }
 }
 
-/* ================= STATES ================= */
-
 .active {
-  background: #e0e7ff;
-  font-weight: 500;
+  background: rgba($color-accent, 0.12);
 }
 
 .highlight {
-  background: #f1f5f9;
-}
-
-.check {
-  color: #6366f1;
-  font-weight: bold;
-}
-
-/* ================= EMPTY ================= */
-
-.empty {
-  padding: 0.6rem;
-  text-align: center;
-  color: #94a3b8;
+  background: rgba($color-accent, 0.08);
 }

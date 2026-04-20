@@ -1,21 +1,21 @@
-@use "../../styles/mixin" as *;
+@use "../../styles/abstracts" as *;
 
 /* ================= NAVBAR ================= */
 
 .navbar {
-  @include Flex(row, space-between, center);
+  @include flex(center, space-between);
 
-  padding: 0 2rem;
   height: 70px;
+  padding: 0 $space-6;
 
   position: sticky;
   top: 0;
   z-index: 1000;
 
-  backdrop-filter: blur(14px);
-  background: rgba(15, 23, 42, 0.75);
+  background: rgba($color-surface, 0.9);
+  backdrop-filter: blur(10px);
 
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid $color-border;
 
   transition: transform 0.3s ease;
 }
@@ -27,60 +27,57 @@
 /* ================= LEFT ================= */
 
 .leftSection {
-  @include Flex(row, center, center);
-  gap: 1rem;
+  @include flex(center, flex-start, $space-3);
 }
 
 /* ================= LOGO ================= */
 
 .logo {
-  .compactLogo {
-    display: none;
-    color: #38bdf8;
-    font-weight: 700;
-    font-size: 1.2rem;
-  }
+  cursor: pointer;
 
   .fullLogo {
-    font-size: 1.4rem;
+    font-size: $font-lg;
     font-weight: 700;
-    color: white;
+    color: $color-primary;
 
     span {
-      color: #38bdf8;
+      color: $color-accent;
     }
+  }
+
+  .compactLogo {
+    display: none;
+    font-weight: 700;
+    color: $color-accent;
   }
 }
 
 /* ================= LINKS ================= */
 
 .desktopLinks {
-  @include Flex(row, center, center);
-  gap: 1.8rem;
+  @include flex(center, center, $space-6);
 
   a {
-    font-size: 14px;
-    color: #cbd5e1;
+    font-size: $font-sm;
+    color: $color-text-secondary;
     text-decoration: none;
     position: relative;
-
-    transition: 0.25s;
+    transition: $transition;
 
     &:hover,
     &:global(.active) {
-      color: #38bdf8;
+      color: $color-primary;
     }
 
     &::after {
       content: "";
       position: absolute;
-      bottom: -4px;
+      bottom: -6px;
       left: 0;
       width: 0%;
       height: 2px;
-      background: #38bdf8;
+      background: $color-accent;
       transition: width 0.25s ease;
-      border-radius: 2px;
     }
 
     &:hover::after,
@@ -93,8 +90,7 @@
 /* ================= ACTIONS ================= */
 
 .actions {
-  @include Flex(row, center, center);
-  gap: 1rem;
+  @include flex(center, center, $space-3);
 }
 
 /* ================= ICON ================= */
@@ -104,19 +100,19 @@
 }
 
 .icon {
-  font-size: 1.5rem;
-  color: #cbd5e1;
+  font-size: 1.4rem;
+  color: $color-text-secondary;
 
   padding: 8px;
   border-radius: 50%;
 
   cursor: pointer;
-  transition: 0.2s;
+  transition: $transition;
 
   &:hover {
-    background: rgba(56,189,248,0.15);
-    color: #38bdf8;
-    transform: scale(1.1);
+    background: rgba($color-accent, 0.1);
+    color: $color-primary;
+    transform: scale(1.08);
   }
 }
 
@@ -124,54 +120,48 @@
 
 .badge {
   position: absolute;
-  top: 2px;
-  right: 2px;
+  top: 0;
+  right: 0;
 
-  width: 8px;
-  height: 8px;
+  min-width: 16px;
+  height: 16px;
 
-  background: #ef4444;
-  border-radius: 50%;
+  padding: 0 4px;
 
-  box-shadow: 0 0 0 2px #0f172a;
+  background: $color-cta;
+  color: black;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  border-radius: 999px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transform: scale(0);
+  animation: badgePop 0.3s ease forwards;
+}
+
+@keyframes badgePop {
+  to {
+    transform: scale(1);
+  }
 }
 
 /* ================= AUTH ================= */
 
 .authButtons {
-  display: flex;
-  gap: 0.5rem;
+  @include flex(center, center, $space-2);
 }
 
 .loginBtn {
-  padding: 6px 12px;
-  border-radius: 999px;
-  border: 1px solid #334155;
-
-  color: #cbd5e1;
-  text-decoration: none;
-
-  transition: 0.2s;
-
-  &:hover {
-    border-color: #38bdf8;
-    color: #38bdf8;
-  }
+  @include button-outline;
 }
 
 .registerBtn {
-  padding: 6px 14px;
-  border-radius: 999px;
-
-  background: linear-gradient(135deg, #38bdf8, #6366f1);
-  color: white;
-  text-decoration: none;
-
-  transition: 0.2s;
-
-  &:hover {
-    transform: translateY(-1px);
-  }
+  @include button-cta;
 }
 
 /* ================= PROFILE ================= */
@@ -179,78 +169,89 @@
 .profile {
   position: relative;
 
-  @include Flex(row, center, center);
-  gap: 0.5rem;
+  @include flex(center, center, $space-2);
 
-  padding: 4px 8px;
+  padding: 4px 10px;
   border-radius: 999px;
 
   cursor: pointer;
-  transition: 0.2s;
+  transition: $transition;
 
   &:hover {
-    background: rgba(255,255,255,0.06);
+    background: rgba($color-border, 0.4);
   }
 
   img {
-    @include Image(36px, 36px);
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
+    object-fit: cover;
   }
 
   .username {
-    font-size: 14px;
-    color: #cbd5e1;
+    font-size: $font-sm;
+    color: $color-text-primary;
   }
+}
+
+/* ================= BADGE ================= */
+
+.tutorBadge {
+  background: $color-accent;
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 6px;
 }
 
 /* ================= DROPDOWN ================= */
 
 .dropdown {
   position: absolute;
-  top: 60px; /* FIXED alignment */
+  top: 60px;
   right: 0;
 
-  padding: 0.8rem;
-  min-width: 160px;
+  min-width: 180px;
+  padding: $space-3;
 
-  border-radius: 12px;
+  border-radius: $radius-md;
 
-  background: rgba(30, 41, 59, 0.9);
-  backdrop-filter: blur(12px);
+  background: $color-surface;
+  border: 1px solid $color-border;
 
-  border: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  box-shadow: $shadow-md;
 
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: $space-2;
 
-  animation: fadeDown 0.2s ease;
+  animation: dropdownIn 0.2s ease;
 
   a,
   button {
-    padding: 6px 8px;
-    border-radius: 8px;
+    padding: 8px;
+    border-radius: $radius-sm;
 
     background: none;
     border: none;
 
-    color: #cbd5e1;
+    text-align: left;
+    color: $color-text-secondary;
     cursor: pointer;
 
-    transition: 0.2s;
+    transition: $transition;
 
     &:hover {
-      background: rgba(56,189,248,0.1);
-      color: #38bdf8;
+      background: rgba($color-accent, 0.1);
+      color: $color-primary;
     }
   }
 }
 
-@keyframes fadeDown {
+@keyframes dropdownIn {
   from {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-6px);
   }
   to {
     opacity: 1;
@@ -263,17 +264,18 @@
 .hamburger {
   display: none;
 
-  @include Flex(column, center, flex-start);
-  gap: 5px;
+  @include flex(center, center);
+  flex-direction: column;
+  gap: 4px;
 
   background: none;
   border: none;
   cursor: pointer;
 
   span {
-    width: 22px;
+    width: 20px;
     height: 2px;
-    background: white;
+    background: $color-primary;
   }
 }
 
@@ -283,46 +285,9 @@
   display: none;
 }
 
-/* ================= MOBILE FIX ================= */
-
-@media (max-width: 500px) {
-  .navbar {
-    padding: 0 0rem;
-  }
-  .bottomNav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-
-    width: 100%;
-    height: 60px;
-
-    background: rgba(15, 23, 42, 0.95);
-    backdrop-filter: blur(12px);
-
-    @include Flex(row, space-around, center);
-
-    z-index: 1000;
-
-    a {
-      font-size: 12px;
-      color: #cbd5e1;
-
-      &:global(.active) {
-        color: #38bdf8;
-      }
-    }
-  }
-
-  /* 🔥 CRITICAL FIX */
-  body {
-    padding-bottom: 70px;
-  }
-}
-
 /* ================= RESPONSIVE ================= */
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .desktopLinks {
     display: none;
   }
@@ -332,7 +297,11 @@
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
+  .navbar {
+    padding: 0 $space-3;
+  }
+
   .fullLogo {
     display: none;
   }
@@ -344,24 +313,39 @@
   .profile .username {
     display: none;
   }
+
+  .bottomNav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+
+    width: 100%;
+    height: 60px;
+
+    background: $color-surface;
+    border-top: 1px solid $color-border;
+
+    @include flex(center, space-around);
+
+    z-index: 1000;
+
+    a {
+      font-size: 12px;
+      color: $color-text-secondary;
+
+      &:global(.active) {
+        color: $color-primary;
+      }
+    }
+  }
+
+  body {
+    padding-bottom: 70px;
+  }
 }
 
-/* ================= EXTRA ================= */
+/* ================= CTA ================= */
 
 .becomeTutor {
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #38bdf8, #6366f1);
-  color: white !important;
-
-  font-size: 13px;
-}
-
-.tutorBadge {
-  background: #22c55e;
-  color: white;
-  font-size: 0.7rem;
-  padding: 2px 6px;
-  border-radius: 6px;
-  margin-left: 6px;
+  @include button-cta;
 }

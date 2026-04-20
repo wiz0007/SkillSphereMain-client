@@ -1,35 +1,46 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+/* ================= ROOT LAYOUT ================= */
 .layout {
   width: 100%;
   min-height: 100vh;
   background: #f8fafc;
 }
 
-/* MAIN CONTENT */
+/* ================= MAIN ================= */
 .main {
-  padding: 30px;
-  transition: margin-left 0.3s ease;
+  min-height: 100vh;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  /* center content (important) */
+  max-width: 1400px;
+  margin-right: auto;
 }
 
-/* Sidebar open */
+/* ================= SIDEBAR STATES ================= */
 .sidebarOpen {
   margin-left: 260px;
 }
 
-/* Sidebar closed */
 .sidebarClosed {
   margin-left: 80px;
 }
 
-/* Tablet */
+/* ================= CONTENT WRAP ================= */
+.main > * {
+  width: 100%;
+}
+
+/* ================= TABLET ================= */
 @media (max-width: 900px) {
   .main {
-    margin-left: 0;
+    margin-left: 0 !important;
+    padding: 1.5rem;
   }
 }
-/* Phone (space for bottom nav) */
+/* ================= MOBILE ================= */
 @media (max-width: 500px) {
   .main {
+    padding: 1rem;
     padding-bottom: 80px;
   }
 }/*# sourceMappingURL=Page.module.css.map */

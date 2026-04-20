@@ -1,68 +1,85 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 /* ================= CONTAINER ================= */
+.container {
+  padding: 2rem;
+  min-height: 100vh;
+  background: #f8fafc;
+}
 .container h1 {
-  margin-bottom: 1.2rem;
+  margin-bottom: 1.5rem;
   color: #0f172a;
+  font-size: 1.6rem;
+}
+@media (max-width: 640px) {
+  .container {
+    padding: 1rem;
+  }
 }
 
 /* ================= TABS ================= */
 .tabs {
   display: flex;
-  gap: 10px;
-  margin-bottom: 1.5rem;
+  gap: 8px;
+  margin-bottom: 1.8rem;
   flex-wrap: wrap;
 }
 .tabs button {
-  padding: 8px 16px;
+  padding: 8px 14px;
   border-radius: 999px;
-  border: none;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(6px);
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
   color: #475569;
-  cursor: pointer;
   font-size: 0.85rem;
-  transition: all 0.2s ease;
+  cursor: pointer;
+  transition: 0.2s;
 }
 .tabs button:hover {
-  transform: translateY(-1px);
-  background: rgba(255, 255, 255, 0.8);
+  border-color: #2ec4b6;
+  color: #0f172a;
 }
 
 .active {
-  background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
+  background: #2ec4b6 !important;
   color: white !important;
+  border-color: transparent !important;
 }
 
 /* ================= GRID ================= */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1.2rem;
+  gap: 1.4rem;
 }
 
 /* ================= CARD ================= */
 .card {
-  padding: 1.2rem;
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-  transition: 0.25s ease;
+  padding: 1.2rem;
   display: flex;
   flex-direction: column;
   gap: 6px;
+  transition: 0.2s;
 }
 .card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
 }
 .card h3 {
   font-size: 1rem;
   color: #0f172a;
+  font-weight: 600;
 }
 .card p {
   font-size: 0.85rem;
   color: #64748b;
+}
+
+/* ================= TIME ================= */
+.time {
+  font-size: 0.85rem;
+  color: #475569;
 }
 
 /* ================= STATUS ================= */
@@ -71,11 +88,31 @@
   padding: 4px 10px;
   border-radius: 999px;
   font-size: 0.75rem;
-  background: rgba(99, 102, 241, 0.15);
-  color: #6366f1;
+  font-weight: 500;
   display: inline-block;
   width: -moz-fit-content;
   width: fit-content;
+}
+
+/* STATUS COLORS */
+.status.pending {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.status.accepted {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.status.completed {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.status.cancelled {
+  background: #fee2e2;
+  color: #dc2626;
 }
 
 /* ================= ACTIONS ================= */
@@ -85,23 +122,24 @@
   gap: 8px;
 }
 
-/* PRIMARY BUTTON */
+/* PRIMARY */
 .primary {
   flex: 1;
   border: none;
   padding: 8px;
   border-radius: 999px;
-  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  background: #2ec4b6;
   color: white;
+  font-size: 0.85rem;
+  font-weight: 500;
   cursor: pointer;
   transition: 0.2s;
 }
 .primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.3);
 }
 
-/* DANGER BUTTON */
+/* DANGER */
 .danger {
   flex: 1;
   border: none;
@@ -109,23 +147,26 @@
   border-radius: 999px;
   background: #fee2e2;
   color: #dc2626;
+  font-size: 0.85rem;
   cursor: pointer;
 }
 .danger:hover {
   background: #fecaca;
 }
 
+/* WAITING */
 .waiting {
-  background: #eee;
-  color: #666;
+  width: 100%;
+  padding: 8px;
+  border-radius: 999px;
+  border: none;
+  background: #f1f5f9;
+  color: #64748b;
   cursor: not-allowed;
 }
 
-.time {
-  font-size: 14px;
-  color: #555;
-}
-
+/* COMPLETED TEXT */
 .completed {
-  color: #888;
+  font-size: 0.85rem;
+  color: #64748b;
 }/*# sourceMappingURL=Sessions.module.css.map */

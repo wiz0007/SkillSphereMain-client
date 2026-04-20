@@ -1,30 +1,63 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+/* ================= CONTAINER ================= */
 .container {
-  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+  padding: 2rem;
+  min-height: 100vh;
+  background: #f8fafc;
+}
+.container h1 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 1.5rem;
+}
+@media (max-width: 640px) {
+  .container {
+    padding: 1rem;
+  }
 }
 
+/* ================= CARD ================= */
 .card {
-  padding: 15px;
-  border-radius: 10px;
-  background: white;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 16px;
   margin-bottom: 10px;
   cursor: pointer;
+  transition: 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
-
-.unread {
-  background: #f5faff;
-  border-left: 4px solid #007bff;
+.card:hover {
+  background: #f9fafb;
 }
-
-.unread {
-  border-left: 4px solid #007bff;
-  background: #f5f9ff;
-}
-
-.message {
+.card p {
+  color: #0f172a;
+  font-size: 0.9rem;
   font-weight: 500;
 }
+.card span {
+  font-size: 0.75rem;
+  color: #64748b;
+}
 
-.time {
-  font-size: 12px;
-  color: #888;
+/* ================= UNREAD ================= */
+.unread {
+  border-left: 4px solid #2ec4b6;
+  background: #f0fdfa;
+}
+.unread p {
+  font-weight: 600;
+}
+
+/* ================= EMPTY ================= */
+.empty {
+  margin-top: 3rem;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.9rem;
 }/*# sourceMappingURL=NotificationLayout.module.css.map */
