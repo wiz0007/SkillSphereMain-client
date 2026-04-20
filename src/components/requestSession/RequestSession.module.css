@@ -1,3 +1,4 @@
+@charset "UTF-8";
 @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 .overlay {
   position: fixed;
@@ -45,24 +46,22 @@
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #ddd;
+  /* ✅ FIX VISIBILITY */
+  background: #fff;
+  color: #111;
+  /* optional: improve UX */
+  outline: none;
 }
-
-.price {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+.field input::-moz-placeholder, .field select::-moz-placeholder, .field textarea::-moz-placeholder {
+  color: #888;
 }
-
-button {
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  background: black;
-  color: white;
+.field input::placeholder,
+.field select::placeholder,
+.field textarea::placeholder {
+  color: #888;
 }
-
-.cancel {
-  background: #eee;
-  color: #333;
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: #000;
 }/*# sourceMappingURL=RequestSession.module.css.map */

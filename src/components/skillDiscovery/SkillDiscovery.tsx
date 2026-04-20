@@ -32,13 +32,9 @@ const SkillDiscovery: React.FC = () => {
     fetchCourses();
   }, [user, authLoading]);
 
-  /* ================= CATEGORIES ================= */
-
   const categories = useMemo(() => {
     return Array.from(new Set(courses.map((c) => c.category).filter(Boolean)));
   }, [courses]);
-
-  /* ================= FILTER ================= */
 
   const filteredCourses = useMemo(() => {
     let result = [...courses];
@@ -66,33 +62,27 @@ const SkillDiscovery: React.FC = () => {
     return result;
   }, [courses, search, category, level, user]);
 
-  /* ================= LOADING ================= */
-
   if (authLoading || !user) {
     return <div className={styles.loading}>Loading...</div>;
   }
-
-  /* ================= UI ================= */
 
   return (
     <div className={styles.container}>
       {/* HEADER */}
       <div className={styles.header}>
-        <h2>Explore Courses</h2>
+        <div>
+          <h2>Explore Skills</h2>
+          <p>Find people to learn from and swap skills</p>
+        </div>
 
-        <div className={styles.searchWrapper}>
-          <div className={styles.searchBox}>
-            <span className={styles.icon}>
-              <FiSearch />
-            </span>
-
-            <input
-              type="text"
-              placeholder="Search courses..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
+        <div className={styles.searchBox}>
+          <FiSearch className={styles.searchIcon} />
+          <input
+            type="text"
+            placeholder="Search skills..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
       </div>
 
@@ -117,13 +107,19 @@ const SkillDiscovery: React.FC = () => {
 
       {/* CONTENT */}
       {loading ? (
-        <div className={styles.loading}>Loading courses...</div>
+        <div className={styles.loading}>Loading skills...</div>
       ) : filteredCourses.length === 0 ? (
-        <div className={styles.empty}>No courses found</div>
+        <div className={styles.empty}>No skills found</div>
       ) : (
         <div className={styles.grid}>
-          {filteredCourses.map((course) => (
-            <CourseCard key={course._id} course={course} />
+          {filteredCourses.map((course, index) => (
+            <div
+              key={course._id}
+              className={styles.cardWrapper}
+              style={{ animationDelay: `${index * 0.05}s` }}
+            >
+              <CourseCard course={course} />
+            </div>
           ))}
         </div>
       )}

@@ -1,165 +1,102 @@
-@use "../../styles/mixin" as *;
+@use "../../styles/abstracts" as *;
 
 /* ================= CONTAINER ================= */
 
 .container {
-  width: 100%;
-  padding: 2rem 3rem;
-  min-height: 100vh;
-
-  background: linear-gradient(135deg, #eef2ff, #f8fafc);
-
-  @include respond(md) {
-    padding: 1.5rem;
-  }
-
-  @include respond(sm) {
-    padding: 1rem;
-  }
-}
-
-/* ================= GLASS ================= */
-
-.glass {
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 14px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  @include container;
+  padding-top: $space-6;
+  padding-bottom: $space-8;
 }
 
 /* ================= HEADER ================= */
 
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  margin-bottom: 2rem;
-  gap: 1rem;
+  @include flex(center, space-between);
+  margin-bottom: $space-6;
+  gap: $space-4;
 
   h2 {
-    font-size: 1.6rem;
-    font-weight: 600;
-    color: #0f172a;
+    font-size: $font-xl;
+    color: $color-primary;
   }
 
-  @include respond(sm) {
+  p {
+    font-size: $font-sm;
+    color: $color-text-secondary;
+  }
+
+  @include respond(md) {
     flex-direction: column;
-    align-items: stretch;
+    align-items: flex-start;
   }
 }
 
 /* ================= SEARCH ================= */
 
-.searchWrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 300px;
-
-  @include respond(sm) {
-    width: 100%;
-  }
-
-  label {
-    @include Text(0.85rem, #475569);
-    font-weight: 500;
-  }
-}
-
 .searchBox {
-  @include Flex(row, flex-start, center);
-  gap: 0.6rem;
+  @include flex(center, flex-start, $space-2);
 
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(6px);
+  padding: $space-2 $space-3;
+  border-radius: $radius-md;
 
-  border: 1px solid #e2e8f0;
-  border-radius: 999px;
+  background: $color-surface;
+  border: 1px solid $color-border;
 
-  padding: 10px 14px;
+  width: 280px;
 
-  transition: all 0.25s ease;
+  transition: $transition;
 
   &:focus-within {
-    border-color: #6366f1;
-    background: #ffffff;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+    border-color: $color-accent;
+    box-shadow: 0 0 0 2px rgba($color-accent, 0.15);
   }
 
   input {
     border: none;
     outline: none;
+    width: 100%;
     background: transparent;
 
-    width: 100%;
+    font-size: $font-sm;
+    color: $color-text-primary;
 
-    @include Text(0.9rem, #0f172a);
-
-    /* ✅ FIXED PLACEHOLDER */
     &::placeholder {
-      color: #94a3b8;
-      opacity: 1;
-    }
-
-    /* optional subtle effect */
-    &:focus::placeholder {
-      color: #cbd5f5;
+      color: $color-text-secondary;
     }
   }
 }
 
-.icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  color: #64748b;
-  font-size: 1rem;
-
-  transition: color 0.2s ease;
-
-  .searchBox:focus-within & {
-    color: #6366f1;
-  }
-
-  &:hover {
-    cursor: pointer;
-  }
+.searchIcon {
+  color: $color-text-secondary;
 }
 
 /* ================= FILTERS ================= */
 
 .filters {
-  display: flex;
-  gap: 0.8rem;
-  margin-bottom: 2rem;
+  @include flex(center, flex-start, $space-3);
+  margin-bottom: $space-6;
   flex-wrap: wrap;
 
   select {
-    padding: 0.6rem 1rem;
-
+    padding: $space-2 $space-3;
     border-radius: 999px;
-    border: 1px solid #e2e8f0;
 
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(6px);
+    border: 1px solid $color-border;
+    background: $color-surface;
 
-    font-size: 0.85rem;
-    color: #475569;
+    font-size: $font-sm;
+    color: $color-text-secondary;
 
     cursor: pointer;
-
-    transition: 0.2s;
+    transition: $transition;
 
     &:hover {
-      transform: translateY(-1px);
+      border-color: $color-accent;
     }
 
     &:focus {
       outline: none;
-      border-color: #6366f1;
+      border-color: $color-accent;
     }
   }
 }
@@ -167,27 +104,36 @@
 /* ================= GRID ================= */
 
 .grid {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: $space-6;
+}
+
+/* ================= CARD WRAPPER ================= */
+
+.cardWrapper {
+  animation: fadeUp 0.4s ease both;
 }
 
 /* ================= STATES ================= */
 
 .loading,
 .empty {
-  margin-top: 3rem;
+  margin-top: $space-8;
   text-align: center;
-
-  font-size: 0.95rem;
-  color: #64748b;
+  font-size: $font-sm;
+  color: $color-text-secondary;
 }
 
-/* ================= OPTIONAL GRID ================= */
+/* ================= ANIMATION ================= */
 
-.gridCards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1.2rem;
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

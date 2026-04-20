@@ -1,44 +1,76 @@
+@use "../../styles/mixin" as *;
+
+/* ================= CONTAINER ================= */
+
 .container {
+  max-width: 800px;
+  margin: auto;
+  padding: 2rem;
+
+  min-height: 100vh;
+  background: #f8fafc;
+
   h1 {
-    color: #111; // strong heading contrast
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 1.5rem;
+  }
+
+  @include respond(sm) {
+    padding: 1rem;
   }
 }
 
-.card {
-  background: #fff; // ensure solid background
-  border-radius: 12px;
-  padding: 16px;
-  cursor: pointer;
+/* ================= CARD ================= */
 
-  /* subtle shadow for visibility */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+.card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+
+  padding: 14px 16px;
+  margin-bottom: 10px;
+
+  cursor: pointer;
+  transition: 0.2s;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  &:hover {
+    background: #f9fafb;
+  }
 
   p {
-    color: #222;        // ✅ FIX: main text visible
+    color: #0f172a;
+    font-size: 0.9rem;
     font-weight: 500;
   }
 
   span {
-    color: #666;        // timestamp slightly muted but readable
-    font-size: 12px;
+    font-size: 0.75rem;
+    color: #64748b;
   }
 }
 
+/* ================= UNREAD ================= */
 
 .unread {
-  background: #f5faff;
-  border-left: 4px solid #007bff;
-}
-.unread {
-  border-left: 4px solid #007bff;
-  background: #f5f9ff;
+  border-left: 4px solid #2ec4b6;
+  background: #f0fdfa;
+
+  p {
+    font-weight: 600;
+  }
 }
 
-.message {
-  font-weight: 500;
-}
+/* ================= EMPTY ================= */
 
-.time {
-  font-size: 12px;
-  color: #888;
+.empty {
+  margin-top: 3rem;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.9rem;
 }

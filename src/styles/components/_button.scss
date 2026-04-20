@@ -1,0 +1,13 @@
+@use '../abstracts' as *;
+
+.btn-primary {
+  @include button-primary;
+}
+
+.btn-cta {
+  @include button-cta;
+}
+
+.btn-outline {
+  @include button-outline;
+}

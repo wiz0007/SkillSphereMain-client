@@ -15,7 +15,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { logout } = useAuth(); // ✅ added
+  const { logout } = useAuth();
 
   return (
     <>
@@ -30,12 +30,14 @@ const Sidebar: React.FC<SidebarProps> = ({
       {/* SIDEBAR */}
       <aside
         className={`${styles.sidebar} ${
-          isCollapsed ? styles.collapsed : ""
+          isCollapsed ? styles.open : ""
         }`}
       >
         {/* HEADER */}
         <div className={styles.logoArea}>
-          <span className={styles.logo}>SS</span>
+          <span className={styles.logo}>
+            <span>Skill</span>Sphere
+          </span>
 
           <button
             className={styles.toggleBtn}
@@ -47,33 +49,30 @@ const Sidebar: React.FC<SidebarProps> = ({
 
         {/* MENU */}
         <nav className={styles.menu}>
-          {sidebarItems.map((item) => (
-            <div
-              key={item.id}
-              className={`${styles.menuItem} ${
-                location.pathname.startsWith(item.route)
-                  ? styles.active
-                  : ""
-              }`}
-              onClick={() => {
-                navigate(item.route);
-                toggleSidebar(); // ✅ UX fix
-              }}
-            >
-              <i className={`${item.icon} ${styles.icon}`} />
-              <span className={styles.title}>
-                {item.title}
-              </span>
-            </div>
-          ))}
+          {sidebarItems.map((item) => {
+            const isActive = location.pathname.startsWith(item.route);
+
+            return (
+              <div
+                key={item.id}
+                className={`${styles.menuItem} ${
+                  isActive ? styles.active : ""
+                }`}
+                onClick={() => {
+                  navigate(item.route);
+                  toggleSidebar();
+                }}
+              >
+                <i className={`${item.icon} ${styles.icon}`} />
+                <span className={styles.title}>{item.title}</span>
+              </div>
+            );
+          })}
         </nav>
 
         {/* FOOTER */}
         <div className={styles.footer}>
-          <div
-            className={styles.logout}
-            onClick={logout} // ✅ real logout
-          >
+          <div className={styles.logout} onClick={logout}>
             <i className="ri-logout-box-r-line" />
             <span>Logout</span>
           </div>

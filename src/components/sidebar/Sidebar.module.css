@@ -1,115 +1,128 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 /* ================= SIDEBAR ================= */
 .sidebar {
   position: fixed;
   top: 0;
   left: 0;
   height: 100vh;
-  width: 250px;
-  padding: 20px;
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(16px);
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
-  z-index: 1000;
+  width: 260px;
+  padding: 20px 16px;
+  background: #FFFFFF;
+  border-right: 1px solid #E2E8F0;
+  z-index: 1100;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  transform: translateX(-100%);
   transition: transform 0.3s ease;
 }
 
-.collapsed {
-  transform: translateX(-100%);
+/* OPEN STATE */
+.open {
+  transform: translateX(0);
 }
 
 /* ================= LOGO ================= */
 .logoArea {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  width: 100%;
+  justify-content: space-between;
+  gap: 0;
+  margin-bottom: 24px;
 }
 
 .logo {
-  font-size: 18px;
-  font-weight: 600;
-  color: white;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1E2A38;
+}
+.logo span {
+  color: #2EC4B6;
 }
 
 .toggleBtn {
   background: none;
   border: none;
-  color: #cbd5e1;
-  font-size: 22px;
+  font-size: 20px;
   cursor: pointer;
+  color: #64748B;
+  transition: all 0.2s ease-in-out;
+}
+.toggleBtn:hover {
+  color: #1E2A38;
 }
 
 /* ================= MENU ================= */
 .menu {
-  width: 100%;
-  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 /* ================= MENU ITEM ================= */
 .menuItem {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 12px;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 12px;
+  padding: 12px 12px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  color: #cbd5e1;
+  color: #64748B;
+  font-size: 0.875rem;
+  transition: all 0.2s ease-in-out;
+  /* subtle entrance */
+  animation: fadeSlide 0.3s ease both;
 }
 .menuItem:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: white;
+  background: rgba(46, 196, 182, 0.08);
+  color: #1E2A38;
+  transform: translateX(4px);
 }
 
 .icon {
   font-size: 18px;
 }
 
-.title {
-  font-size: 14px;
-}
-
-/* ACTIVE ITEM */
+/* ================= ACTIVE ================= */
 .active {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  color: white;
-  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.25);
+  background: rgba(46, 196, 182, 0.12);
+  color: #1E2A38;
+  font-weight: 500;
+  box-shadow: inset 3px 0 0 #2EC4B6;
 }
 
 /* ================= FOOTER ================= */
 .footer {
-  width: 100%;
+  margin-top: 24px;
 }
 
 /* LOGOUT */
 .logout {
-  padding: 12px;
-  border-radius: 10px;
   display: flex;
-  gap: 12px;
   align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 12px;
   cursor: pointer;
-  color: #cbd5e1;
-  transition: 0.2s;
+  color: #64748B;
+  transition: all 0.2s ease-in-out;
 }
 .logout:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: #ef4444;
+  background: rgba(255, 0, 0, 0.05);
+  color: red;
+  transform: translateX(4px);
 }
 
 /* ================= OVERLAY ================= */
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.3);
   opacity: 0;
   visibility: hidden;
   transition: 0.3s;
+  z-index: 1000;
 }
 
 .showOverlay {
@@ -117,12 +130,32 @@
   visibility: visible;
 }
 
-/* ================= MOBILE ================= */
-@media (max-width: 900px) {
-  .sidebar {
-    transform: translateX(-100%);
+/* ================= ANIMATIONS ================= */
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
   }
-  .collapsed {
+  to {
+    opacity: 1;
     transform: translateX(0);
+  }
+}
+/* ================= DESKTOP ================= */
+@media (min-width: 1024px) {
+  .sidebar {
+    transform: translateX(0);
+  }
+  .overlay {
+    display: none;
+  }
+  .toggleBtn {
+    display: none;
+  }
+}
+/* ================= MOBILE ================= */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 240px;
   }
 }/*# sourceMappingURL=Sidebar.module.css.map */

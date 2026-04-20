@@ -1,178 +1,128 @@
-@charset "UTF-8";
-@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 /* ================= CONTAINER ================= */
 .container {
-  width: 100%;
-  padding: 2rem 3rem;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #eef2ff, #f8fafc);
-}
-@media (max-width: 768px) {
-  .container {
-    padding: 1.5rem;
-  }
-}
-@media (max-width: 640px) {
-  .container {
-    padding: 1rem;
-  }
-}
-
-/* ================= GLASS ================= */
-.glass {
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 14px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+  padding-top: 24px;
+  padding-bottom: 32px;
 }
 
 /* ================= HEADER ================= */
 .header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-  gap: 1rem;
+  justify-content: space-between;
+  gap: 0;
+  margin-bottom: 24px;
+  gap: 16px;
 }
 .header h2 {
-  font-size: 1.6rem;
-  font-weight: 600;
-  color: #0f172a;
+  font-size: 1.5rem;
+  color: #1E2A38;
 }
-@media (max-width: 640px) {
+.header p {
+  font-size: 0.875rem;
+  color: #64748B;
+}
+@media (max-width: 768px) {
   .header {
     flex-direction: column;
-    align-items: stretch;
+    align-items: flex-start;
   }
 }
 
 /* ================= SEARCH ================= */
-.searchWrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 300px;
-}
-@media (max-width: 640px) {
-  .searchWrapper {
-    width: 100%;
-  }
-}
-.searchWrapper label {
-  font-size: 0.85rem;
-  color: #475569;
-  font-family: "Roboto", sans-serif;
-  font-weight: 500;
-}
-
 .searchBox {
   display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
   align-items: center;
-  gap: 0.6rem;
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(6px);
-  border: 1px solid #e2e8f0;
-  border-radius: 999px;
-  padding: 10px 14px;
-  transition: all 0.25s ease;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  width: 280px;
+  transition: all 0.2s ease-in-out;
 }
 .searchBox:focus-within {
-  border-color: #6366f1;
-  background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+  border-color: #2EC4B6;
+  box-shadow: 0 0 0 2px rgba(46, 196, 182, 0.15);
 }
 .searchBox input {
   border: none;
   outline: none;
-  background: transparent;
   width: 100%;
-  font-size: 0.9rem;
-  color: #0f172a;
-  font-family: "Roboto", sans-serif;
-  /* ✅ FIXED PLACEHOLDER */
+  background: transparent;
+  font-size: 0.875rem;
+  color: #0F172A;
 }
 .searchBox input::-moz-placeholder {
-  color: #94a3b8;
-  opacity: 1;
+  color: #64748B;
 }
 .searchBox input::placeholder {
-  color: #94a3b8;
-  opacity: 1;
-}
-.searchBox input {
-  /* optional subtle effect */
-}
-.searchBox input:focus::-moz-placeholder {
-  color: #cbd5f5;
-}
-.searchBox input:focus::placeholder {
-  color: #cbd5f5;
+  color: #64748B;
 }
 
-.icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #64748b;
-  font-size: 1rem;
-  transition: color 0.2s ease;
-}
-.searchBox:focus-within .icon {
-  color: #6366f1;
-}
-.icon:hover {
-  cursor: pointer;
+.searchIcon {
+  color: #64748B;
 }
 
 /* ================= FILTERS ================= */
 .filters {
   display: flex;
-  gap: 0.8rem;
-  margin-bottom: 2rem;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  margin-bottom: 24px;
   flex-wrap: wrap;
 }
 .filters select {
-  padding: 0.6rem 1rem;
+  padding: 8px 12px;
   border-radius: 999px;
-  border: 1px solid #e2e8f0;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(6px);
-  font-size: 0.85rem;
-  color: #475569;
+  border: 1px solid #E2E8F0;
+  background: #FFFFFF;
+  font-size: 0.875rem;
+  color: #64748B;
   cursor: pointer;
-  transition: 0.2s;
+  transition: all 0.2s ease-in-out;
 }
 .filters select:hover {
-  transform: translateY(-1px);
+  border-color: #2EC4B6;
 }
 .filters select:focus {
   outline: none;
-  border-color: #6366f1;
+  border-color: #2EC4B6;
 }
 
 /* ================= GRID ================= */
 .grid {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+/* ================= CARD WRAPPER ================= */
+.cardWrapper {
+  animation: fadeUp 0.4s ease both;
 }
 
 /* ================= STATES ================= */
 .loading,
 .empty {
-  margin-top: 3rem;
+  margin-top: 32px;
   text-align: center;
-  font-size: 0.95rem;
-  color: #64748b;
+  font-size: 0.875rem;
+  color: #64748B;
 }
 
-/* ================= OPTIONAL GRID ================= */
-.gridCards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1.2rem;
+/* ================= ANIMATION ================= */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }/*# sourceMappingURL=SkillDiscovery.module.css.map */

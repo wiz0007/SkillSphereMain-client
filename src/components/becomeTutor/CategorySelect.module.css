@@ -2,116 +2,78 @@
   position: relative;
 }
 
-/* ================= SELECT BOX ================= */
+/* SELECT BOX */
 .selector {
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 0.5rem;
-  background: rgba(255, 255, 255, 0.95);
-  color: #0f172a;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 8px;
+  background: #FFFFFF;
 }
 
-/* ================= TAGS + INPUT ================= */
+/* TAGS */
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: 4px;
   flex: 1;
 }
 .tags input {
   border: none;
   outline: none;
-  background: transparent;
   flex: 1;
-  min-width: 120px;
-  font-size: 0.9rem;
-  color: #0f172a;
-  caret-color: #0f172a;
-}
-.tags input::-moz-placeholder {
-  color: #94a3b8;
-}
-.tags input::placeholder {
-  color: #94a3b8;
+  background: transparent;
+  font-size: 0.875rem;
 }
 
 .tag {
-  background: #6366f1;
-  color: white;
-  padding: 0.3rem 0.6rem;
+  padding: 4px 10px;
+  font-size: 0.875rem;
   border-radius: 999px;
-  font-size: 0.75rem;
+  background: rgba(46, 196, 182, 0.1);
+  color: #2EC4B6;
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 4px;
 }
 .tag button {
   background: none;
   border: none;
-  color: white;
   cursor: pointer;
 }
 
-/* ================= CHEVRON ================= */
-.chevron {
-  margin-left: 8px;
-  font-size: 0.8rem;
-  color: #475569;
-  transition: transform 0.2s ease;
-}
-
-.rotate {
-  transform: rotate(180deg);
-}
-
-/* ================= DROPDOWN ================= */
+/* DROPDOWN */
 .dropdown {
   position: absolute;
   width: 100%;
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  margin-top: 0.3rem;
-  z-index: 30;
-  max-height: 240px;
-  overflow-y: auto;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  margin-top: 4px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  z-index: 10;
 }
 
-/* ================= OPTION ================= */
+/* OPTION */
 .option {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 0.6rem;
+  justify-content: space-between;
+  gap: 0;
+  padding: 8px;
   cursor: pointer;
-  color: #0f172a;
 }
 .option:hover {
-  background: #f1f5f9;
+  background: rgba(46, 196, 182, 0.08);
 }
 
-/* ================= STATES ================= */
 .active {
-  background: #e0e7ff;
-  font-weight: 500;
+  background: rgba(46, 196, 182, 0.12);
 }
 
 .highlight {
-  background: #f1f5f9;
-}
-
-.check {
-  color: #6366f1;
-  font-weight: bold;
-}
-
-/* ================= EMPTY ================= */
-.empty {
-  padding: 0.6rem;
-  text-align: center;
-  color: #94a3b8;
+  background: rgba(46, 196, 182, 0.08);
 }/*# sourceMappingURL=CategorySelect.module.css.map */

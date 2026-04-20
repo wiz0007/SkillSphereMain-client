@@ -2,7 +2,7 @@
 /* ================= PAGE ================= */
 .page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #eef2ff, #f8fafc);
+  background: #f8fafc;
 }
 
 /* ================= CONTAINER ================= */
@@ -15,16 +15,6 @@
   .container {
     padding: 1rem;
   }
-}
-
-/* ================= GLASS ================= */
-.glass, .mobileBar, .reviewCard, .addReview, .summary, .card, .left {
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 18px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-  transition: all 0.25s ease;
 }
 
 /* ================= HERO ================= */
@@ -42,42 +32,57 @@
 /* ================= LEFT ================= */
 .left {
   flex: 2;
-  min-width: 0;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
   padding: 1.5rem;
 }
 .left h1 {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 1.8rem;
+  font-weight: 600;
   color: #0f172a;
 }
-@media (max-width: 640px) {
-  .left h1 {
-    font-size: 1.5rem;
-  }
-}
 
+/* DESCRIPTION */
 .desc {
   margin-top: 0.6rem;
   color: #475569;
   line-height: 1.6;
 }
 
+/* ================= TUTOR ================= */
+.tutor {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.6rem 0;
+  cursor: pointer;
+}
+.tutor img {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.tutor span {
+  font-size: 0.9rem;
+  color: #334155;
+  font-weight: 500;
+}
+
 /* ================= RATING ================= */
 .ratingRow {
   margin-top: 1rem;
   display: flex;
-  gap: 0.8rem;
-  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
 }
 
-.stars {
-  display: flex;
-  gap: 4px;
-}
 .stars span {
   font-size: 1.2rem;
   cursor: pointer;
-  color: #cbd5f5;
+  color: #cbd5e1;
   transition: 0.2s;
 }
 .stars span:hover {
@@ -90,6 +95,7 @@
 }
 
 .ratingText {
+  font-size: 0.9rem;
   color: #64748b;
 }
 
@@ -101,25 +107,26 @@
   flex-wrap: wrap;
 }
 .badges span {
-  background: rgba(255, 255, 255, 0.6);
+  background: #f1f5f9;
   padding: 4px 10px;
   border-radius: 999px;
   font-size: 12px;
+  color: #334155;
 }
 
 /* ================= SAVE ================= */
 .saveBtn {
   margin-top: 1rem;
   border: none;
-  background: rgba(255, 255, 255, 0.5);
+  background: #f1f5f9;
   padding: 8px;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 18px;
   transition: 0.2s;
 }
 .saveBtn:hover {
-  transform: scale(1.2);
+  transform: scale(1.1);
 }
 
 .saved {
@@ -129,7 +136,6 @@
 /* ================= RIGHT ================= */
 .right {
   flex: 1;
-  min-width: 0;
 }
 
 /* ================= VIDEO ================= */
@@ -146,21 +152,36 @@
 /* ================= SIDEBAR CARD ================= */
 .card {
   margin-top: 1rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
   padding: 1.2rem;
   text-align: center;
+}
+.card h3 {
+  font-size: 1.4rem;
+  color: #0f172a;
 }
 .card button {
   width: 100%;
   padding: 0.8rem;
-  margin: 0.6rem 0;
+  margin: 0.8rem 0;
   border-radius: 10px;
   border: none;
-  background: linear-gradient(135deg, #3b82f6, #6366f1);
-  color: white;
+  background: #ffb703;
+  color: black;
+  font-weight: 600;
   cursor: pointer;
+  transition: 0.2s;
 }
 .card button:hover {
   transform: translateY(-2px);
+}
+.card ul {
+  margin-top: 0.6rem;
+  text-align: left;
+  font-size: 0.9rem;
+  color: #475569;
 }
 
 /* ================= SECTION ================= */
@@ -168,10 +189,13 @@
   margin-top: 2.5rem;
 }
 
-/* ================= REVIEW SUMMARY ================= */
+/* ================= SUMMARY ================= */
 .summary {
   display: flex;
   gap: 2rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
   padding: 1.5rem;
 }
 @media (max-width: 768px) {
@@ -186,17 +210,10 @@
   text-align: center;
 }
 .avg h1 {
-  font-size: 3rem;
-  font-weight: 700;
+  font-size: 2.5rem;
 }
 .avg p {
   color: #64748b;
-}
-
-.avgStars {
-  margin-top: 0.4rem;
-  color: #f59e0b;
-  font-size: 1.2rem;
 }
 
 /* ================= BREAKDOWN ================= */
@@ -211,94 +228,36 @@
   display: grid;
   grid-template-columns: 40px 1fr 30px;
   align-items: center;
-  gap: 0.5rem;
-}
-
-.starLabel {
-  font-size: 0.85rem;
-  color: #334155;
 }
 
 .bar {
   height: 6px;
   background: #e2e8f0;
   border-radius: 10px;
-  overflow: hidden;
 }
 
 .fill {
   height: 100%;
-  background: linear-gradient(90deg, #f59e0b, #fbbf24);
-  transition: width 0.3s ease;
-}
-
-.count {
-  font-size: 0.8rem;
-  text-align: right;
-  color: #64748b;
+  background: #f59e0b;
 }
 
 /* ================= ADD REVIEW ================= */
 .addReview {
   margin-top: 2rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-/* STAR INPUT */
-.reviewStars {
-  display: flex;
-  gap: 6px;
-}
-.reviewStars span {
-  font-size: 20px;
-  cursor: pointer;
-  color: #cbd5f5;
-  transition: 0.2s;
-}
-.reviewStars span:hover {
-  color: #f59e0b;
-  transform: scale(1.2);
-}
-
-/* TEXTAREA */
 .addReview textarea {
   width: 100%;
-  padding: 0.9rem;
-  border-radius: 12px;
+  padding: 0.8rem;
+  border-radius: 10px;
   border: 1px solid #e2e8f0;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(6px);
-  font-size: 0.9rem;
-  outline: none;
-}
-.addReview textarea:focus {
-  border-color: #6366f1;
-}
-
-/* BUTTON */
-.addReview button {
-  align-self: flex-end;
-  padding: 0.7rem 1.5rem;
-  border-radius: 999px;
-  border: none;
-  background: linear-gradient(135deg, #22c55e, #06b6d4);
-  color: white;
-  cursor: pointer;
-  transition: 0.2s;
-}
-.addReview button:hover {
-  transform: translateY(-2px);
-}
-.addReview button:disabled {
-  opacity: 0.5;
-}
-
-.error {
-  color: red;
-  font-size: 0.85rem;
 }
 
 /* ================= REVIEW LIST ================= */
@@ -312,6 +271,9 @@
 .reviewCard {
   display: flex;
   gap: 1rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
   padding: 1.2rem;
 }
 @media (max-width: 640px) {
@@ -320,35 +282,19 @@
   }
 }
 
-/* AVATAR */
 .avatar {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #6366f1, #3b82f6);
-  color: white;
+  background: #e2e8f0;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
 }
 
-/* CONTENT */
-.reviewContent {
-  flex: 1;
-  min-width: 0;
-}
-
-/* HEADER */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .name {
   font-weight: 600;
-  color: #1e293b;
 }
 
 .time {
@@ -356,60 +302,13 @@
   color: #94a3b8;
 }
 
-/* STARS */
-.reviewStarsDisplay {
-  color: #f59e0b;
-  font-size: 0.9rem;
-}
-
-/* COMMENT */
 .comment {
   margin-top: 0.4rem;
   color: #475569;
-  line-height: 1.5;
 }
 
-/* ================= MOBILE BAR ================= */
-.mobileBar {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  padding: 0.7rem;
-}
-.mobileBar button {
-  width: 100%;
-  padding: 0.8rem;
-  border-radius: 10px;
-  background: #111827;
-  color: white;
-}
-@media (min-width: 768px) {
-  .mobileBar {
-    display: none;
-  }
-}
-
-.tutor {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin: 0.5rem 0 0.8rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-.tutor:hover {
-  opacity: 0.8;
-}
-.tutor img {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  -o-object-fit: cover;
-     object-fit: cover;
-  border: 2px solid #e5e7eb;
-}
-.tutor span {
-  font-size: 0.9rem;
-  color: #334155;
-  font-weight: 500;
+/* ================= ERROR ================= */
+.error {
+  color: red;
+  font-size: 0.85rem;
 }/*# sourceMappingURL=CourseDetails.module.css.map */
