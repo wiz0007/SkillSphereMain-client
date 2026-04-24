@@ -1,24 +1,24 @@
-@use "../../styles/mixin" as *;
+@use "../../styles/abstracts" as *;
 
 .overlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
 
-  @include Flex(row, center, center);
+  @include flex(row, center, center);
 }
 
 .modal {
-  @include Card();
+  @include card();
   width: 420px;
   padding: 24px;
 
-  @include Flex(column, flex-start, stretch);
+  @include flex(column, flex-start, stretch);
   gap: 16px;
 }
 
 .field {
-  @include Flex(column, flex-start, flex-start);
+  @include flex(column, flex-start, flex-start);
   gap: 6px;
 
   input,
