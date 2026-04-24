@@ -34,31 +34,17 @@ export function Login() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     setError("");
 
     try {
       setLoading(true);
 
       const data = await loginUser(form);
-
-      /*
-      Backend Response
-      {
-        token: "...",
-        user: { _id, email, profileCompleted }
-      }
-      */
-
       const { token, user } = data;
 
-      // ✅ ONLY store token here
       localStorage.setItem("token", token);
-
-      // ✅ Let AuthContext handle user persistence
       setUser(user);
 
-      // ✅ Redirect logic
       if (user.profileCompleted) {
         navigate("/");
       } else {
@@ -120,7 +106,7 @@ export function Login() {
 
         </form>
 
-        <p>
+        <p className={styles.footer}>
           Don’t have an account?{" "}
           <Link to="/register">Register</Link>
         </p>

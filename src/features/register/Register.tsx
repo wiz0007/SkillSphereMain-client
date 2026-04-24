@@ -115,11 +115,9 @@ const Register: React.FC = () => {
     if (!isPasswordValid)
       return setError("Password does not meet requirements");
 
-    if (!isMatch)
-      return setError("Passwords do not match");
+    if (!isMatch) return setError("Passwords do not match");
 
-    if (!acceptedTerms)
-      return setError("Please accept Terms & Conditions");
+    if (!acceptedTerms) return setError("Please accept Terms & Conditions");
 
     if (usernameStatus !== "available")
       return setError("Username not available");
@@ -138,7 +136,6 @@ const Register: React.FC = () => {
 
       /* 🔥 START COOLDOWN */
       setCooldown(30);
-
     } catch (err: any) {
       setError(err?.response?.data?.message || "Registration failed");
     } finally {
@@ -172,7 +169,6 @@ const Register: React.FC = () => {
 
       /* 🔥 RESET COOLDOWN */
       setCooldown(30);
-
     } catch {
       alert("Failed to resend OTP");
     }
@@ -181,7 +177,6 @@ const Register: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.card}>
-
         <h1 className={styles.title}>
           {isOtpStep ? "Verify OTP" : "Create Account"}
         </h1>
@@ -190,7 +185,6 @@ const Register: React.FC = () => {
 
         {!isOtpStep ? (
           <form onSubmit={handleSubmit} className={styles.form}>
-
             <input
               name="username"
               placeholder="Username"
@@ -230,11 +224,19 @@ const Register: React.FC = () => {
             </div>
 
             <div className={styles.passwordRules}>
-              <p className={checks.length ? styles.valid : ""}>✔ At least 8 characters</p>
-              <p className={checks.upper ? styles.valid : ""}>✔ One uppercase letter</p>
-              <p className={checks.lower ? styles.valid : ""}>✔ One lowercase letter</p>
+              <p className={checks.length ? styles.valid : ""}>
+                ✔ At least 8 characters
+              </p>
+              <p className={checks.upper ? styles.valid : ""}>
+                ✔ One uppercase letter
+              </p>
+              <p className={checks.lower ? styles.valid : ""}>
+                ✔ One lowercase letter
+              </p>
               <p className={checks.number ? styles.valid : ""}>✔ One number</p>
-              <p className={checks.special ? styles.valid : ""}>✔ One special character</p>
+              <p className={checks.special ? styles.valid : ""}>
+                ✔ One special character
+              </p>
             </div>
 
             <div className={styles.passwordContainer}>
@@ -261,12 +263,23 @@ const Register: React.FC = () => {
 
             <div className={styles.terms}>
               <input
+                id="terms"
                 type="checkbox"
                 checked={acceptedTerms}
                 onChange={(e) => setAcceptedTerms(e.target.checked)}
               />
-              <label onClick={() => setShowTerms(true)}>
-                I agree to Terms & Conditions
+
+              <label htmlFor="terms">
+                I agree to{" "}
+                <span
+                  className={styles.link}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowTerms(true);
+                  }}
+                >
+                  Terms & Conditions
+                </span>
               </label>
             </div>
 
@@ -282,11 +295,9 @@ const Register: React.FC = () => {
             >
               {loading ? "Creating..." : "Sign Up"}
             </button>
-
           </form>
         ) : (
           <div className={styles.form}>
-
             <input
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
@@ -302,11 +313,8 @@ const Register: React.FC = () => {
               onClick={handleResend}
               disabled={cooldown > 0}
             >
-              {cooldown > 0
-                ? `Resend in ${cooldown}s`
-                : "Resend OTP"}
+              {cooldown > 0 ? `Resend in ${cooldown}s` : "Resend OTP"}
             </button>
-
           </div>
         )}
 
@@ -321,13 +329,10 @@ const Register: React.FC = () => {
             <div className={styles.modalContent}>
               <h2>Terms & Conditions</h2>
               <p>Put your legal content here...</p>
-              <button onClick={() => setShowTerms(false)}>
-                Close
-              </button>
+              <button onClick={() => setShowTerms(false)}>Close</button>
             </div>
           </div>
         )}
-
       </div>
     </div>
   );

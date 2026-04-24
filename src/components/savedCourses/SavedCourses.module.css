@@ -1,11 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 /* ================= PAGE ================= */
 .page {
   padding: 2rem;
   min-height: 100vh;
   background: #f8fafc;
 }
-@media (max-width: 640px) {
+@media (max-width: 480px) {
   .page {
     padding: 1rem;
   }

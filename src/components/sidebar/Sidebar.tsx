@@ -9,10 +9,7 @@ interface SidebarProps {
   toggleSidebar: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({
-  isCollapsed,
-  toggleSidebar,
-}) => {
+const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useAuth();
@@ -21,28 +18,19 @@ const Sidebar: React.FC<SidebarProps> = ({
     <>
       {/* OVERLAY */}
       <div
-        className={`${styles.overlay} ${
-          isCollapsed ? styles.showOverlay : ""
-        }`}
+        className={`${styles.overlay} ${isCollapsed ? styles.showOverlay : ""}`}
         onClick={toggleSidebar}
       />
 
       {/* SIDEBAR */}
-      <aside
-        className={`${styles.sidebar} ${
-          isCollapsed ? styles.open : ""
-        }`}
-      >
+      <aside className={`${styles.sidebar} ${isCollapsed ? styles.open : ""}`}>
         {/* HEADER */}
         <div className={styles.logoArea}>
           <span className={styles.logo}>
             <span>Skill</span>Sphere
           </span>
 
-          <button
-            className={styles.toggleBtn}
-            onClick={toggleSidebar}
-          >
+          <button className={styles.toggleBtn} onClick={toggleSidebar}>
             <i className="ri-menu-line" />
           </button>
         </div>
@@ -60,7 +48,11 @@ const Sidebar: React.FC<SidebarProps> = ({
                 }`}
                 onClick={() => {
                   navigate(item.route);
-                  toggleSidebar();
+
+                  // ✅ Only close sidebar on mobile
+                  if (window.innerWidth <= 900) {
+                    toggleSidebar();
+                  }
                 }}
               >
                 <i className={`${item.icon} ${styles.icon}`} />

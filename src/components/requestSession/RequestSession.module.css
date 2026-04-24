@@ -1,42 +1,39 @@
 @charset "UTF-8";
-@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 .overlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
-  flex-direction: row;
+  align-items: row;
   justify-content: center;
-  align-items: center;
+  gap: center;
 }
 
 .modal {
-  background: #ffffff;
+  background: #FFFFFF;
   border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  padding: 16px;
+  transition: all 0.2s ease-in-out;
 }
 .modal:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
 .modal {
   width: 420px;
   padding: 24px;
   display: flex;
-  flex-direction: column;
+  align-items: column;
   justify-content: flex-start;
-  align-items: stretch;
+  gap: stretch;
   gap: 16px;
 }
 
 .field {
   display: flex;
-  flex-direction: column;
+  align-items: column;
   justify-content: flex-start;
-  align-items: flex-start;
+  gap: flex-start;
   gap: 6px;
 }
 .field input,
