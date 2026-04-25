@@ -68,18 +68,20 @@ const SkillDiscovery: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      {/* HEADER */}
       <div className={styles.header}>
         <div>
-          <h2>Explore Skills</h2>
-          <p>Find people to learn from and swap skills</p>
+          <h2>Explore courses and tutor-led skill tracks.</h2>
+          <p>
+            Discover focused sessions, compare teaching styles,
+            and shortlist the paths that match your goals.
+          </p>
         </div>
 
         <div className={styles.searchBox}>
           <FiSearch className={styles.searchIcon} />
           <input
             type="text"
-            placeholder="Search skills..."
+            placeholder="Search courses or topics"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -109,7 +111,9 @@ const SkillDiscovery: React.FC = () => {
       {loading ? (
         <div className={styles.loading}>Loading skills...</div>
       ) : filteredCourses.length === 0 ? (
-        <div className={styles.empty}>No skills found</div>
+        <div className={styles.empty}>
+          No courses match these filters right now.
+        </div>
       ) : (
         <div className={styles.grid}>
           {filteredCourses.map((course, index) => (

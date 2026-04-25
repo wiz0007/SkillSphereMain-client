@@ -64,7 +64,12 @@ function UserOnboarding() {
     <div className={styles.container}>
       <form className={styles.form} onSubmit={handleSubmit}>
         <header className={styles.header}>
-          <h1>Complete Your Profile</h1>
+          <p className={styles.kicker}>Profile Setup</p>
+          <h1>Complete your profile before you start exploring.</h1>
+          <p className={styles.subtitle}>
+            These details help the dashboard, public profile,
+            and session flows stay aligned from the beginning.
+          </p>
         </header>
 
         <BasicProfileSection

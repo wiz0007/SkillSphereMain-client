@@ -1,59 +1,81 @@
 @use "../../styles/abstracts" as *;
 
-/* ================= GLOBAL FIX ================= */
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+.page {
+  min-height: calc(100vh - 74px);
+  padding: 2rem 1.5rem 2.5rem;
+  background:
+    radial-gradient(circle at top left, rgba(46, 196, 182, 0.12), transparent 26%),
+    radial-gradient(circle at bottom right, rgba(255, 183, 3, 0.14), transparent 24%),
+    #f8fafc;
 }
 
-/* ================= CONTAINER ================= */
-
-.container {
+.shell {
   width: 100%;
-  min-height: calc(100vh - 70px);
-
-  display: flex;
+  max-width: 1120px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(380px, 0.95fr);
+  gap: 1.5rem;
   align-items: center;
-  justify-content: center;
 
-  padding: 1.5rem;
-
-  background: linear-gradient(135deg, #eef2ff, #f8fafc);
+  @include respond(md) {
+    grid-template-columns: 1fr;
+  }
 }
 
-/* ================= CARD ================= */
+.hero {
+  max-width: 58ch;
+
+  h1 {
+    margin: 0 0 0.8rem;
+    font-size: clamp(2rem, 4.5vw, 3.2rem);
+    line-height: 1.04;
+    color: #0f172a;
+  }
+}
+
+.kicker {
+  @include section-kicker;
+  margin-bottom: 0.7rem;
+}
+
+.subtitle {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.98rem;
+  line-height: 1.7;
+}
 
 .card {
-  width: 100%;
-  max-width: 460px;
-
-  padding: 2rem;
-
-  border-radius: 18px;
-
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(12px);
-
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-
-  overflow: hidden;
+  @include hero-panel(1.5rem);
 }
 
-/* ================= TITLE ================= */
+.cardHeader {
+  margin-bottom: 1.25rem;
 
-.title {
-  text-align: center;
-  font-size: 1.6rem;
+  h2 {
+    margin: 0 0 0.3rem;
+    font-size: 1.35rem;
+    color: #0f172a;
+  }
+
+  p {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.92rem;
+  }
+}
+
+.feedbackBanner {
+  margin-bottom: 1rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: 16px;
+  border: 1px solid rgba(46, 196, 182, 0.24);
+  background: rgba(46, 196, 182, 0.08);
+  color: #0f766e;
+  font-size: 0.88rem;
   font-weight: 600;
-  color: #0f172a;
-
-  margin-bottom: 1.5rem;
 }
-
-/* ================= FORM ================= */
 
 .form {
   display: flex;
@@ -61,175 +83,166 @@
   gap: 1rem;
 }
 
-/* ================= INPUT ================= */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
 
-.form input {
-  width: 100%;
-  padding: 12px 14px;
-
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-
-  background: #ffffff;
-  color: #0f172a;
-
-  font-size: 0.9rem;
-}
-
-/* ================= PASSWORD ================= */
-
-.passwordContainer {
-  position: relative;
-  width: 100%;
+  span {
+    color: #475569;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
 
   input {
-    width: 100%;
-    padding-right: 45px; // space for eye
-  }
-
-  .eye {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-
-    cursor: pointer;
-    color: #64748b;
+    @include input-surface;
   }
 }
 
-/* ================= PASSWORD RULES ================= */
+.passwordField {
+  position: relative;
+
+  input {
+    padding-right: 3rem;
+  }
+}
+
+.eyeButton {
+  position: absolute;
+  top: 50%;
+  right: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: #64748b;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.inlineHint {
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
 
 .passwordRules {
-  font-size: 0.75rem;
-  color: #64748b;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 
-  p {
-    margin: 2px 0;
+  span {
+    @include neutral-tag;
   }
 }
 
 .valid {
-  color: #16a34a;
+  background: rgba(46, 196, 182, 0.16) !important;
+  color: #0f766e !important;
 }
 
-/* ================= STATUS ================= */
-
-.status {
-  font-size: 0.8rem;
-}
-
-/* ================= TERMS ================= */
-
-.terms {
+.termsRow {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.72);
+  color: #334155;
+  font-size: 0.9rem;
+  line-height: 1.6;
 
-  font-size: 0.85rem;
-  color: #475569;
-
-  position: relative; // 🔥 anchor for absolute children (just in case)
-
-  input[type="checkbox"] {
-    position: static !important; // 🔥 force reset
-    appearance: auto;
-
+  input {
     width: 16px;
     height: 16px;
-    margin: 0;
-
-    flex: 0 0 auto;
-    cursor: pointer;
-
-    accent-color: #6366f1;
-  }
-
-  label {
-    cursor: pointer;
+    margin-top: 0.18rem;
+    accent-color: #2ec4b6;
   }
 }
-/* ================= BUTTON ================= */
 
-button {
-  margin-top: 0.5rem;
-
-  padding: 12px;
-  border-radius: 999px;
+.inlineLink {
   border: none;
-
-  background: linear-gradient(135deg, #6366f1, #4f46e5);
-  color: white;
-
+  padding: 0;
+  background: transparent;
+  color: #0f172a;
+  font-size: inherit;
+  font-weight: 700;
+  text-decoration: underline;
   cursor: pointer;
-  transition: 0.2s;
-
-  &:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
 }
 
-/* ================= FOOTER ================= */
+.submitButton,
+.secondaryButton {
+  min-height: 48px;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
 
-p {
+.submitButton {
+  @include button-cta;
+  width: 100%;
+}
+
+.secondaryButton {
+  @include button-secondary;
+  width: 100%;
+}
+
+.footer {
+  margin: 1rem 0 0;
+  color: #64748b;
+  font-size: 0.88rem;
   text-align: center;
-  font-size: 0.85rem;
-  margin-top: 1rem;
+
+  a {
+    color: #0f172a;
+    font-weight: 700;
+    text-decoration: none;
+  }
 }
-
-/* ================= ERROR ================= */
-
-.error {
-  color: #dc2626;
-  text-align: center;
-  font-size: 0.85rem;
-}
-
-/* ================= MODAL ================= */
 
 .modal {
   position: fixed;
   inset: 0;
-
-  background: rgba(0, 0, 0, 0.5);
-
   display: flex;
   align-items: center;
   justify-content: center;
-
-  z-index: 999;
+  padding: 1rem;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 1200;
 }
 
 .modalContent {
-  background: white;
-  padding: 2rem;
+  @include panel(22px, 1.4rem);
+  width: min(100%, 460px);
 
-  border-radius: 12px;
+  h3 {
+    margin: 0 0 0.5rem;
+    color: #0f172a;
+  }
 
-  width: 90%;
-  max-width: 400px;
+  p {
+    margin: 0 0 1rem;
+    color: #64748b;
+    line-height: 1.65;
+  }
 }
-
-/* ================= RESPONSIVE ================= */
 
 @include respond(sm) {
+  .page {
+    padding: 1.25rem 1rem 2rem;
+  }
+
   .card {
-    padding: 1.5rem;
+    padding: 1.25rem;
   }
-
-  .title {
-    font-size: 1.3rem;
-  }
-}
-
-.link {
-  color: #6366f1;
-  text-decoration: underline;
-  cursor: pointer;
 }

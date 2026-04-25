@@ -1,17 +1,23 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../dashboard/Dashboard.module.scss";
-
 import {
   getMyCourses,
   deleteCourse,
   type Course,
 } from "../../services/courses.service";
-
 import TutorCourseCard from "../tutorCourseCard/TutorCourseCard";
 import { useAuth } from "../../context/AuthContext";
 
-const TutorSection = () => {
+interface TutorSectionProps {
+  summary: {
+    courseCount: number;
+    pendingRequests: number;
+    averageRating: number;
+  };
+}
+
+const TutorSection = ({ summary }: TutorSectionProps) => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
 
@@ -19,18 +25,16 @@ const TutorSection = () => {
   const [selected, setSelected] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
-  /* ================= FETCH ================= */
   const fetchCourses = async () => {
     try {
       setLoading(true);
-
       const data = await getMyCourses();
       setCourses(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Fetch error:", err);
       setCourses([]);
     } finally {
-      setLoading(false); // ✅ REQUIRED
+      setLoading(false);
     }
   };
 
@@ -39,14 +43,11 @@ const TutorSection = () => {
     fetchCourses();
   }, [user, authLoading]);
 
-  /* ================= SELECT ================= */
   const toggleSelect = (id: string) => {
     setSelected((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
-
-  /* ================= ACTIONS ================= */
 
   const handleAddCourse = () => {
     navigate("/add-course");
@@ -60,7 +61,7 @@ const TutorSection = () => {
 
   const handleDelete = async (id: string) => {
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this course?",
+      "Are you sure you want to delete this course?"
     );
 
     if (!confirmDelete) return;
@@ -77,7 +78,7 @@ const TutorSection = () => {
     if (!selected.length) return;
 
     const confirmDelete = window.confirm(
-      `Delete ${selected.length} selected courses?`,
+      `Delete ${selected.length} selected courses?`
     );
 
     if (!confirmDelete) return;
@@ -91,29 +92,47 @@ const TutorSection = () => {
     }
   };
 
-  /* ================= UI ================= */
-
   return (
     <div className={styles.tutorSection}>
-      <h2>🧑‍🏫 Your Courses</h2>
+      <div className={styles.sectionTitleRow}>
+        <div>
+          <h2>Your Courses</h2>
+          <p className={styles.sectionSubtitle}>
+            Manage your catalogue, respond to demand, and keep your offers fresh.
+          </p>
+        </div>
+
+        <div className={styles.tutorHighlights}>
+          <span>{summary.courseCount} courses</span>
+          <span>{summary.pendingRequests} pending</span>
+          <span>
+            {summary.averageRating ? `${summary.averageRating}★ avg` : "New tutor"}
+          </span>
+        </div>
+      </div>
 
       <div className={styles.toolbar}>
         <button className={styles.addBtn} onClick={handleAddCourse}>
           + Add Course
         </button>
 
-        {selected.length > 0 && (
+        {selected.length > 0 ? (
           <button className={styles.bulkDelete} onClick={handleBulkDelete}>
             Delete Selected ({selected.length})
           </button>
-        )}
+        ) : null}
       </div>
 
       <div className={styles.panel}>
         {loading ? (
           <p>Loading courses...</p>
         ) : courses.length === 0 ? (
-          <p>No courses yet</p>
+          <div className={styles.emptyState}>
+            <strong>No courses yet</strong>
+            <span>
+              Create your first course to start accepting student requests.
+            </span>
+          </div>
         ) : (
           <div className={styles.grid}>
             {courses.map((course) => (

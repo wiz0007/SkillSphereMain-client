@@ -1,71 +1,134 @@
-/* ================= ROOT ================= */
 .dashboard {
-  padding: 2rem;
-  min-height: 100vh;
   width: 100%;
-  background: #f8fafc;
-}
-@media (max-width: 480px) {
-  .dashboard {
-    padding: 1rem;
-  }
+  min-height: 100vh;
+  padding: 1rem 0 2rem;
+  color: #0f172a;
 }
 
-/* ================= HEADER ================= */
 .header {
-  margin-bottom: 2rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(240px, 0.8fr);
+  gap: 1rem;
+  align-items: stretch;
+  margin-bottom: 1.75rem;
+}
+@media (max-width: 768px) {
+  .header {
+    grid-template-columns: 1fr;
+  }
 }
 .header h1 {
-  font-size: 1.8rem;
-  font-weight: 600;
+  margin: 0.25rem 0 0.35rem;
+  font-size: clamp(1.85rem, 4vw, 2.7rem);
+  line-height: 1.05;
   color: #0f172a;
 }
 .header p {
+  max-width: 60ch;
   color: #64748b;
-  margin-top: 4px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.kicker {
+  display: inline-block;
+  color: #2ec4b6;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.snapshot {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 1.4rem 1.5rem;
+  border: 1px solid rgba(46, 196, 182, 0.18);
+  border-radius: 22px;
+  background: radial-gradient(circle at top right, rgba(46, 196, 182, 0.22), transparent 45%), linear-gradient(145deg, #ffffff, #f4f9fb);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.snapshotLabel {
+  color: #64748b;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.snapshot strong {
+  font-size: 1.15rem;
+  color: #0f172a;
+}
+
+.snapshotHint {
+  color: #64748b;
   font-size: 0.9rem;
 }
 
-/* ================= STATS ================= */
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1rem;
 }
 
-/* ================= CARD ================= */
 .card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-  padding: 1.4rem;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+  gap: 0.35rem;
+  padding: 1.25rem;
+  border-radius: 18px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 .card h3 {
-  font-size: 0.85rem;
+  margin: 0;
+  font-size: 0.82rem;
   color: #64748b;
-  font-weight: 500;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 .card p {
-  font-size: 1.6rem;
-  font-weight: 600;
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
   color: #0f172a;
 }
 
-/* ================= MAIN GRID ================= */
+.cardMeta {
+  color: #64748b;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.cardDefault {
+  border-color: #e2e8f0;
+}
+
+.cardAccent {
+  border-color: rgba(46, 196, 182, 0.2);
+  background: linear-gradient(180deg, rgba(244, 252, 250, 0.95), #ffffff);
+}
+
+.cardSuccess {
+  border-color: rgba(34, 197, 94, 0.18);
+  background: linear-gradient(180deg, rgba(240, 253, 244, 0.98), #ffffff);
+}
+
+.cardWarning {
+  border-color: rgba(245, 158, 11, 0.2);
+  background: linear-gradient(180deg, rgba(255, 251, 235, 0.98), #ffffff);
+}
+
 .mainGrid {
-  margin-top: 2rem;
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1.6fr 1fr;
   gap: 1.5rem;
+  margin-top: 1.75rem;
 }
 @media (max-width: 768px) {
   .mainGrid {
@@ -73,63 +136,219 @@
   }
 }
 
-/* ================= PANEL ================= */
 .panel {
-  background: #ffffff;
   border: 1px solid #e2e8f0;
-  border-radius: 14px;
+  border-radius: 20px;
+  background: #ffffff;
   padding: 1.4rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
-.panel h2 {
-  font-size: 1rem;
-  font-weight: 600;
+
+.panelHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
   margin-bottom: 1rem;
+}
+.panelHeader h2 {
+  margin: 0 0 0.2rem;
+  font-size: 1.02rem;
   color: #0f172a;
 }
+.panelHeader p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
 
-/* ================= SESSION ================= */
-.sessionItem {
+.panelBadge {
+  min-width: 34px;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #0f172a;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.sessionList,
+.activityList {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.8rem 0;
-  border-bottom: 1px solid #f1f5f9;
-}
-.sessionItem span {
-  font-size: 0.9rem;
-  color: #334155;
-}
-.sessionItem:last-child {
-  border-bottom: none;
+  flex-direction: column;
+  gap: 0.8rem;
 }
 
-/* ================= LOADER ================= */
+.sessionCard,
+.activityItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid #f1f5f9;
+  border-radius: 16px;
+  background: #fbfdff;
+}
+@media (max-width: 480px) {
+  .sessionCard,
+  .activityItem {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.sessionContent,
+.activityContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.sessionContent strong,
+.activityContent strong {
+  color: #0f172a;
+  font-size: 0.96rem;
+}
+
+.sessionContent span,
+.activityContent span {
+  color: #64748b;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.sessionMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.15rem;
+}
+.sessionMeta strong {
+  color: #0f172a;
+  font-size: 0.9rem;
+}
+.sessionMeta span {
+  color: #64748b;
+  font-size: 0.8rem;
+}
+@media (max-width: 480px) {
+  .sessionMeta {
+    align-items: flex-start;
+  }
+}
+
+.activityIndicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #cbd5e1;
+  flex-shrink: 0;
+}
+
+.activityPending {
+  background: #f59e0b;
+}
+
+.activitySuccess {
+  background: #22c55e;
+}
+
+.activityAccent {
+  background: #2ec4b6;
+}
+
+.activityDanger {
+  background: #ef4444;
+}
+
+.unreadDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #2ec4b6;
+  flex-shrink: 0;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1.2rem;
+  border-radius: 16px;
+  background: #f8fafc;
+  color: #64748b;
+}
+.emptyState strong {
+  color: #0f172a;
+}
+.emptyState span {
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
 .loader {
   text-align: center;
   padding: 3rem;
   color: #64748b;
 }
 
-/* ================= TUTOR BADGE ================= */
 .tutorBadge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.6rem;
+  padding: 0.24rem 0.55rem;
+  border-radius: 999px;
   background: #2ec4b6;
   color: white;
-  font-size: 0.7rem;
-  padding: 3px 8px;
-  border-radius: 999px;
-  margin-left: 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  vertical-align: middle;
 }
 
-/* ================= TUTOR SECTION ================= */
 .tutorSection {
-  margin-top: 2rem;
+  margin-top: 1.9rem;
 }
-.tutorSection h2 {
+
+.sectionTitleRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
   margin-bottom: 1rem;
+}
+.sectionTitleRow h2 {
+  margin: 0 0 0.25rem;
   color: #0f172a;
 }
+@media (max-width: 768px) {
+  .sectionTitleRow {
+    flex-direction: column;
+  }
+}
 
-/* ================= TOOLBAR ================= */
+.sectionSubtitle {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.tutorHighlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.tutorHighlights span {
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #0f172a;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
 .toolbar {
   display: flex;
   gap: 10px;
@@ -137,32 +356,28 @@
   flex-wrap: wrap;
 }
 
-/* ================= BUTTON BASE ================= */
 .btn, .bulkDelete, .addBtn {
   padding: 10px 16px;
   border-radius: 999px;
   border: none;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 600;
   transition: all 0.2s ease;
 }
 .btn:hover, .bulkDelete:hover, .addBtn:hover {
   transform: translateY(-2px);
 }
 
-/* ADD COURSE */
 .addBtn {
   background: #ffb703;
   color: black;
 }
 
-/* BULK DELETE */
 .bulkDelete {
   background: #ef4444;
   color: white;
 }
 
-/* ================= GRID ================= */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));

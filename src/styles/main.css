@@ -44,6 +44,7 @@
   background: #FFB703;
   color: black;
   font-weight: 600;
+  box-shadow: 0 10px 24px rgba(255, 183, 3, 0.2);
 }
 
 .btn-outline {

@@ -63,7 +63,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
 
           <div className={styles.logo}>
             <span className={styles.fullLogo}>
-              <span>Skill</span>Share
+              <span>Skill</span>Sphere
             </span>
             <span className={styles.compactLogo}>SS</span>
           </div>
@@ -103,9 +103,9 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
             <NavbarBell />
           </div>
 
-          <div className={styles.iconWrapper}>
+          <NavLink to="/messages" className={styles.iconWrapper}>
             <FiMessageSquare className={styles.icon} />
-          </div>
+          </NavLink>
 
           {loading ? (
             <div className={styles.skeleton}></div>

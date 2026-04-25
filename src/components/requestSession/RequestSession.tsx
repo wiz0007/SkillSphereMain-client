@@ -1,4 +1,13 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import {
+  CalendarDays,
+  CheckCircle2,
+  Clock3,
+  IndianRupee,
+  MessageSquareText,
+  Send,
+  X,
+} from "lucide-react";
 import styles from "./RequestSession.module.scss";
 import { createSession } from "../../services/session.service";
 import { useAuth } from "../../context/AuthContext";
@@ -13,6 +22,7 @@ interface Props {
 
 const RequestModal: React.FC<Props> = ({ course, onClose }) => {
   const { user, loading: authLoading } = useAuth();
+  const durationOptions = [30, 60, 90];
 
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -21,8 +31,6 @@ const RequestModal: React.FC<Props> = ({ course, onClose }) => {
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-
-  /* ================= SUBMIT ================= */
 
   const handleSubmit = async () => {
     if (authLoading || !user?._id) {
@@ -63,106 +71,258 @@ const RequestModal: React.FC<Props> = ({ course, onClose }) => {
     }
   };
 
-  /* ================= SUCCESS ================= */
+  const estimatedPrice = course.price
+    ? Math.round((course.price / 60) * duration)
+    : 0;
+
+  const selectedDateLabel = useMemo(() => {
+    if (!date || !time) return "Choose a date and time";
+
+    return new Date(`${date}T${time}`).toLocaleString([], {
+      dateStyle: "full",
+      timeStyle: "short",
+    });
+  }, [date, time]);
+
+  const formatAmount = (value: number) =>
+    new Intl.NumberFormat("en-IN", {
+      maximumFractionDigits: 0,
+    }).format(value);
 
   if (success) {
     return (
       <div className={styles.overlay}>
-        <div className={styles.modal}>
-          <h2>🎉 Request Sent!</h2>
+        <div
+          className={`${styles.modal} ${styles.successModal}`}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="request-session-success"
+        >
+          <button
+            type="button"
+            className={styles.close}
+            onClick={onClose}
+            aria-label="Close request session modal"
+          >
+            <X size={18} />
+          </button>
 
-          <p>
-            Your session request has been sent to the tutor.
+          <div className={styles.successBadge}>
+            <CheckCircle2 size={18} />
+            Request sent
+          </div>
+
+          <h2 id="request-session-success">Your request is on its way</h2>
+          <p className={styles.successNote}>
+            The tutor can now review your preferred time, session
+            length, and message before confirming.
           </p>
 
-          <p>⏳ Status: Pending Approval</p>
+          <div className={styles.summaryCard}>
+            <div className={styles.summaryItem}>
+              <span className={styles.summaryLabel}>Requested for</span>
+              <strong className={styles.summaryValue}>
+                {selectedDateLabel}
+              </strong>
+            </div>
+            <div className={styles.summaryItem}>
+              <span className={styles.summaryLabel}>Session length</span>
+              <strong className={styles.summaryValue}>
+                {duration} minutes
+              </strong>
+            </div>
+            <div className={styles.summaryItem}>
+              <span className={styles.summaryLabel}>Status</span>
+              <strong className={styles.summaryValue}>
+                Pending approval
+              </strong>
+            </div>
+          </div>
 
-          <button onClick={onClose}>Close</button>
+          <div className={styles.actions}>
+            <button
+              type="button"
+              className={styles.primaryAction}
+              onClick={onClose}
+            >
+              Close
+            </button>
+          </div>
         </div>
       </div>
     );
   }
-
-  /* ================= LOADING GUARD ================= */
 
   if (authLoading) {
     return (
       <div className={styles.overlay}>
         <div className={styles.modal}>
-          <p>Loading...</p>
+          <p className={styles.loadingState}>
+            Loading your session workspace...
+          </p>
         </div>
       </div>
     );
   }
 
-  /* ================= PRICE ================= */
-
-  const price = course.price
-    ? Math.round((course.price / 60) * duration)
-    : 0;
-
-  /* ================= UI ================= */
-
   return (
     <div className={styles.overlay}>
-      <div className={styles.modal}>
-        <h2>Request a Session</h2>
+      <div
+        className={styles.modal}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="request-session-title"
+      >
+        <button
+          type="button"
+          className={styles.close}
+          onClick={onClose}
+          aria-label="Close request session modal"
+        >
+          <X size={18} />
+        </button>
 
-        <div className={styles.field}>
-          <label>Date</label>
-          <input
-            type="date"
-            value={date}
-            min={new Date().toISOString().split("T")[0]} // ✅ prevent past
-            onChange={(e) => setDate(e.target.value)}
-          />
+        <div className={styles.header}>
+          <div>
+            <span className={styles.kicker}>Session request</span>
+            <h2 id="request-session-title">Plan a 1-on-1 session</h2>
+            <p>
+              Pick a time that works for you, add context for the
+              tutor, and send a focused request in one step.
+            </p>
+          </div>
+
+          <div className={styles.headerBadge}>
+            <IndianRupee size={16} />
+            {course.price
+              ? `${formatAmount(course.price)}/hour`
+              : "Flexible pricing"}
+          </div>
         </div>
 
-        <div className={styles.field}>
-          <label>Time</label>
-          <input
-            type="time"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-          />
-        </div>
-
-        <div className={styles.field}>
-          <label>Duration</label>
-          <select
-            value={duration}
-            onChange={(e) =>
-              setDuration(Number(e.target.value))
-            }
+        <div className={styles.body}>
+          <form
+            className={styles.form}
+            onSubmit={(event) => {
+              event.preventDefault();
+              void handleSubmit();
+            }}
           >
-            <option value={30}>30 mins</option>
-            <option value={60}>1 hour</option>
-            <option value={90}>1.5 hours</option>
-          </select>
+            <div className={styles.grid}>
+              <div className={styles.field}>
+                <label className={styles.label} htmlFor="session-date">
+                  <CalendarDays size={16} />
+                  Date
+                </label>
+                <input
+                  id="session-date"
+                  type="date"
+                  value={date}
+                  min={new Date().toISOString().split("T")[0]}
+                  onChange={(event) => setDate(event.target.value)}
+                />
+              </div>
+
+              <div className={styles.field}>
+                <label className={styles.label} htmlFor="session-time">
+                  <Clock3 size={16} />
+                  Time
+                </label>
+                <input
+                  id="session-time"
+                  type="time"
+                  value={time}
+                  onChange={(event) => setTime(event.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className={styles.field}>
+              <label className={styles.label}>Duration</label>
+              <div className={styles.durationGrid}>
+                {durationOptions.map((option) => (
+                  <button
+                    key={option}
+                    type="button"
+                    className={`${styles.durationOption} ${
+                      duration === option ? styles.durationActive : ""
+                    }`}
+                    onClick={() => setDuration(option)}
+                  >
+                    <strong>{option}</strong>
+                    <span>minutes</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className={styles.field}>
+              <label
+                className={styles.label}
+                htmlFor="session-message"
+              >
+                <MessageSquareText size={16} />
+                Message
+              </label>
+              <textarea
+                id="session-message"
+                value={message}
+                placeholder="Share what you want to work on so the tutor can prepare."
+                onChange={(event) => setMessage(event.target.value)}
+              />
+            </div>
+
+            <div className={styles.actions}>
+              <button
+                type="button"
+                className={styles.secondaryAction}
+                onClick={onClose}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className={styles.primaryAction}
+                disabled={loading}
+              >
+                <Send size={16} />
+                {loading ? "Sending..." : "Send request"}
+              </button>
+            </div>
+          </form>
+
+          <aside className={styles.summaryCard}>
+            <span className={styles.summaryKicker}>Request summary</span>
+            <h3>Make the handoff easy</h3>
+            <p className={styles.summaryMeta}>
+              A clear request helps the tutor confirm faster and
+              come prepared with the right context.
+            </p>
+
+            <div className={styles.summaryItem}>
+              <span className={styles.summaryLabel}>Requested slot</span>
+              <strong className={styles.summaryValue}>
+                {selectedDateLabel}
+              </strong>
+            </div>
+            <div className={styles.summaryItem}>
+              <span className={styles.summaryLabel}>Session length</span>
+              <strong className={styles.summaryValue}>
+                {duration} minutes
+              </strong>
+            </div>
+            <div className={styles.summaryItem}>
+              <span className={styles.summaryLabel}>
+                Estimated total
+              </span>
+              <strong className={styles.summaryValue}>
+                {course.price
+                  ? `Rs ${formatAmount(estimatedPrice)}`
+                  : "Shared with tutor"}
+              </strong>
+            </div>
+          </aside>
         </div>
-
-        <div className={styles.field}>
-          <label>Message</label>
-          <textarea
-            value={message}
-            onChange={(e) =>
-              setMessage(e.target.value)
-            }
-          />
-        </div>
-
-        <div className={styles.price}>
-          <span>Estimated Price:</span>
-          <strong>₹ {price}</strong>
-        </div>
-
-        <button onClick={handleSubmit} disabled={loading}>
-          {loading ? "Requesting..." : "Confirm Request"}
-        </button>
-
-        <button className={styles.cancel} onClick={onClose}>
-          Cancel
-        </button>
       </div>
     </div>
   );

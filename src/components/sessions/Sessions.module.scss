@@ -1,210 +1,266 @@
 @use "../../styles/abstracts" as *;
 
-/* ================= CONTAINER ================= */
-
 .container {
-  padding: 2rem;
-  min-height: 100vh;
-  background: #f8fafc;
+  @include app-page;
+}
 
-  h1 {
-    margin-bottom: 1.5rem;
-    color: #0f172a;
-    font-size: 1.6rem;
+.header {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.82fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  @include respond(md) {
+    grid-template-columns: 1fr;
   }
 
-  @include respond(sm) {
-    padding: 1rem;
+  h1 {
+    margin: 0.35rem 0 0.4rem;
+    font-size: clamp(1.9rem, 4vw, 2.8rem);
+    line-height: 1.05;
+    color: #0f172a;
+  }
+
+  p {
+    max-width: 58ch;
+    color: #64748b;
+    font-size: 0.96rem;
   }
 }
 
-/* ================= TABS ================= */
+.kicker {
+  @include section-kicker;
+}
+
+.snapshot {
+  @include hero-panel(1.35rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.snapshotLabel {
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.snapshot strong {
+  color: #0f172a;
+  font-size: 1.08rem;
+}
+
+.snapshotHint {
+  color: #64748b;
+  font-size: 0.88rem;
+}
 
 .tabs {
   display: flex;
-  gap: 8px;
-  margin-bottom: 1.8rem;
   flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-bottom: 1.5rem;
 
   button {
-    padding: 8px 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-height: 42px;
+    padding: 0.65rem 0.95rem;
+    border: 1px solid #dbe4ee;
     border-radius: 999px;
-    border: 1px solid #e2e8f0;
-
     background: #ffffff;
     color: #475569;
-
-    font-size: 0.85rem;
     cursor: pointer;
-
-    transition: 0.2s;
+    transition:
+      transform 0.2s ease,
+      background 0.2s ease,
+      color 0.2s ease,
+      border-color 0.2s ease;
 
     &:hover {
-      border-color: #2ec4b6;
-      color: #0f172a;
+      transform: translateY(-1px);
+      border-color: rgba(46, 196, 182, 0.32);
     }
+  }
+
+  span {
+    font-size: 0.84rem;
+    font-weight: 700;
+  }
+
+  strong {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 0.4rem;
+    border-radius: 999px;
+    background: #f1f5f9;
+    font-size: 0.74rem;
   }
 }
 
 .active {
-  background: #2ec4b6 !important;
-  color: white !important;
-  border-color: transparent !important;
-}
+  background: #0f172a !important;
+  border-color: #0f172a !important;
+  color: #ffffff !important;
 
-/* ================= GRID ================= */
+  strong {
+    background: rgba(255, 255, 255, 0.12) !important;
+  }
+}
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1.4rem;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 1.2rem;
 }
 
-/* ================= CARD ================= */
+.card,
+.emptyState,
+.loadingPanel {
+  @include panel(22px, 1.25rem);
+}
 
 .card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-
-  padding: 1.2rem;
-
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 1rem;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at top right, rgba(46, 196, 182, 0.1), transparent 34%),
+    linear-gradient(180deg, #ffffff, #fbfdff);
+}
 
-  transition: 0.2s;
-
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
-  }
+.cardTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.8rem;
 
   h3 {
-    font-size: 1rem;
+    margin: 0 0 0.35rem;
     color: #0f172a;
-    font-weight: 600;
-  }
-
-  p {
-    font-size: 0.85rem;
-    color: #64748b;
+    font-size: 1.04rem;
   }
 }
 
-/* ================= TIME ================= */
+.personLine {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.88rem;
+}
 
-.time {
-  font-size: 0.85rem;
+.infoRows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.infoRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
   color: #475569;
-}
+  font-size: 0.86rem;
+  font-weight: 600;
 
-/* ================= STATUS ================= */
+  svg {
+    color: #2ec4b6;
+    flex-shrink: 0;
+  }
+}
 
 .status {
-  margin-top: 6px;
-  padding: 4px 10px;
-
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 0.28rem 0.65rem;
   border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 500;
-
-  display: inline-block;
-  width: fit-content;
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: capitalize;
 }
 
-/* STATUS COLORS */
-
-.status.pending {
-  background: #fef3c7;
-  color: #d97706;
+.pending {
+  background: #fff7ed;
+  color: #c2410c;
 }
 
-.status.accepted {
-  background: #d1fae5;
-  color: #059669;
+.accepted {
+  background: #ecfdf5;
+  color: #047857;
 }
-
-.status.completed {
-  background: #e2e8f0;
-  color: #475569;
-}
-
-.status.cancelled {
-  background: #fee2e2;
-  color: #dc2626;
-}
-
-/* ================= ACTIONS ================= */
-
-.actions {
-  margin-top: auto;
-  display: flex;
-  gap: 8px;
-}
-
-/* PRIMARY */
-
-.primary {
-  flex: 1;
-  border: none;
-  padding: 8px;
-
-  border-radius: 999px;
-
-  background: #2ec4b6;
-  color: white;
-
-  font-size: 0.85rem;
-  font-weight: 500;
-
-  cursor: pointer;
-  transition: 0.2s;
-
-  &:hover {
-    transform: translateY(-2px);
-  }
-}
-
-/* DANGER */
-
-.danger {
-  flex: 1;
-  border: none;
-  padding: 8px;
-
-  border-radius: 999px;
-
-  background: #fee2e2;
-  color: #dc2626;
-
-  font-size: 0.85rem;
-
-  cursor: pointer;
-
-  &:hover {
-    background: #fecaca;
-  }
-}
-
-/* WAITING */
-
-.waiting {
-  width: 100%;
-  padding: 8px;
-
-  border-radius: 999px;
-  border: none;
-
-  background: #f1f5f9;
-  color: #64748b;
-
-  cursor: not-allowed;
-}
-
-/* COMPLETED TEXT */
 
 .completed {
-  font-size: 0.85rem;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.cancelled {
+  background: #fff1f2;
+  color: #be123c;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: auto;
+
+  @include respond(sm) {
+    flex-direction: column;
+  }
+}
+
+.primary,
+.secondary,
+.danger,
+.waiting {
+  flex: 1;
+  min-height: 42px;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.primary {
+  @include button-cta;
+}
+
+.danger {
+  @include button-danger;
+}
+
+.secondary {
+  @include button-secondary;
+}
+
+.waiting {
+  @include button-secondary;
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+
+.completedLabel {
   color: #64748b;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.emptyState,
+.loadingPanel {
+  text-align: center;
+  color: #64748b;
+}
+
+.emptyState strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #0f172a;
 }

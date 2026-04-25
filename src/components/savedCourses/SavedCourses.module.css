@@ -1,80 +1,121 @@
-/* ================= PAGE ================= */
 .page {
-  padding: 2rem;
+  width: 100%;
   min-height: 100vh;
-  background: #f8fafc;
-}
-@media (max-width: 480px) {
-  .page {
-    padding: 1rem;
-  }
+  padding: 1rem 0 2rem;
+  color: #0F172A;
 }
 
-/* ================= HEADER ================= */
 .header {
-  margin-bottom: 2rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.8fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+@media (max-width: 768px) {
+  .header {
+    grid-template-columns: 1fr;
+  }
 }
 .header h2 {
-  font-size: 1.6rem;
-  font-weight: 600;
+  margin: 0.4rem 0 0.35rem;
+  font-size: clamp(1.9rem, 4vw, 2.7rem);
+  line-height: 1.05;
   color: #0f172a;
 }
 .header p {
-  font-size: 0.9rem;
+  max-width: 58ch;
   color: #64748b;
-  margin-top: 4px;
+  font-size: 0.96rem;
 }
 
-/* ================= GRID ================= */
+.kicker {
+  color: #2EC4B6;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.snapshot {
+  padding: 1.3rem;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  background: radial-gradient(circle at top right, rgba(46, 196, 182, 0.16), transparent 38%), linear-gradient(145deg, #ffffff, #f7fbfc);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.snapshotLabel {
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.snapshot strong {
+  color: #0f172a;
+  font-size: 1.08rem;
+}
+
+.snapshotHint {
+  color: #64748b;
+  font-size: 0.88rem;
+}
+
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
 }
 
-/* ================= STATES ================= */
 .state {
-  margin-top: 3rem;
+  padding: 1.2rem;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1rem;
   text-align: center;
-  font-size: 0.95rem;
   color: #64748b;
 }
 
-/* ================= EMPTY STATE ================= */
 .emptyBox {
-  margin-top: 3rem;
-  padding: 2rem;
+  padding: 1.6rem;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  max-width: 480px;
+  margin: 0 auto 1.25rem;
   text-align: center;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-  max-width: 420px;
-  margin-left: auto;
-  margin-right: auto;
 }
 .emptyBox h3 {
-  font-size: 1.2rem;
+  margin: 0 0 0.35rem;
   color: #0f172a;
-  margin-bottom: 0.4rem;
+  font-size: 1.2rem;
 }
 .emptyBox p {
   color: #64748b;
-  font-size: 0.9rem;
-  margin-bottom: 1.2rem;
+  margin-bottom: 1rem;
 }
 
-/* ================= BUTTON ================= */
 .exploreBtn {
-  padding: 0.7rem 1.6rem;
-  border-radius: 999px;
-  border: none;
-  background: #ffb703;
-  color: black;
-  font-size: 0.9rem;
-  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 1rem;
   cursor: pointer;
-  transition: 0.2s;
-}
-.exploreBtn:hover {
-  transform: translateY(-2px);
+  transition: all 0.2s ease-in-out;
+  border: none;
+  background: #FFB703;
+  color: black;
+  font-weight: 600;
+  box-shadow: 0 10px 24px rgba(255, 183, 3, 0.2);
+  min-height: 46px;
+  border-radius: 999px;
+  font-weight: 700;
 }/*# sourceMappingURL=SavedCourses.module.css.map */

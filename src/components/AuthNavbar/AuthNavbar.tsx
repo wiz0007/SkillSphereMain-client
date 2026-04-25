@@ -6,7 +6,7 @@ export function AuthNavbar() {
     <nav className={styles.navbar}>
       <div className={styles.logoSection}>
         <Link to="/" className={styles.logo}>
-          <span className={styles.logoIcon}>⚡</span>
+          <span className={styles.logoIcon}>S</span>
           <span className={styles.logoText}>SkillSphere</span>
         </Link>
       </div>

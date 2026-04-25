@@ -1,42 +1,52 @@
 @use "../../styles/abstracts" as *;
 
-
 .navbar {
   position: sticky;
   top: 0;
-
+  z-index: 1000;
   width: 100%;
-  height: 64px;
-
-  padding: 0 0rem;
-
-  background: #ffffff;
-  border-bottom: 1px solid #e2e8f0;
-
+  height: 74px;
+  padding: 0 1.5rem;
   display: flex;
   align-items: center;
+  background: rgba(248, 250, 252, 0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.92);
+}
 
-  z-index: 1000;
+.logoSection {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
 }
 
 .logo {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
-
+  gap: 0.6rem;
+  min-height: 48px;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(226, 232, 240, 0.92);
   text-decoration: none;
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.04);
 }
 
 .logoIcon {
-  font-size: 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  background: #ecfeff;
+  color: #0f766e;
+  font-size: 1rem;
 }
 
 .logoText {
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1.05rem;
+  font-weight: 800;
   color: #0f172a;
-
-  span {
-    color: #2ec4b6;
-  }
 }
