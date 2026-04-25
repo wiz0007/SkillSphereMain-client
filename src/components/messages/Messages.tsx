@@ -45,7 +45,6 @@ const Messages = () => {
   const [sending, setSending] = useState(false);
 
   const selectedId = searchParams.get("userId") || "";
-  const selectedUsername = searchParams.get("username") || "";
 
   const refreshInbox = async () => {
     const [conversationData, contactData] = await Promise.all([
@@ -168,16 +167,8 @@ const Messages = () => {
       }
     });
 
-    if (selectedId && !map.has(selectedId)) {
-      map.set(selectedId, {
-        _id: selectedId,
-        username: selectedUsername || "participant",
-        fullName: "",
-      });
-    }
-
     return [...map.values()];
-  }, [contacts, conversations, selectedId, selectedUsername]);
+  }, [contacts, conversations]);
 
   const filteredContacts = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -261,8 +252,9 @@ const Messages = () => {
           <span className={styles.kicker}>Messages</span>
           <h1>Keep learner and tutor conversations in one place</h1>
           <p>
-            Follow up on session requests, coordinate timing, and keep
-            the context close to your dashboard workflow.
+            Chat becomes available only after a tutor accepts your
+            course booking, so every thread here is tied to a confirmed
+            learning relationship.
           </p>
         </div>
 
@@ -306,8 +298,8 @@ const Messages = () => {
               <div className={styles.emptyState}>
                 <strong>No contacts yet</strong>
                 <span>
-                  Book or manage sessions first and the people you work
-                  with will appear here.
+                  Tutor conversations appear here only after one of your
+                  bookings has been accepted.
                 </span>
               </div>
             ) : (

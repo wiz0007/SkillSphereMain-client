@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import styles from "./Navbar.module.scss";
 import { FiMessageSquare, FiChevronDown } from "react-icons/fi";
 import { useAuth } from "../../context/AuthContext";
@@ -11,6 +11,7 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
   const { user, logout, loading } = useAuth();
+  const navigate = useNavigate();
 
   const [profileOpen, setProfileOpen] = useState(false);
   const [hideNav, setHideNav] = useState(false);
@@ -103,9 +104,14 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
             <NavbarBell />
           </div>
 
-          <NavLink to="/messages" className={styles.iconWrapper}>
+          <button
+            type="button"
+            className={styles.iconWrapper}
+            onClick={() => navigate("/messages")}
+            aria-label="Open messages"
+          >
             <FiMessageSquare className={styles.icon} />
-          </NavLink>
+          </button>
 
           {loading ? (
             <div className={styles.skeleton}></div>

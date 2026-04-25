@@ -3,6 +3,7 @@
 .page {
   min-height: calc(100vh - 74px);
   padding: 2rem 1.5rem 2.5rem;
+  overflow-x: clip;
   background:
     radial-gradient(circle at top left, rgba(46, 196, 182, 0.12), transparent 26%),
     radial-gradient(circle at bottom right, rgba(255, 183, 3, 0.14), transparent 24%),
@@ -24,7 +25,10 @@
 }
 
 .hero {
+  min-width: 0;
   max-width: 56ch;
+  align-self: start;
+  padding-top: clamp(1rem, 5vw, 4rem);
 
   h1 {
     margin: 0 0 0.8rem;
@@ -48,6 +52,8 @@
 
 .card {
   @include hero-panel(1.5rem);
+  min-width: 0;
+  overflow: hidden;
 }
 
 .cardHeader {
@@ -87,6 +93,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
+  min-width: 0;
 
   span {
     color: #475569;
@@ -98,13 +105,17 @@
 
   input {
     @include input-surface;
+    min-width: 0;
   }
 }
 
 .passwordField {
   position: relative;
+  width: 100%;
+  min-width: 0;
 
   input {
+    width: 100%;
     padding-right: 3rem;
   }
 }
@@ -151,6 +162,14 @@
 @include respond(sm) {
   .page {
     padding: 1.25rem 1rem 2rem;
+  }
+
+  .shell {
+    gap: 1.1rem;
+  }
+
+  .hero {
+    padding-top: 0;
   }
 
   .card {
