@@ -1,0 +1,378 @@
+@use "../../styles/abstracts" as *;
+
+.page {
+  @include app-page;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.8fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  @include respond(md) {
+    grid-template-columns: 1fr;
+  }
+
+  h1 {
+    margin: 0.35rem 0 0.4rem;
+    font-size: clamp(1.9rem, 4vw, 2.8rem);
+    line-height: 1.05;
+    color: #0f172a;
+  }
+
+  p {
+    max-width: 58ch;
+    color: #64748b;
+    font-size: 0.96rem;
+    line-height: 1.6;
+  }
+}
+
+.kicker {
+  @include section-kicker;
+}
+
+.snapshot {
+  @include hero-panel(1.35rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.snapshotLabel {
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.snapshot strong {
+  color: #0f172a;
+  font-size: 1.08rem;
+}
+
+.snapshotHint {
+  color: #64748b;
+  font-size: 0.88rem;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+  gap: 1.2rem;
+  min-height: 68vh;
+
+  @include respond(md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sidebar,
+.chatPanel {
+  @include panel(24px, 1rem);
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+  padding: 0.82rem 0.95rem;
+  border: 1px solid #dbe4ee;
+  border-radius: 18px;
+  background: #fbfdff;
+
+  svg {
+    color: #64748b;
+    flex-shrink: 0;
+  }
+
+  input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: #0f172a;
+    font: inherit;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 0;
+}
+
+.contactCard {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+  padding: 0.9rem;
+  border: 1px solid #edf2f7;
+  border-radius: 18px;
+  background: #fbfdff;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    border-color: rgba(46, 196, 182, 0.28);
+    box-shadow: 0 12px 20px rgba(15, 23, 42, 0.05);
+  }
+}
+
+.contactCardActive {
+  border-color: rgba(46, 196, 182, 0.45);
+  background: linear-gradient(180deg, #f4fcfa, #ffffff);
+}
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background: #ecfeff;
+  color: #0f766e;
+  font-weight: 800;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.contactContent {
+  min-width: 0;
+
+  p {
+    margin: 0.2rem 0 0;
+    color: #64748b;
+    font-size: 0.84rem;
+    line-height: 1.45;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.contactTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+
+  strong {
+    color: #0f172a;
+    font-size: 0.92rem;
+  }
+
+  span {
+    color: #94a3b8;
+    font-size: 0.74rem;
+    flex-shrink: 0;
+  }
+}
+
+.contactMeta {
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.unreadBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.chatHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.chatIdentity {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+
+  strong {
+    display: block;
+    color: #0f172a;
+    font-size: 0.98rem;
+  }
+
+  span {
+    color: #64748b;
+    font-size: 0.82rem;
+  }
+}
+
+.messagesArea {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  flex: 1;
+  min-height: 340px;
+  padding: 1rem 0;
+}
+
+.messageRow {
+  display: flex;
+}
+
+.mine {
+  justify-content: flex-end;
+}
+
+.theirs {
+  justify-content: flex-start;
+}
+
+.messageBubble {
+  max-width: min(72%, 560px);
+  padding: 0.85rem 0.95rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+
+  p {
+    margin: 0;
+    color: #0f172a;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    white-space: pre-wrap;
+  }
+
+  span {
+    display: block;
+    margin-top: 0.45rem;
+    color: #64748b;
+    font-size: 0.74rem;
+  }
+}
+
+.mine .messageBubble {
+  background: linear-gradient(135deg, #2ec4b6, #74d9cf);
+
+  p,
+  span {
+    color: #062f2b;
+  }
+}
+
+.theirs .messageBubble {
+  background: #f8fafc;
+  border: 1px solid #edf2f7;
+}
+
+.composer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.85rem;
+  padding-top: 1rem;
+  border-top: 1px solid #edf2f7;
+
+  @include respond(sm) {
+    grid-template-columns: 1fr;
+  }
+
+  textarea {
+    @include textarea-surface(120px);
+  }
+}
+
+.sendButton {
+  @include button-cta;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-width: 132px;
+  min-height: 48px;
+  border-radius: 999px;
+  font-weight: 700;
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+.emptyState,
+.placeholder,
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 180px;
+  padding: 1.25rem;
+  border-radius: 18px;
+  background: #f8fafc;
+  color: #64748b;
+  text-align: center;
+
+  strong {
+    color: #0f172a;
+  }
+
+  span {
+    max-width: 36ch;
+    line-height: 1.55;
+  }
+}
+
+.placeholder {
+  flex: 1;
+  background:
+    radial-gradient(circle at top, rgba(46, 196, 182, 0.12), transparent 42%),
+    #f8fafc;
+}
+
+.placeholderIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 18px;
+  background: #ecfeff;
+  color: #0f766e;
+}
+
+.loading {
+  min-height: 260px;
+}

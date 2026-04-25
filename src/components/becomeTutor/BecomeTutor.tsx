@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { CheckCircle2, Sparkles } from "lucide-react";
 import styles from "./BecomeTutor.module.scss";
 import { becomeTutor } from "../../services/profile.service";
 import { useAuth } from "../../context/AuthContext";
@@ -29,83 +30,71 @@ const BecomeTutor: React.FC = () => {
   const [error, setError] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
 
-  /* ================= HANDLE CHANGE ================= */
-
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
-    const { name, value } = e.target;
+    const { name, value } = event.target;
 
-    setForm((prev) => ({
-      ...prev,
+    setForm((previous) => ({
+      ...previous,
       [name]: value,
     }));
   };
 
-  /* ================= SUBMIT ================= */
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
 
     setLoading(true);
     setError("");
 
-    /* ================= VALIDATION ================= */
-
     if (!form.headline.trim()) {
-      setError("Headline is required");
+      setError("Headline is required.");
       setLoading(false);
       return;
     }
 
     if (!form.bio || form.bio.length < 20) {
-      setError("Bio must be at least 20 characters");
+      setError("Bio must be at least 20 characters.");
       setLoading(false);
       return;
     }
 
     if (form.skills.length < 2) {
-      setError("Add at least 2 skills");
+      setError("Add at least 2 skills.");
       setLoading(false);
       return;
     }
 
     if (form.categories.length === 0) {
-      setError("Select at least 1 category");
+      setError("Select at least 1 category.");
       setLoading(false);
       return;
     }
 
     if (form.availability === null) {
-      setError("Please select availability");
+      setError("Please choose your availability.");
       setLoading(false);
       return;
     }
 
-    /* ================= PAYLOAD ================= */
-
     const payload = {
       headline: form.headline,
       bio: form.bio,
-
       skills: form.skills,
       categories: form.categories,
-
       experience: Number(form.experience) || 0,
       experienceDetails: form.experienceDetails,
-
       education: form.education,
-
       portfolioLinks: form.portfolioLinks
         .split(",")
-        .map((s) => s.trim())
+        .map((item) => item.trim())
         .filter(Boolean),
-
       languages: form.languages
         .split(",")
-        .map((s) => s.trim())
+        .map((item) => item.trim())
         .filter(Boolean),
-
       availability: form.availability,
       teachingMode: form.teachingMode || "Online",
     };
@@ -113,13 +102,13 @@ const BecomeTutor: React.FC = () => {
     try {
       await becomeTutor(payload);
 
-      setUser((prev) =>
-        prev
+      setUser((previous) =>
+        previous
           ? {
-              ...prev,
+              ...previous,
               isTutor: true,
             }
-          : prev
+          : previous
       );
 
       setShowSuccess(true);
@@ -129,7 +118,7 @@ const BecomeTutor: React.FC = () => {
       }, 1800);
     } catch (err: any) {
       setError(
-        err?.response?.data?.message || "Something went wrong"
+        err?.response?.data?.message || "Something went wrong."
       );
     } finally {
       setLoading(false);
@@ -137,185 +126,210 @@ const BecomeTutor: React.FC = () => {
   };
 
   return (
-    <div className={styles.container}>
-      {/* HERO */}
-      <section className={styles.hero}>
-        <h1>Become a Tutor</h1>
-        <p>Share your skills and earn money 🚀</p>
-      </section>
+    <section className={styles.container}>
+      <div className={styles.header}>
+        <div>
+          <span className={styles.kicker}>Tutor Onboarding</span>
+          <h1>Turn your profile into a tutor-ready workspace.</h1>
+          <p>
+            Add the signals learners need to trust your expertise,
+            request sessions, and understand your teaching style at
+            a glance.
+          </p>
+        </div>
 
-      {/* FORM */}
+        <div className={styles.snapshot}>
+          <span className={styles.snapshotLabel}>Progress</span>
+          <strong>
+            {form.skills.length} skills | {form.categories.length}{" "}
+            categories
+          </strong>
+          <span className={styles.snapshotHint}>
+            Clear profiles convert better than sparse ones.
+          </span>
+        </div>
+      </div>
+
       <form className={styles.form} onSubmit={handleSubmit}>
-        <h2>Your Tutor Profile</h2>
-
-        {error && <p className={styles.error}>{error}</p>}
-
-        {/* HEADLINE */}
-        <div className={styles.field}>
-          <label>Headline</label>
-          <input
-            name="headline"
-            value={form.headline}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        {/* BIO */}
-        <div className={styles.field}>
-          <label>Bio</label>
-          <textarea
-            name="bio"
-            value={form.bio}
-            placeholder="Describe your teaching style, experience, and strengths"
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        {/* SKILLS */}
-        <div className={styles.field}>
-          <label>Skills</label>
-          <SkillsInput
-            value={form.skills}
-            onChange={(skills) =>
-              setForm((prev) => ({ ...prev, skills }))
-            }
-          />
-        </div>
-
-        {/* CATEGORIES */}
-        <div className={styles.field}>
-          <label>Categories</label>
-          <CategorySelect
-            value={form.categories}
-            onChange={(categories) =>
-              setForm((prev) => ({ ...prev, categories }))
-            }
-          />
-        </div>
-
-        {/* EXPERIENCE */}
-        <div className={styles.field}>
-          <label>Experience (years)</label>
-          <input
-            name="experience"
-            type="number"
-            onChange={handleChange}
-          />
-        </div>
-
-        {/* EXPERIENCE DETAILS */}
-        <div className={styles.field}>
-          <label>Experience Details</label>
-          <textarea
-            name="experienceDetails"
-            placeholder="Worked at X, built Y, mentored Z students..."
-            onChange={handleChange}
-          />
-        </div>
-
-        {/* EDUCATION */}
-        <div className={styles.field}>
-          <label>Education</label>
-          <input
-            name="education"
-            placeholder="Degree, University, or Self-taught"
-            onChange={handleChange}
-          />
-        </div>
-
-        {/* PORTFOLIO */}
-        <div className={styles.field}>
-          <label>Portfolio / Professional Links</label>
-          <input
-            name="portfolioLinks"
-            placeholder="GitHub, LinkedIn, Portfolio URL"
-            onChange={handleChange}
-          />
-        </div>
-
-        {/* LANGUAGES */}
-        <div className={styles.field}>
-          <label>Languages</label>
-          <input
-            name="languages"
-            placeholder="English, Hindi"
-            onChange={handleChange}
-          />
-        </div>
-
-        {/* AVAILABILITY */}
-        <div className={styles.field}>
-          <label>Currently Available?</label>
-
-          <div style={{ display: "flex", gap: "1rem" }}>
-            <label>
-              <input
-                type="radio"
-                checked={form.availability === true}
-                onChange={() =>
-                  setForm((prev) => ({
-                    ...prev,
-                    availability: true,
-                  }))
-                }
-              />
-              Yes
-            </label>
-
-            <label>
-              <input
-                type="radio"
-                checked={form.availability === false}
-                onChange={() =>
-                  setForm((prev) => ({
-                    ...prev,
-                    availability: false,
-                  }))
-                }
-              />
-              No
-            </label>
+        <div className={styles.sectionHeader}>
+          <div>
+            <h2>Your tutor profile</h2>
+            <p>
+              These details will feed into your public profile and
+              dashboard surfaces.
+            </p>
           </div>
         </div>
 
-        {/* TEACHING MODE */}
-        <div className={styles.field}>
-          <label>Teaching Mode</label>
-          <select
-            name="teachingMode"
-            value={form.teachingMode}
-            onChange={handleChange}
-          >
-            <option value="">Select mode</option>
-            <option value="Online">Online</option>
-            <option value="Offline">Offline</option>
-            <option value="Both">Both</option>
-          </select>
+        {error ? <p className={styles.error}>{error}</p> : null}
+
+        <div className={styles.fieldGrid}>
+          <label className={`${styles.field} ${styles.fieldWide}`}>
+            <span>Headline</span>
+            <input
+              name="headline"
+              value={form.headline}
+              onChange={handleChange}
+              placeholder="What outcome do you help learners achieve?"
+              required
+            />
+          </label>
+
+          <label className={`${styles.field} ${styles.fieldWide}`}>
+            <span>Bio</span>
+            <textarea
+              name="bio"
+              value={form.bio}
+              placeholder="Describe your teaching style, experience, and strengths."
+              onChange={handleChange}
+              required
+            />
+          </label>
+
+          <div className={styles.field}>
+            <span>Skills</span>
+            <SkillsInput
+              value={form.skills}
+              onChange={(skills) =>
+                setForm((previous) => ({ ...previous, skills }))
+              }
+            />
+          </div>
+
+          <div className={styles.field}>
+            <span>Categories</span>
+            <CategorySelect
+              value={form.categories}
+              onChange={(categories) =>
+                setForm((previous) => ({
+                  ...previous,
+                  categories,
+                }))
+              }
+            />
+          </div>
+
+          <label className={styles.field}>
+            <span>Experience in years</span>
+            <input
+              name="experience"
+              type="number"
+              value={form.experience}
+              onChange={handleChange}
+              placeholder="3"
+            />
+          </label>
+
+          <label className={styles.field}>
+            <span>Teaching mode</span>
+            <select
+              name="teachingMode"
+              value={form.teachingMode}
+              onChange={handleChange}
+            >
+              <option value="">Select mode</option>
+              <option value="Online">Online</option>
+              <option value="Offline">Offline</option>
+              <option value="Both">Both</option>
+            </select>
+          </label>
+
+          <label className={`${styles.field} ${styles.fieldWide}`}>
+            <span>Experience details</span>
+            <textarea
+              name="experienceDetails"
+              value={form.experienceDetails}
+              placeholder="Share notable work, projects, mentoring, or outcomes."
+              onChange={handleChange}
+            />
+          </label>
+
+          <label className={styles.field}>
+            <span>Education</span>
+            <input
+              name="education"
+              value={form.education}
+              placeholder="Degree, certification, or self-taught background"
+              onChange={handleChange}
+            />
+          </label>
+
+          <label className={styles.field}>
+            <span>Languages</span>
+            <input
+              name="languages"
+              value={form.languages}
+              placeholder="English, Hindi"
+              onChange={handleChange}
+            />
+          </label>
+
+          <label className={`${styles.field} ${styles.fieldWide}`}>
+            <span>Portfolio or professional links</span>
+            <input
+              name="portfolioLinks"
+              value={form.portfolioLinks}
+              placeholder="GitHub, LinkedIn, portfolio URL"
+              onChange={handleChange}
+            />
+          </label>
+
+          <div className={`${styles.field} ${styles.fieldWide}`}>
+            <span>Availability</span>
+            <div className={styles.radioGroup}>
+              <label className={styles.radioOption}>
+                <input
+                  type="radio"
+                  checked={form.availability === true}
+                  onChange={() =>
+                    setForm((previous) => ({
+                      ...previous,
+                      availability: true,
+                    }))
+                  }
+                />
+                <span>Available for requests</span>
+              </label>
+
+              <label className={styles.radioOption}>
+                <input
+                  type="radio"
+                  checked={form.availability === false}
+                  onChange={() =>
+                    setForm((previous) => ({
+                      ...previous,
+                      availability: false,
+                    }))
+                  }
+                />
+                <span>Not available right now</span>
+              </label>
+            </div>
+          </div>
         </div>
 
-        {/* SUBMIT */}
         <button
           type="submit"
           className={styles.submitBtn}
           disabled={loading}
         >
-          {loading ? "Submitting..." : "Become Tutor 🚀"}
+          <Sparkles size={16} />
+          {loading ? "Submitting..." : "Become a tutor"}
         </button>
       </form>
 
-      {/* SUCCESS MODAL */}
-      {showSuccess && (
+      {showSuccess ? (
         <div className={styles.successOverlay}>
           <div className={styles.successModal}>
-            <div className={styles.checkmark}>✓</div>
-            <h2>You are now a Tutor!</h2>
-            <p>Redirecting to dashboard...</p>
+            <div className={styles.checkmark}>
+              <CheckCircle2 size={28} />
+            </div>
+            <h2>You are now a tutor</h2>
+            <p>Redirecting to your dashboard...</p>
           </div>
         </div>
-      )}
-    </div>
+      ) : null}
+    </section>
   );
 };
 

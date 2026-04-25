@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { X } from "lucide-react";
 import styles from "./SkillsInput.module.scss";
 
 interface Props {
@@ -33,16 +34,16 @@ const SkillsInput: React.FC<Props> = ({ value, onChange }) => {
   };
 
   const removeSkill = (skill: string) => {
-    onChange(value.filter((s) => s !== skill));
+    onChange(value.filter((item) => item !== skill));
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    setInput(val);
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const nextValue = event.target.value;
+    setInput(nextValue);
 
-    if (val.trim()) {
-      const results = SUGGESTIONS.filter((s) =>
-        s.toLowerCase().includes(val.toLowerCase())
+    if (nextValue.trim()) {
+      const results = SUGGESTIONS.filter((skill) =>
+        skill.toLowerCase().includes(nextValue.toLowerCase())
       );
       setFiltered(results);
     } else {
@@ -50,9 +51,11 @@ const SkillsInput: React.FC<Props> = ({ value, onChange }) => {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && input.trim()) {
-      e.preventDefault();
+  const handleKeyDown = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (event.key === "Enter" && input.trim()) {
+      event.preventDefault();
       addSkill(input.trim());
     }
   };
@@ -63,7 +66,12 @@ const SkillsInput: React.FC<Props> = ({ value, onChange }) => {
         {value.map((skill) => (
           <span key={skill} className={styles.tag}>
             {skill}
-            <button onClick={() => removeSkill(skill)}>×</button>
+            <button
+              type="button"
+              onClick={() => removeSkill(skill)}
+            >
+              <X size={12} />
+            </button>
           </span>
         ))}
 
@@ -71,19 +79,23 @@ const SkillsInput: React.FC<Props> = ({ value, onChange }) => {
           value={input}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          placeholder="Type and press Enter..."
+          placeholder="Type a skill and press Enter"
         />
       </div>
 
-      {filtered.length > 0 && (
+      {filtered.length > 0 ? (
         <div className={styles.dropdown}>
-          {filtered.map((s) => (
-            <div key={s} onClick={() => addSkill(s)}>
-              {s}
-            </div>
+          {filtered.map((skill) => (
+            <button
+              key={skill}
+              type="button"
+              onClick={() => addSkill(skill)}
+            >
+              {skill}
+            </button>
           ))}
         </div>
-      )}
+      ) : null}
     </div>
   );
 };

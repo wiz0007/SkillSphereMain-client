@@ -1,322 +1,557 @@
 @use "../../styles/abstracts" as *;
 
-/* ================= PAGE ================= */
-
 .page {
-  min-height: 100vh;
-  background: #f8fafc;
+  @include app-page;
 }
-
-/* ================= CONTAINER ================= */
 
 .container {
-  max-width: 1100px;
-  margin: auto;
-  padding: 2rem;
-
-  @include respond(sm) {
-    padding: 1rem;
-  }
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
-
-/* ================= HERO ================= */
 
 .hero {
-  display: flex;
-  gap: 2rem;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(300px, 0.88fr);
+  gap: 1rem;
+  align-items: start;
 
   @include respond(md) {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
 }
-
-/* ================= LEFT ================= */
 
 .left {
-  flex: 2;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
+  @include hero-panel(1.35rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 
-  padding: 1.5rem;
+.heroTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
 
-  h1 {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: #0f172a;
+  @include respond(sm) {
+    flex-direction: column;
+    align-items: stretch;
   }
 }
 
-/* DESCRIPTION */
-
-.desc {
-  margin-top: 0.6rem;
-  color: #475569;
-  line-height: 1.6;
+.kicker {
+  @include section-kicker;
 }
 
-/* ================= TUTOR ================= */
+.saveButton {
+  @include button-secondary;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 40px;
+  border-radius: 999px;
+  width: fit-content;
+}
+
+.saved {
+  background: #ecfeff;
+  border-color: rgba(46, 196, 182, 0.32);
+  color: #0f766e;
+}
+
+.left h1 {
+  margin: 0;
+  color: $color-text-primary;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.02;
+}
+
+.desc {
+  margin: 0;
+  max-width: 64ch;
+  color: $color-text-secondary;
+  font-size: 0.96rem;
+  line-height: 1.7;
+}
 
 .tutor {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  margin: 0.6rem 0;
-
+  gap: 0.85rem;
+  width: fit-content;
+  padding: 0.8rem 1rem;
+  border: 1px solid #dbe4ee;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.8);
   cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    border-color: rgba(46, 196, 182, 0.28);
+    box-shadow: $shadow-sm;
+  }
 
   img {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    border-radius: 16px;
     object-fit: cover;
+  }
+}
+
+.tutorText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+
+  strong {
+    color: $color-text-primary;
+    font-size: 0.95rem;
   }
 
   span {
-    font-size: 0.9rem;
-    color: #334155;
-    font-weight: 500;
+    color: $color-text-secondary;
+    font-size: 0.82rem;
   }
 }
 
-/* ================= RATING ================= */
-
-.ratingRow {
-  margin-top: 1rem;
+.badges,
+.skills,
+.previewTags {
   display: flex;
-  gap: 0.6rem;
-  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.55rem;
 }
 
-.stars span {
-  font-size: 1.2rem;
-  cursor: pointer;
+.badges span,
+.previewTags span {
+  @include neutral-tag;
+}
+
+.metricRow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+
+  @include respond(sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.metricCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid #edf2f7;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.76);
+
+  svg {
+    color: $color-accent;
+  }
+}
+
+.metricLabel {
+  color: $color-text-secondary;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.metricValue {
+  color: $color-text-primary;
+  font-size: 1.15rem;
+}
+
+.ratePanel {
+  @include panel(22px, 1rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  background: rgba(255, 255, 255, 0.76);
+}
+
+.rateLabel {
+  color: $color-text-primary;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.rateCopy {
+  margin: 0.25rem 0 0;
+  color: $color-text-secondary;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.ratingStars,
+.reviewStars,
+.inlineStars {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.starButton,
+.starIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  border: 1px solid $color-border-strong;
+  background: #ffffff;
   color: #cbd5e1;
-  transition: 0.2s;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.starButton {
+  cursor: pointer;
 
   &:hover {
-    transform: scale(1.2);
-    color: #f59e0b;
+    transform: translateY(-1px);
+    border-color: rgba(245, 158, 11, 0.24);
+    color: #fbbf24;
   }
 }
 
-.active {
-  color: #f59e0b !important;
+.inlineStars .starIcon {
+  width: 32px;
+  height: 32px;
+}
+
+.activeStar {
+  border-color: rgba(245, 158, 11, 0.24);
+  background: #fffbeb;
+  color: #f59e0b;
 }
 
 .ratingText {
-  font-size: 0.9rem;
-  color: #64748b;
+  color: $color-text-secondary;
+  font-size: 0.86rem;
+  font-weight: 600;
 }
 
-/* ================= BADGES ================= */
-
-.badges {
-  margin-top: 1rem;
+.skillsSection {
   display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-
-  span {
-    background: #f1f5f9;
-    padding: 4px 10px;
-    border-radius: 999px;
-    font-size: 12px;
-    color: #334155;
-  }
+  flex-direction: column;
+  gap: 0.55rem;
 }
 
-/* ================= SAVE ================= */
-
-.saveBtn {
-  margin-top: 1rem;
-  border: none;
-  background: #f1f5f9;
-  padding: 8px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 18px;
-
-  transition: 0.2s;
-
-  &:hover {
-    transform: scale(1.1);
-  }
+.skillsLabel,
+.summaryLabel,
+.priceLabel,
+.snapshotLabel {
+  color: $color-text-secondary;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.saved {
-  color: #ef4444;
+.skills span {
+  @include tag;
+  font-weight: 700;
 }
-
-/* ================= RIGHT ================= */
 
 .right {
-  flex: 1;
-}
-
-/* ================= VIDEO ================= */
-
-.video {
-  width: 100%;
-  aspect-ratio: 16/9;
-
-  iframe {
-    width: 100%;
-    height: 100%;
-    border-radius: 12px;
-  }
-}
-
-/* ================= SIDEBAR CARD ================= */
-
-.card {
-  margin-top: 1rem;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-
-  padding: 1.2rem;
-  text-align: center;
-
-  h3 {
-    font-size: 1.4rem;
-    color: #0f172a;
-  }
-
-  button {
-    width: 100%;
-    padding: 0.8rem;
-    margin: 0.8rem 0;
-
-    border-radius: 10px;
-    border: none;
-
-    background: #ffb703;
-    color: black;
-    font-weight: 600;
-
-    cursor: pointer;
-    transition: 0.2s;
-
-    &:hover {
-      transform: translateY(-2px);
-    }
-  }
-
-  ul {
-    margin-top: 0.6rem;
-    text-align: left;
-    font-size: 0.9rem;
-    color: #475569;
-  }
-}
-
-/* ================= SECTION ================= */
-
-.section {
-  margin-top: 2.5rem;
-}
-
-/* ================= SUMMARY ================= */
-
-.summary {
   display: flex;
-  gap: 2rem;
-
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-
-  padding: 1.5rem;
+  flex-direction: column;
+  gap: 1rem;
+  position: sticky;
+  top: 1rem;
+  align-self: start;
 
   @include respond(md) {
-    flex-direction: column;
+    position: static;
   }
 }
 
-/* AVG */
+.previewCard {
+  @include hero-panel(1.2rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
 
-.avg {
-  min-width: 140px;
-  text-align: center;
-
-  h1 {
-    font-size: 2.5rem;
+  h3 {
+    margin: 0;
+    color: $color-text-primary;
+    font-size: 1.15rem;
   }
 
   p {
-    color: #64748b;
+    margin: 0;
+    color: $color-text-secondary;
+    font-size: 0.9rem;
+    line-height: 1.65;
   }
 }
 
-/* ================= BREAKDOWN ================= */
+.sidebarKicker {
+  @include section-kicker;
+}
 
-.breakdown {
-  flex: 1;
+.card {
+  @include panel(24px, 1.2rem);
   display: flex;
   flex-direction: column;
+  gap: 1rem;
+}
+
+.priceBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.price {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: $color-text-primary;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.priceNote,
+.snapshotHint {
+  color: $color-text-secondary;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.requestButton {
+  @include button-cta;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: 100%;
+  min-height: 48px;
+  border-radius: 999px;
+}
+
+.sidebarList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sidebarItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.85rem 0.9rem;
+  border: 1px solid #edf2f7;
+  border-radius: 18px;
+  background: #fbfdff;
+
+  svg {
+    color: $color-accent;
+    margin-top: 0.15rem;
+    flex-shrink: 0;
+  }
+
+  strong {
+    display: block;
+    margin-bottom: 0.2rem;
+    color: $color-text-primary;
+    font-size: 0.9rem;
+  }
+
+  span {
+    color: #475569;
+    font-size: 0.84rem;
+    line-height: 1.55;
+  }
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sectionHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.88fr);
+  gap: 1rem;
+
+  @include respond(md) {
+    grid-template-columns: 1fr;
+  }
+
+  h2 {
+    margin: 0.35rem 0 0.4rem;
+    color: $color-text-primary;
+    font-size: clamp(1.55rem, 3vw, 2.1rem);
+    line-height: 1.1;
+  }
+
+  p {
+    margin: 0;
+    max-width: 58ch;
+    color: $color-text-secondary;
+    font-size: 0.94rem;
+    line-height: 1.65;
+  }
+}
+
+.sectionSnapshot {
+  @include hero-panel(1.2rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.35rem;
+
+  strong {
+    color: $color-text-primary;
+    font-size: 1.08rem;
+  }
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.84fr) minmax(0, 1fr);
+  gap: 1rem;
+
+  @include respond(md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.avg,
+.breakdown,
+.reviewComposer,
+.emptyReviews,
+.loadingState {
+  @include panel(24px, 1.2rem);
+}
+
+.avg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 0.6rem;
+  text-align: center;
+
+  h1 {
+    margin: 0;
+    color: $color-text-primary;
+    font-size: 3rem;
+    line-height: 0.95;
+  }
+
+  p {
+    margin: 0;
+    color: $color-text-secondary;
+    font-size: 0.88rem;
+  }
+}
+
+.breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
 }
 
 .barRow {
   display: grid;
-  grid-template-columns: 40px 1fr 30px;
+  grid-template-columns: 54px 1fr 36px;
+  gap: 0.75rem;
   align-items: center;
 }
 
+.barLabel,
+.barCount {
+  color: $color-text-secondary;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.barCount {
+  text-align: right;
+}
+
 .bar {
-  height: 6px;
+  height: 10px;
+  border-radius: 999px;
   background: #e2e8f0;
-  border-radius: 10px;
+  overflow: hidden;
 }
 
 .fill {
   height: 100%;
-  background: #f59e0b;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #f59e0b, #ffb703);
 }
 
-/* ================= ADD REVIEW ================= */
-
-.addReview {
-  margin-top: 2rem;
-
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-
-  padding: 1.5rem;
-
+.reviewComposer {
   display: flex;
   flex-direction: column;
+  gap: 0.9rem;
+}
+
+.composerHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: 1rem;
+
+  h3 {
+    margin: 0.28rem 0 0;
+    color: $color-text-primary;
+    font-size: 1.08rem;
+  }
 }
 
-.addReview textarea {
-  width: 100%;
-  padding: 0.8rem;
-  border-radius: 10px;
-  border: 1px solid #e2e8f0;
+.composerIcon {
+  color: $color-accent;
+  flex-shrink: 0;
 }
 
-/* ================= REVIEW LIST ================= */
+.reviewComposer textarea {
+  @include textarea-surface(156px);
+}
+
+.composeButton {
+  @include button-cta;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  border-radius: 999px;
+  width: fit-content;
+}
 
 .reviewList {
-  margin-top: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.9rem;
 }
 
 .reviewCard {
+  @include panel(22px, 1rem);
   display: flex;
-  gap: 1rem;
-
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-
-  padding: 1.2rem;
+  gap: 0.9rem;
 
   @include respond(sm) {
     flex-direction: column;
@@ -324,34 +559,74 @@
 }
 
 .avatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: #e2e8f0;
-
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-weight: 600;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at top right, rgba($color-accent, 0.18), transparent 36%),
+    #f1f5f9;
+  color: $color-text-primary;
+  font-size: 1rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.reviewBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.reviewHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.55rem;
+
+  @include respond(sm) {
+    flex-direction: column;
+  }
 }
 
 .name {
-  font-weight: 600;
+  display: block;
+  color: $color-text-primary;
+  font-size: 0.95rem;
+  font-weight: 700;
 }
 
 .time {
-  font-size: 12px;
+  display: block;
+  margin-top: 0.15rem;
   color: #94a3b8;
+  font-size: 0.8rem;
 }
 
 .comment {
-  margin-top: 0.4rem;
+  margin: 0;
   color: #475569;
+  font-size: 0.9rem;
+  line-height: 1.7;
 }
 
-/* ================= ERROR ================= */
+.emptyReviews,
+.loadingState {
+  text-align: center;
+  color: $color-text-secondary;
+}
+
+.emptyReviews strong {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: $color-text-primary;
+}
 
 .error {
-  color: red;
-  font-size: 0.85rem;
+  margin: 0;
+  color: $color-danger;
+  font-size: 0.84rem;
+  font-weight: 600;
 }

@@ -1,0 +1,364 @@
+@use "../../styles/abstracts" as *;
+
+.container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 1rem 0 2rem;
+  color: $color-text-primary;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(260px, 0.8fr);
+  gap: 1.25rem;
+  align-items: stretch;
+  margin-bottom: 1.5rem;
+
+  @include respond(md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.eyebrow {
+  margin-bottom: 0.5rem;
+  color: $color-accent;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.hero h1 {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.9rem, 4vw, 2.7rem);
+  line-height: 1.05;
+  color: $color-primary;
+}
+
+.subtitle {
+  max-width: 58ch;
+  color: $color-text-secondary;
+  line-height: 1.6;
+}
+
+.heroCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(46, 196, 182, 0.2);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top right, rgba(46, 196, 182, 0.22), transparent 45%),
+    linear-gradient(145deg, #ffffff, #f3f8fb);
+  box-shadow: $shadow-md;
+}
+
+.heroLabel {
+  color: $color-text-secondary;
+  font-size: $font-sm;
+}
+
+.heroCard strong {
+  font-size: 1.2rem;
+  color: $color-primary;
+}
+
+.heroCard span:last-child {
+  color: $color-text-secondary;
+  word-break: break-word;
+}
+
+.grid,
+.securityGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.9fr);
+  gap: 1.5rem;
+
+  @include respond(md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.securityGrid {
+  margin-top: 1.5rem;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: 22px;
+  padding: 1.5rem;
+  box-shadow: $shadow-sm;
+}
+
+.dangerCard {
+  border-color: rgba(229, 62, 62, 0.15);
+  background: linear-gradient(180deg, rgba(255, 248, 248, 0.96), rgba(255, 255, 255, 0.96));
+}
+
+.sectionHeader {
+  margin-bottom: 1rem;
+}
+
+.sectionHeader h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.05rem;
+  color: $color-primary;
+}
+
+.sectionHeader p {
+  margin: 0;
+  color: $color-text-secondary;
+  font-size: $font-sm;
+  line-height: 1.55;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+
+  @include respond(sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.formGrid label,
+.textareaField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: $color-primary;
+}
+
+.textareaField {
+  margin-top: 1rem;
+}
+
+.container input,
+.container textarea {
+  width: 100%;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid $color-border;
+  border-radius: 14px;
+  background: #f8fafc;
+  color: $color-text-primary;
+  font: inherit;
+  transition: $transition;
+}
+
+.container input:focus,
+.container textarea:focus {
+  outline: none;
+  border-color: $color-accent;
+  box-shadow: 0 0 0 3px rgba(46, 196, 182, 0.14);
+  background: #ffffff;
+}
+
+.container input:disabled {
+  background: #eef2f7;
+  color: #7b8798;
+  cursor: not-allowed;
+}
+
+.container textarea {
+  min-height: 140px;
+  resize: vertical;
+  line-height: 1.55;
+}
+
+.inlineHint {
+  color: $color-text-secondary;
+  font-size: 0.76rem;
+  font-weight: 500;
+}
+
+.preferenceRow {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 0;
+  border: none;
+  border-top: 1px solid rgba(226, 232, 240, 0.9);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.preferenceRow:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.preferenceRow:last-child {
+  padding-bottom: 0;
+}
+
+.preferenceRow strong {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: $color-primary;
+  font-size: 0.95rem;
+}
+
+.preferenceRow span {
+  color: $color-text-secondary;
+  font-size: $font-sm;
+  line-height: 1.5;
+}
+
+.pill,
+.toggle {
+  flex-shrink: 0;
+  min-width: 62px;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: #e2e8f0;
+  color: $color-primary;
+  text-align: center;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.toggleOn,
+.pill {
+  background: rgba(46, 196, 182, 0.16);
+  color: #0f766e;
+}
+
+.passwordRules {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.passwordRules span {
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: $color-text-secondary;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.ruleValid {
+  background: rgba(46, 196, 182, 0.16) !important;
+  color: #0f766e !important;
+}
+
+.confirmRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-top: 0.9rem;
+  color: $color-primary;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.confirmRow input {
+  width: 16px;
+  height: 16px;
+  margin-top: 0.2rem;
+}
+
+.actions,
+.inlineActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+
+  @include respond(sm) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.inlineActions {
+  margin-top: 1rem;
+}
+
+.primaryButton,
+.secondaryButton,
+.dangerButton {
+  border: none;
+  border-radius: 999px;
+  padding: 0.9rem 1.4rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+}
+
+.primaryButton:hover,
+.secondaryButton:hover,
+.dangerButton:hover {
+  transform: translateY(-1px);
+}
+
+.primaryButton {
+  background: linear-gradient(135deg, $color-accent, #1aa595);
+  color: white;
+  box-shadow: 0 10px 24px rgba(46, 196, 182, 0.28);
+}
+
+.secondaryButton {
+  background: #f1f5f9;
+  color: $color-primary;
+}
+
+.dangerButton {
+  background: #fff1f2;
+  color: #b42318;
+}
+
+.primaryButton:disabled,
+.dangerButton:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.footerBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: $shadow-sm;
+
+  @include respond(sm) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.feedback {
+  color: $color-text-secondary;
+  font-size: $font-sm;
+  line-height: 1.5;
+}
+
+.loading {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: $color-text-secondary;
+}

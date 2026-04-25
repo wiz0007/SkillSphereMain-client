@@ -1,186 +1,281 @@
-/* ================= GLOBAL FIX ================= */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+.page {
+  min-height: calc(100vh - 74px);
+  padding: 2rem 1.5rem 2.5rem;
+  background: radial-gradient(circle at top left, rgba(46, 196, 182, 0.12), transparent 26%), radial-gradient(circle at bottom right, rgba(255, 183, 3, 0.14), transparent 24%), #f8fafc;
 }
 
-/* ================= CONTAINER ================= */
-.container {
+.shell {
   width: 100%;
-  min-height: calc(100vh - 70px);
-  display: flex;
+  max-width: 1120px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(380px, 0.95fr);
+  gap: 1.5rem;
   align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-  background: linear-gradient(135deg, #eef2ff, #f8fafc);
+}
+@media (max-width: 768px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
 }
 
-/* ================= CARD ================= */
-.card {
-  width: 100%;
-  max-width: 460px;
-  padding: 2rem;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
+.hero {
+  max-width: 58ch;
 }
-
-/* ================= TITLE ================= */
-.title {
-  text-align: center;
-  font-size: 1.6rem;
-  font-weight: 600;
+.hero h1 {
+  margin: 0 0 0.8rem;
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  line-height: 1.04;
   color: #0f172a;
-  margin-bottom: 1.5rem;
 }
 
-/* ================= FORM ================= */
+.kicker {
+  color: #2EC4B6;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.7rem;
+}
+
+.subtitle {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.98rem;
+  line-height: 1.7;
+}
+
+.card {
+  padding: 1.5rem;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  background: radial-gradient(circle at top right, rgba(46, 196, 182, 0.16), transparent 38%), linear-gradient(145deg, #ffffff, #f7fbfc);
+}
+
+.cardHeader {
+  margin-bottom: 1.25rem;
+}
+.cardHeader h2 {
+  margin: 0 0 0.3rem;
+  font-size: 1.35rem;
+  color: #0f172a;
+}
+.cardHeader p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.92rem;
+}
+
+.feedbackBanner {
+  margin-bottom: 1rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: 16px;
+  border: 1px solid rgba(46, 196, 182, 0.24);
+  background: rgba(46, 196, 182, 0.08);
+  color: #0f766e;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
 .form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-/* ================= INPUT ================= */
-.form input {
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+.field span {
+  color: #475569;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.field input {
   width: 100%;
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  background: #ffffff;
-  color: #0f172a;
-  font-size: 0.9rem;
+  min-height: 48px;
+  padding: 0.82rem 0.95rem;
+  border: 1px solid #DBE4EE;
+  border-radius: 16px;
+  background: #FBFDFF;
+  color: #0F172A;
+  font: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.field input:focus {
+  outline: none;
+  border-color: #2EC4B6;
+  box-shadow: 0 0 0 4px rgba(46, 196, 182, 0.12);
+  background: #FFFFFF;
 }
 
-/* ================= PASSWORD ================= */
-.passwordContainer {
+.passwordField {
   position: relative;
-  width: 100%;
 }
-.passwordContainer input {
-  width: 100%;
-  padding-right: 45px;
+.passwordField input {
+  padding-right: 3rem;
 }
-.passwordContainer .eye {
+
+.eyeButton {
   position: absolute;
-  right: 12px;
   top: 50%;
+  right: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: #64748b;
   transform: translateY(-50%);
   cursor: pointer;
-  color: #64748b;
 }
 
-/* ================= PASSWORD RULES ================= */
-.passwordRules {
-  font-size: 0.75rem;
+.inlineHint {
   color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 600;
 }
-.passwordRules p {
-  margin: 2px 0;
+
+.passwordRules {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.passwordRules span {
+  padding: 0.38rem 0.78rem;
+  font-size: 0.78rem;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #334155;
+  font-weight: 600;
 }
 
 .valid {
-  color: #16a34a;
+  background: rgba(46, 196, 182, 0.16) !important;
+  color: #0f766e !important;
 }
 
-/* ================= STATUS ================= */
-.status {
-  font-size: 0.8rem;
-}
-
-/* ================= TERMS ================= */
-.terms {
+.termsRow {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.85rem;
-  color: #475569;
-  position: relative;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.72);
+  color: #334155;
+  font-size: 0.9rem;
+  line-height: 1.6;
 }
-.terms input[type=checkbox] {
-  position: static !important;
-  -webkit-appearance: auto;
-     -moz-appearance: auto;
-          appearance: auto;
+.termsRow input {
   width: 16px;
   height: 16px;
-  margin: 0;
-  flex: 0 0 auto;
-  cursor: pointer;
-  accent-color: #6366f1;
-}
-.terms label {
-  cursor: pointer;
+  margin-top: 0.18rem;
+  accent-color: #2ec4b6;
 }
 
-/* ================= BUTTON ================= */
-button {
-  margin-top: 0.5rem;
-  padding: 12px;
-  border-radius: 999px;
+.inlineLink {
   border: none;
-  background: linear-gradient(135deg, #6366f1, #4f46e5);
-  color: white;
+  padding: 0;
+  background: transparent;
+  color: #0f172a;
+  font-size: inherit;
+  font-weight: 700;
+  text-decoration: underline;
   cursor: pointer;
-  transition: 0.2s;
-}
-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
-}
-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
-/* ================= FOOTER ================= */
-p {
+.submitButton,
+.secondaryButton {
+  min-height: 48px;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.submitButton {
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  border: none;
+  background: #FFB703;
+  color: black;
+  font-weight: 600;
+  box-shadow: 0 10px 24px rgba(255, 183, 3, 0.2);
+  width: 100%;
+}
+
+.secondaryButton {
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  border: none;
+  background: #FFFFFF;
+  border: 1px solid #DBE4EE;
+  color: #0F172A;
+  width: 100%;
+}
+
+.footer {
+  margin: 1rem 0 0;
+  color: #64748b;
+  font-size: 0.88rem;
   text-align: center;
-  font-size: 0.85rem;
-  margin-top: 1rem;
+}
+.footer a {
+  color: #0f172a;
+  font-weight: 700;
+  text-decoration: none;
 }
 
-/* ================= ERROR ================= */
-.error {
-  color: #dc2626;
-  text-align: center;
-  font-size: 0.85rem;
-}
-
-/* ================= MODAL ================= */
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
+  padding: 1rem;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 1200;
 }
 
 .modalContent {
-  background: white;
-  padding: 2rem;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 400px;
+  padding: 1.4rem;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  width: min(100%, 460px);
+}
+.modalContent h3 {
+  margin: 0 0 0.5rem;
+  color: #0f172a;
+}
+.modalContent p {
+  margin: 0 0 1rem;
+  color: #64748b;
+  line-height: 1.65;
 }
 
-/* ================= RESPONSIVE ================= */
 @media (max-width: 480px) {
+  .page {
+    padding: 1.25rem 1rem 2rem;
+  }
   .card {
-    padding: 1.5rem;
+    padding: 1.25rem;
   }
-  .title {
-    font-size: 1.3rem;
-  }
-}
-.link {
-  color: #6366f1;
-  text-decoration: underline;
-  cursor: pointer;
 }/*# sourceMappingURL=Register.module.css.map */

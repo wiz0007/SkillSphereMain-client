@@ -17,7 +17,6 @@ export const registerUser = async (data: {
   return res.data;
 };
 
-// ✅ NEW
 export const verifyOTP = async (data: {
   userId: string;
   otp: string;
@@ -26,7 +25,6 @@ export const verifyOTP = async (data: {
   return res.data;
 };
 
-// ✅ OPTIONAL (resend)
 export const resendOTP = async (data: {
   userId: string;
 }) => {
@@ -36,5 +34,21 @@ export const resendOTP = async (data: {
 
 export const checkUsername = async (username: string) => {
   const res = await api.get(`/auth/check-username/${username}`);
+  return res.data as { available: boolean };
+};
+
+export const changePassword = async (data: {
+  currentPassword: string;
+  newPassword: string;
+}) => {
+  const res = await api.post("/auth/change-password", data);
+  return res.data;
+};
+
+export const deleteAccount = async (data: {
+  currentPassword: string;
+  confirmationText: string;
+}) => {
+  const res = await api.post("/auth/delete-account", data);
   return res.data;
 };

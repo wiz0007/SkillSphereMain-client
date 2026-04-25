@@ -9,20 +9,20 @@ const MainLayout = () => {
 
   return (
     <div className={styles.layout}>
-      <Navbar toggleSidebar={() => setSidebarOpen(prev => !prev)} />
-
       <Sidebar
         isCollapsed={!sidebarOpen}
-        toggleSidebar={() => setSidebarOpen(prev => !prev)}
+        toggleSidebar={() => setSidebarOpen((prev) => !prev)}
       />
 
-      <main
-        className={`${styles.main} ${
-          sidebarOpen ? styles.sidebarOpen : styles.sidebarClosed
-        }`}
-      >
-        <Outlet />
-      </main>
+      <div className={styles.shell}>
+        <Navbar
+          toggleSidebar={() => setSidebarOpen((prev) => !prev)}
+        />
+
+        <main className={styles.main}>
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 };

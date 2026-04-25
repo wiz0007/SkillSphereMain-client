@@ -1,7 +1,12 @@
-import { useState } from "react";
-import styles from "./CourseDetails.module.scss";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
+import {
+  Bookmark,
+  BookmarkCheck,
+  MessageSquareText,
+  ShieldCheck,
+  Star,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import styles from "./CourseDetails.module.scss";
 
 const CourseHero = ({
   course,
@@ -17,78 +22,121 @@ const CourseHero = ({
   const avg = course.averageRating || 0;
   const total = course.totalRatings || 0;
   const active = hover || userRating || Math.round(avg);
-
-  const [animate, setAnimate] = useState(false);
-
-  const triggerAnimation = () => {
-    setAnimate(true);
-    setTimeout(() => setAnimate(false), 300);
-  };
+  const reviewCount = course.reviews?.length || 0;
+  const tutorName = course.tutor?.username || "Tutor";
+  const tutorAvatar =
+    course.tutor?.profilePhoto ||
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(tutorName)}`;
 
   return (
-    <div className={styles.left}>
-      <h1>{course.title}</h1>
+    <article className={styles.left}>
+      <div className={styles.heroTop}>
+        <span className={styles.kicker}>Course details</span>
 
-      {/* 🔥 TUTOR INFO (NEW) */}
-      <div
-        className={styles.tutor}
-        onClick={() =>
-          navigate(`/public-profile/${course.tutor?._id}`)
-        }
-      >
-        <img
-          src={
-            course.tutor?.profilePhoto ||
-            `https://ui-avatars.com/api/?name=${course.tutor?.username}`
-          }
-          alt={course.tutor?.username}
-        />
-        <span>@{course.tutor?.username}</span>
+        <button
+          type="button"
+          className={`${styles.saveButton} ${
+            saved ? styles.saved : ""
+          }`}
+          onClick={onSave}
+        >
+          {saved ? <BookmarkCheck size={16} /> : <Bookmark size={16} />}
+          {saved ? "Saved" : "Save course"}
+        </button>
       </div>
 
-      <p className={styles.desc}>{course.description}</p>
+      <h1>{course.title}</h1>
+      <p className={styles.desc}>
+        {course.description?.trim() ||
+          "A focused learning experience built around practical progress."}
+      </p>
 
-      {/* ⭐ STARS */}
-      <div className={styles.ratingRow}>
-        <div className={styles.stars}>
-          {[1, 2, 3, 4, 5].map((s) => (
-            <span
-              key={s}
-              onClick={() => handleRate(s)}
-              onMouseEnter={() => setHover(s)}
+      <button
+        type="button"
+        className={styles.tutor}
+        onClick={() => {
+          if (course.tutor?._id) {
+            navigate(`/public-profile/${course.tutor._id}`);
+          }
+        }}
+      >
+        <img src={tutorAvatar} alt={tutorName} />
+        <div className={styles.tutorText}>
+          <strong>@{tutorName}</strong>
+          <span>View tutor profile</span>
+        </div>
+      </button>
+
+      <div className={styles.badges}>
+        <span>{course.category || "General"}</span>
+        <span>{course.level || "All levels"}</span>
+        <span>{course.duration || "Flexible pace"}</span>
+      </div>
+
+      <div className={styles.metricRow}>
+        <div className={styles.metricCard}>
+          <ShieldCheck size={18} />
+          <span className={styles.metricLabel}>Average rating</span>
+          <strong className={styles.metricValue}>
+            {avg ? avg.toFixed(1) : "New"}
+          </strong>
+        </div>
+        <div className={styles.metricCard}>
+          <Star size={18} />
+          <span className={styles.metricLabel}>Ratings submitted</span>
+          <strong className={styles.metricValue}>{total}</strong>
+        </div>
+        <div className={styles.metricCard}>
+          <MessageSquareText size={18} />
+          <span className={styles.metricLabel}>Written reviews</span>
+          <strong className={styles.metricValue}>
+            {reviewCount}
+          </strong>
+        </div>
+      </div>
+
+      <div className={styles.ratePanel}>
+        <div>
+          <span className={styles.rateLabel}>Rate this course</span>
+          <p className={styles.rateCopy}>
+            Share a quick signal to help other learners judge the fit.
+          </p>
+        </div>
+
+        <div className={styles.ratingStars}>
+          {[1, 2, 3, 4, 5].map((star) => (
+            <button
+              key={star}
+              type="button"
+              className={`${styles.starButton} ${
+                star <= active ? styles.activeStar : ""
+              }`}
+              onClick={() => handleRate(star)}
+              onMouseEnter={() => setHover(star)}
               onMouseLeave={() => setHover(0)}
-              className={s <= active ? styles.active : ""}
+              aria-label={`Rate ${star} out of 5`}
             >
-              ★
-            </span>
+              <Star size={17} fill="currentColor" />
+            </button>
           ))}
         </div>
 
         <span className={styles.ratingText}>
-          {avg.toFixed(1)} ({total})
+          {avg ? avg.toFixed(1) : "New"} average from {total} ratings
         </span>
       </div>
 
-      {/* BADGES */}
-      <div className={styles.badges}>
-        <span>{course.category}</span>
-        <span>{course.level}</span>
-        <span>{course.duration}</span>
-      </div>
-
-      {/* SAVE */}
-      <button
-        className={`${styles.saveBtn} ${saved ? styles.saved : ""} ${
-          animate ? styles.animate : ""
-        }`}
-        onClick={() => {
-          onSave();
-          triggerAnimation();
-        }}
-      >
-        {saved ? <FaHeart /> : <FaRegHeart />}
-      </button>
-    </div>
+      {course.skills?.length ? (
+        <div className={styles.skillsSection}>
+          <span className={styles.skillsLabel}>Covered topics</span>
+          <div className={styles.skills}>
+            {course.skills.map((skill: string) => (
+              <span key={skill}>{skill}</span>
+            ))}
+          </div>
+        </div>
+      ) : null}
+    </article>
   );
 };
 

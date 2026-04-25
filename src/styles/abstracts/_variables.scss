@@ -1,14 +1,19 @@
 // COLORS
 $color-bg: #F8FAFC;
 $color-surface: #FFFFFF;
+$color-surface-soft: #FBFDFF;
 
 $color-primary: #1E2A38;
 $color-accent: #2EC4B6;
 $color-cta: #FFB703;
+$color-danger: #DC2626;
+$color-success: #0F9F6E;
+$color-warning: #D97706;
 
 $color-text-primary: #0F172A;
 $color-text-secondary: #64748B;
 $color-border: #E2E8F0;
+$color-border-strong: #DBE4EE;
 
 // TYPOGRAPHY
 $font-family: 'Inter', sans-serif;
@@ -33,10 +38,12 @@ $space-10: 40px;
 $radius-sm: 8px;
 $radius-md: 12px;
 $radius-lg: 16px;
+$radius-xl: 20px;
 
 // SHADOWS
 $shadow-sm: 0 2px 6px rgba(0,0,0,0.05);
 $shadow-md: 0 6px 20px rgba(0,0,0,0.08);
+$shadow-lg: 0 20px 48px rgba(15, 23, 42, 0.12);
 
 // TRANSITIONS
 $transition: all 0.2s ease-in-out;

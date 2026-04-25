@@ -30,28 +30,19 @@ const Register: React.FC = () => {
     password: "",
     confirmPassword: "",
   });
-
   const [otp, setOtp] = useState("");
   const [userId, setUserId] = useState<string | null>(null);
   const [isOtpStep, setIsOtpStep] = useState(false);
-
   const [usernameStatus, setUsernameStatus] = useState<
     "idle" | "checking" | "available" | "taken"
   >("idle");
-
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
-
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
+  const [feedback, setFeedback] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-
-  /* 🔥 COOLDOWN STATE */
   const [cooldown, setCooldown] = useState(0);
-
-  /* ================= PASSWORD RULES ================= */
 
   const checks = {
     length: form.password.length >= 8,
@@ -63,12 +54,11 @@ const Register: React.FC = () => {
 
   const isPasswordValid = Object.values(checks).every(Boolean);
   const isMatch =
-    form.confirmPassword && form.password === form.confirmPassword;
-
-  /* ================= USERNAME CHECK ================= */
+    form.confirmPassword.length > 0 &&
+    form.password === form.confirmPassword;
 
   useEffect(() => {
-    if (!form.username) {
+    if (!form.username.trim()) {
       setUsernameStatus("idle");
       return;
     }
@@ -77,264 +67,341 @@ const Register: React.FC = () => {
 
     const timer = setTimeout(async () => {
       try {
-        const res = await checkUsername(form.username);
+        const res = await checkUsername(form.username.trim());
         setUsernameStatus(res.available ? "available" : "taken");
       } catch {
         setUsernameStatus("idle");
       }
-    }, 500);
+    }, 400);
 
     return () => clearTimeout(timer);
   }, [form.username]);
-
-  /* ================= COOLDOWN TIMER ================= */
 
   useEffect(() => {
     if (cooldown <= 0) return;
 
     const interval = setInterval(() => {
-      setCooldown((prev) => prev - 1);
+      setCooldown((previous) => previous - 1);
     }, 1000);
 
     return () => clearInterval(interval);
   }, [cooldown]);
 
-  /* ================= HANDLERS ================= */
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setForm((previous) => ({ ...previous, [name]: value }));
   };
 
-  /* ================= REGISTER ================= */
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setFeedback("");
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError("");
+    if (!isPasswordValid) {
+      setFeedback("Password does not meet the required strength.");
+      return;
+    }
 
-    if (!isPasswordValid)
-      return setError("Password does not meet requirements");
+    if (!isMatch) {
+      setFeedback("Passwords do not match.");
+      return;
+    }
 
-    if (!isMatch) return setError("Passwords do not match");
+    if (!acceptedTerms) {
+      setFeedback("Please accept the terms to continue.");
+      return;
+    }
 
-    if (!acceptedTerms) return setError("Please accept Terms & Conditions");
-
-    if (usernameStatus !== "available")
-      return setError("Username not available");
+    if (usernameStatus !== "available") {
+      setFeedback("Choose an available username before creating the account.");
+      return;
+    }
 
     try {
       setLoading(true);
 
       const res = await registerUser({
-        username: form.username,
+        username: form.username.trim(),
         email: form.email,
         password: form.password,
       });
 
       setUserId(res.userId);
       setIsOtpStep(true);
-
-      /* 🔥 START COOLDOWN */
       setCooldown(30);
+      setFeedback("We sent a verification code to your email.");
     } catch (err: any) {
-      setError(err?.response?.data?.message || "Registration failed");
+      setFeedback(
+        err?.response?.data?.message || "Registration failed."
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  /* ================= OTP ================= */
-
   const handleVerifyOtp = async () => {
-    if (!otp) return setError("Enter OTP");
+    if (!otp.trim()) {
+      setFeedback("Enter the verification code first.");
+      return;
+    }
 
     try {
       setLoading(true);
-      await verifyOTP({ userId: userId!, otp });
-      alert("Account verified!");
+      await verifyOTP({ userId: userId!, otp: otp.trim() });
       navigate("/login");
     } catch (err: any) {
-      setError(err?.response?.data?.message || "Invalid OTP");
+      setFeedback(err?.response?.data?.message || "Invalid OTP.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleResend = async () => {
-    if (cooldown > 0) return;
+    if (cooldown > 0 || !userId) return;
 
     try {
-      await resendOTP({ userId: userId! });
-      alert("OTP resent");
-
-      /* 🔥 RESET COOLDOWN */
+      await resendOTP({ userId });
       setCooldown(30);
+      setFeedback("A new verification code has been sent.");
     } catch {
-      alert("Failed to resend OTP");
+      setFeedback("Failed to resend OTP.");
     }
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.card}>
-        <h1 className={styles.title}>
-          {isOtpStep ? "Verify OTP" : "Create Account"}
-        </h1>
+    <section className={styles.page}>
+      <div className={styles.shell}>
+        <div className={styles.hero}>
+          <p className={styles.kicker}>
+            {isOtpStep ? "Verify Account" : "Create Account"}
+          </p>
+          <h1>
+            {isOtpStep
+              ? "Finish verification and step into your workspace."
+              : "Start learning, teaching, and booking sessions in one place."}
+          </h1>
+          <p className={styles.subtitle}>
+            {isOtpStep
+              ? "Use the code from your inbox to activate the account you just created."
+              : "Build your profile once, then move through the dashboard, sessions, and tutor tools with a single consistent flow."}
+          </p>
+        </div>
 
-        {error && <p className={styles.error}>{error}</p>}
-
-        {!isOtpStep ? (
-          <form onSubmit={handleSubmit} className={styles.form}>
-            <input
-              name="username"
-              placeholder="Username"
-              value={form.username}
-              onChange={handleChange}
-              required
-            />
-
-            <p className={styles.status}>
-              {usernameStatus === "checking" && "Checking..."}
-              {usernameStatus === "available" && "✅ Available"}
-              {usernameStatus === "taken" && "❌ Username taken"}
+        <div className={styles.card}>
+          <div className={styles.cardHeader}>
+            <h2>{isOtpStep ? "Verify OTP" : "Set up your account"}</h2>
+            <p>
+              {isOtpStep
+                ? "Verification helps keep the platform clean and secure."
+                : "A few details now and the rest of your profile comes next."}
             </p>
+          </div>
 
-            <input
-              name="email"
-              placeholder="Email Address"
-              value={form.email}
-              onChange={handleChange}
-              required
-            />
+          {feedback ? (
+            <div className={styles.feedbackBanner}>{feedback}</div>
+          ) : null}
 
-            <div className={styles.passwordContainer}>
-              <input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                placeholder="Password"
-                value={form.password}
-                onChange={handleChange}
-              />
-              <span
-                className={styles.eye}
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <FiEyeOff /> : <FiEye />}
-              </span>
-            </div>
+          {!isOtpStep ? (
+            <form onSubmit={handleSubmit} className={styles.form}>
+              <label className={styles.field}>
+                <span>Username</span>
+                <input
+                  name="username"
+                  placeholder="Choose a username"
+                  value={form.username}
+                  onChange={handleChange}
+                  required
+                />
+                <small className={styles.inlineHint}>
+                  {usernameStatus === "checking" &&
+                    "Checking availability..."}
+                  {usernameStatus === "available" &&
+                    "Username is available."}
+                  {usernameStatus === "taken" &&
+                    "That username is already taken."}
+                  {usernameStatus === "idle" &&
+                    "Letters, numbers, and underscores work best."}
+                </small>
+              </label>
 
-            <div className={styles.passwordRules}>
-              <p className={checks.length ? styles.valid : ""}>
-                ✔ At least 8 characters
-              </p>
-              <p className={checks.upper ? styles.valid : ""}>
-                ✔ One uppercase letter
-              </p>
-              <p className={checks.lower ? styles.valid : ""}>
-                ✔ One lowercase letter
-              </p>
-              <p className={checks.number ? styles.valid : ""}>✔ One number</p>
-              <p className={checks.special ? styles.valid : ""}>
-                ✔ One special character
-              </p>
-            </div>
+              <label className={styles.field}>
+                <span>Email address</span>
+                <input
+                  name="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={form.email}
+                  onChange={handleChange}
+                  required
+                />
+              </label>
 
-            <div className={styles.passwordContainer}>
-              <input
-                type={showConfirm ? "text" : "password"}
-                name="confirmPassword"
-                placeholder="Confirm Password"
-                value={form.confirmPassword}
-                onChange={handleChange}
-              />
-              <span
-                className={styles.eye}
-                onClick={() => setShowConfirm(!showConfirm)}
-              >
-                {showConfirm ? <FiEyeOff /> : <FiEye />}
-              </span>
-            </div>
+              <label className={styles.field}>
+                <span>Password</span>
+                <div className={styles.passwordField}>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    placeholder="Create a strong password"
+                    value={form.password}
+                    onChange={handleChange}
+                  />
+                  <button
+                    type="button"
+                    className={styles.eyeButton}
+                    onClick={() =>
+                      setShowPassword((previous) => !previous)
+                    }
+                  >
+                    {showPassword ? <FiEyeOff /> : <FiEye />}
+                  </button>
+                </div>
+              </label>
 
-            {form.confirmPassword && (
-              <p className={isMatch ? styles.valid : styles.error}>
-                {isMatch ? "✔ Passwords match" : "✖ Passwords do not match"}
-              </p>
-            )}
+              <div className={styles.passwordRules}>
+                <span className={checks.length ? styles.valid : ""}>
+                  8+ characters
+                </span>
+                <span className={checks.upper ? styles.valid : ""}>
+                  uppercase
+                </span>
+                <span className={checks.lower ? styles.valid : ""}>
+                  lowercase
+                </span>
+                <span className={checks.number ? styles.valid : ""}>
+                  number
+                </span>
+                <span className={checks.special ? styles.valid : ""}>
+                  special char
+                </span>
+              </div>
 
-            <div className={styles.terms}>
-              <input
-                id="terms"
-                type="checkbox"
-                checked={acceptedTerms}
-                onChange={(e) => setAcceptedTerms(e.target.checked)}
-              />
+              <label className={styles.field}>
+                <span>Confirm password</span>
+                <div className={styles.passwordField}>
+                  <input
+                    type={showConfirm ? "text" : "password"}
+                    name="confirmPassword"
+                    placeholder="Repeat your password"
+                    value={form.confirmPassword}
+                    onChange={handleChange}
+                  />
+                  <button
+                    type="button"
+                    className={styles.eyeButton}
+                    onClick={() =>
+                      setShowConfirm((previous) => !previous)
+                    }
+                  >
+                    {showConfirm ? <FiEyeOff /> : <FiEye />}
+                  </button>
+                </div>
+                {form.confirmPassword ? (
+                  <small className={styles.inlineHint}>
+                    {isMatch
+                      ? "Passwords match."
+                      : "Passwords do not match yet."}
+                  </small>
+                ) : null}
+              </label>
 
-              <label htmlFor="terms">
-                I agree to{" "}
-                <span
-                  className={styles.link}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setShowTerms(true);
-                  }}
-                >
-                  Terms & Conditions
+              <label className={styles.termsRow}>
+                <input
+                  id="terms"
+                  type="checkbox"
+                  checked={acceptedTerms}
+                  onChange={(event) =>
+                    setAcceptedTerms(event.target.checked)
+                  }
+                />
+                <span>
+                  I agree to the{" "}
+                  <button
+                    type="button"
+                    className={styles.inlineLink}
+                    onClick={() => setShowTerms(true)}
+                  >
+                    Terms and Conditions
+                  </button>
+                  .
                 </span>
               </label>
+
+              <button
+                type="submit"
+                className={styles.submitButton}
+                disabled={
+                  loading ||
+                  !isPasswordValid ||
+                  !isMatch ||
+                  !acceptedTerms ||
+                  usernameStatus !== "available"
+                }
+              >
+                {loading ? "Creating account..." : "Create account"}
+              </button>
+            </form>
+          ) : (
+            <div className={styles.form}>
+              <label className={styles.field}>
+                <span>Verification code</span>
+                <input
+                  value={otp}
+                  onChange={(event) => setOtp(event.target.value)}
+                  placeholder="Enter the OTP from your email"
+                />
+              </label>
+
+              <button
+                type="button"
+                className={styles.submitButton}
+                onClick={handleVerifyOtp}
+                disabled={loading}
+              >
+                {loading ? "Verifying..." : "Verify account"}
+              </button>
+
+              <button
+                type="button"
+                className={styles.secondaryButton}
+                onClick={handleResend}
+                disabled={cooldown > 0}
+              >
+                {cooldown > 0
+                  ? `Resend in ${cooldown}s`
+                  : "Resend OTP"}
+              </button>
             </div>
+          )}
 
-            <button
-              type="submit"
-              disabled={
-                loading ||
-                !isPasswordValid ||
-                !isMatch ||
-                !acceptedTerms ||
-                usernameStatus !== "available"
-              }
-            >
-              {loading ? "Creating..." : "Sign Up"}
-            </button>
-          </form>
-        ) : (
-          <div className={styles.form}>
-            <input
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-              placeholder="Enter OTP"
-            />
+          {!isOtpStep ? (
+            <p className={styles.footer}>
+              Already have an account?{" "}
+              <Link to="/login">Sign in</Link>
+            </p>
+          ) : null}
+        </div>
+      </div>
 
-            <button onClick={handleVerifyOtp} disabled={loading}>
-              {loading ? "Verifying..." : "Verify OTP"}
-            </button>
-
+      {showTerms ? (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <h3>Terms and Conditions</h3>
+            <p>
+              By creating an account, you agree to use the
+              platform responsibly, provide accurate profile
+              information, and respect the people you learn with.
+            </p>
             <button
               type="button"
-              onClick={handleResend}
-              disabled={cooldown > 0}
+              className={styles.secondaryButton}
+              onClick={() => setShowTerms(false)}
             >
-              {cooldown > 0 ? `Resend in ${cooldown}s` : "Resend OTP"}
+              Close
             </button>
           </div>
-        )}
-
-        {!isOtpStep && (
-          <p>
-            Already have an account? <Link to="/login">Login</Link>
-          </p>
-        )}
-
-        {showTerms && (
-          <div className={styles.modal}>
-            <div className={styles.modalContent}>
-              <h2>Terms & Conditions</h2>
-              <p>Put your legal content here...</p>
-              <button onClick={() => setShowTerms(false)}>Close</button>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+        </div>
+      ) : null}
+    </section>
   );
 };
 

@@ -34,6 +34,75 @@
   }
 }
 
+@mixin app-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 1rem 0 2rem;
+  color: $color-text-primary;
+}
+
+@mixin panel($radius: 22px, $padding: 1.35rem) {
+  padding: $padding;
+  border: 1px solid rgba($color-border, 0.95);
+  border-radius: $radius;
+  background: rgba($color-surface, 0.96);
+  box-shadow: $shadow-sm;
+}
+
+@mixin hero-panel($padding: 1.4rem) {
+  @include panel(24px, $padding);
+  background:
+    radial-gradient(circle at top right, rgba($color-accent, 0.16), transparent 38%),
+    linear-gradient(145deg, #ffffff, #f7fbfc);
+}
+
+@mixin section-kicker {
+  color: $color-accent;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+@mixin panel-title {
+  margin: 0 0 0.25rem;
+  color: $color-text-primary;
+  font-size: 1.08rem;
+}
+
+@mixin panel-copy {
+  color: $color-text-secondary;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+@mixin input-surface($min-height: 48px) {
+  width: 100%;
+  min-height: $min-height;
+  padding: 0.82rem 0.95rem;
+  border: 1px solid $color-border-strong;
+  border-radius: 16px;
+  background: $color-surface-soft;
+  color: $color-text-primary;
+  font: inherit;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: $color-accent;
+    box-shadow: 0 0 0 4px rgba($color-accent, 0.12);
+    background: $color-surface;
+  }
+}
+
+@mixin textarea-surface($min-height: 132px) {
+  @include input-surface($min-height);
+  resize: vertical;
+}
+
 // BUTTON
 @mixin button-base {
   padding: $space-2 $space-4;
@@ -56,12 +125,27 @@
   background: $color-cta;
   color: black;
   font-weight: 600;
+  box-shadow: 0 10px 24px rgba($color-cta, 0.2);
 }
 
 @mixin button-outline {
   @include button-base;
   background: transparent;
   border: 1px solid $color-border;
+}
+
+@mixin button-secondary {
+  @include button-base;
+  background: $color-surface;
+  border: 1px solid $color-border-strong;
+  color: $color-text-primary;
+}
+
+@mixin button-danger {
+  @include button-base;
+  background: #fff5f5;
+  border: 1px solid #fecaca;
+  color: $color-danger;
 }
 
 // TAG / SKILL CHIP
@@ -71,6 +155,15 @@
   border-radius: 999px;
   background: rgba($color-accent, 0.1);
   color: $color-accent;
+}
+
+@mixin neutral-tag {
+  padding: 0.38rem 0.78rem;
+  font-size: 0.78rem;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #334155;
+  font-weight: 600;
 }
 
 // TYPOGRAPHY

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { Check, ChevronDown, X } from "lucide-react";
 import styles from "./CategorySelect.module.scss";
 
 interface Props {
@@ -30,12 +31,11 @@ const CategorySelect: React.FC<Props> = ({ value, onChange }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  /* ================= CLOSE ON OUTSIDE CLICK ================= */
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
+    const handleClickOutside = (event: MouseEvent) => {
       if (
         wrapperRef.current &&
-        !wrapperRef.current.contains(e.target as Node)
+        !wrapperRef.current.contains(event.target as Node)
       ) {
         setOpen(false);
       }
@@ -46,58 +46,54 @@ const CategorySelect: React.FC<Props> = ({ value, onChange }) => {
       document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  /* ================= FILTER ================= */
-  const filtered = CATEGORY_OPTIONS.filter((cat) =>
-    cat.toLowerCase().includes(search.toLowerCase())
+  const filtered = CATEGORY_OPTIONS.filter((category) =>
+    category.toLowerCase().includes(search.toLowerCase())
   );
-
-  /* ================= ACTIONS ================= */
 
   const toggleCategory = (category: string) => {
     if (value.includes(category)) {
-      onChange(value.filter((c) => c !== category));
+      onChange(value.filter((item) => item !== category));
     } else {
       onChange([...value, category]);
     }
   };
 
   const removeCategory = (category: string) => {
-    onChange(value.filter((c) => c !== category));
+    onChange(value.filter((item) => item !== category));
   };
 
-  /* ================= KEYBOARD ================= */
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
     if (!open) return;
 
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setHighlightIndex((prev) =>
-        prev < filtered.length - 1 ? prev + 1 : prev
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setHighlightIndex((previous) =>
+        previous < filtered.length - 1 ? previous + 1 : previous
       );
     }
 
-    if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setHighlightIndex((prev) =>
-        prev > 0 ? prev - 1 : prev
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setHighlightIndex((previous) =>
+        previous > 0 ? previous - 1 : previous
       );
     }
 
-    if (e.key === "Enter") {
-      e.preventDefault();
+    if (event.key === "Enter") {
+      event.preventDefault();
       const selected = filtered[highlightIndex];
       if (selected) toggleCategory(selected);
     }
 
-    if (e.key === "Escape") {
+    if (event.key === "Escape") {
       setOpen(false);
     }
   };
 
   return (
     <div className={styles.wrapper} ref={wrapperRef}>
-      {/* SELECT BOX */}
       <div
         className={styles.selector}
         onClick={() => {
@@ -105,68 +101,68 @@ const CategorySelect: React.FC<Props> = ({ value, onChange }) => {
           setTimeout(() => inputRef.current?.focus(), 0);
         }}
       >
-        {/* TAGS */}
         <div className={styles.tags}>
-          {value.map((cat) => (
-            <span key={cat} className={styles.tag}>
-              {cat}
+          {value.map((category) => (
+            <span key={category} className={styles.tag}>
+              {category}
               <button
                 type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  removeCategory(cat);
+                onClick={(event) => {
+                  event.stopPropagation();
+                  removeCategory(category);
                 }}
               >
-                ×
+                <X size={12} />
               </button>
             </span>
           ))}
 
-          {/* SEARCH INPUT */}
           <input
             ref={inputRef}
             value={search}
-            placeholder={value.length === 0 ? "Search categories..." : ""}
-            onChange={(e) => setSearch(e.target.value)}
+            placeholder={
+              value.length === 0 ? "Search categories..." : ""
+            }
+            onChange={(event) => setSearch(event.target.value)}
             onKeyDown={handleKeyDown}
           />
         </div>
 
-        {/* CHEVRON */}
         <div
           className={`${styles.chevron} ${
             open ? styles.rotate : ""
           }`}
         >
-          ▼
+          <ChevronDown size={16} />
         </div>
       </div>
 
-      {/* DROPDOWN */}
-      {open && (
+      {open ? (
         <div className={styles.dropdown}>
-          {filtered.length === 0 && (
+          {filtered.length === 0 ? (
             <div className={styles.empty}>No results</div>
-          )}
+          ) : null}
 
-          {filtered.map((cat, index) => (
-            <div
-              key={cat}
-              className={`${styles.option} 
-                ${value.includes(cat) ? styles.active : ""}
+          {filtered.map((category, index) => (
+            <button
+              key={category}
+              type="button"
+              className={`${styles.option}
+                ${value.includes(category) ? styles.active : ""}
                 ${index === highlightIndex ? styles.highlight : ""}
               `}
-              onClick={() => toggleCategory(cat)}
+              onClick={() => toggleCategory(category)}
             >
-              <span>{cat}</span>
-
-              {value.includes(cat) && (
-                <span className={styles.check}>✓</span>
-              )}
-            </div>
+              <span>{category}</span>
+              {value.includes(category) ? (
+                <span className={styles.check}>
+                  <Check size={14} />
+                </span>
+              ) : null}
+            </button>
           ))}
         </div>
-      )}
+      ) : null}
     </div>
   );
 };

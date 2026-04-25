@@ -16,24 +16,23 @@ export function Login() {
 
   const [form, setForm] = useState<LoginForm>({
     email: "",
-    password: ""
+    password: "",
   });
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
 
-    setForm((prev) => ({
-      ...prev,
-      [name]: value
+    setForm((previous) => ({
+      ...previous,
+      [name]: value,
     }));
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setError("");
 
     try {
@@ -45,16 +44,11 @@ export function Login() {
       localStorage.setItem("token", token);
       setUser(user);
 
-      if (user.profileCompleted) {
-        navigate("/");
-      } else {
-        navigate("/userdetails");
-      }
-
+      navigate(user.profileCompleted ? "/" : "/userdetails");
     } catch (err: any) {
       setError(
         err?.response?.data?.message ||
-        "Invalid email or password"
+          "Invalid email or password."
       );
     } finally {
       setLoading(false);
@@ -62,56 +56,79 @@ export function Login() {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.card}>
+    <section className={styles.page}>
+      <div className={styles.shell}>
+        <div className={styles.hero}>
+          <p className={styles.kicker}>Welcome Back</p>
+          <h1>Pick up exactly where your last session left off.</h1>
+          <p className={styles.subtitle}>
+            Access your dashboard, bookings, saved courses,
+            and teaching workspace from one place.
+          </p>
+        </div>
 
-        <h1 className={styles.title}>Welcome Back</h1>
-
-        {error && <p className={styles.error}>{error}</p>}
-
-        <form onSubmit={handleSubmit} className={styles.form}>
-
-          <input
-            type="email"
-            name="email"
-            placeholder="Email Address"
-            required
-            value={form.email}
-            onChange={handleChange}
-          />
-
-          <div className={styles.passwordContainer}>
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              placeholder="Password"
-              required
-              value={form.password}
-              onChange={handleChange}
-            />
-
-            <span
-              className={styles.eye}
-              onClick={() =>
-                setShowPassword((prev) => !prev)
-              }
-            >
-              {showPassword ? <FiEyeOff /> : <FiEye />}
-            </span>
+        <div className={styles.card}>
+          <div className={styles.cardHeader}>
+            <h2>Sign in</h2>
+            <p>Use your account details to enter SkillSphere.</p>
           </div>
 
-          <button type="submit" disabled={loading}>
-            {loading ? "Signing In..." : "Sign In"}
-          </button>
+          {error ? (
+            <div className={styles.errorBanner}>{error}</div>
+          ) : null}
 
-        </form>
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <label className={styles.field}>
+              <span>Email address</span>
+              <input
+                type="email"
+                name="email"
+                placeholder="you@example.com"
+                required
+                value={form.email}
+                onChange={handleChange}
+              />
+            </label>
 
-        <p className={styles.footer}>
-          Don’t have an account?{" "}
-          <Link to="/register">Register</Link>
-        </p>
+            <label className={styles.field}>
+              <span>Password</span>
+              <div className={styles.passwordField}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="Enter your password"
+                  required
+                  value={form.password}
+                  onChange={handleChange}
+                />
 
+                <button
+                  type="button"
+                  className={styles.eyeButton}
+                  onClick={() =>
+                    setShowPassword((previous) => !previous)
+                  }
+                >
+                  {showPassword ? <FiEyeOff /> : <FiEye />}
+                </button>
+              </div>
+            </label>
+
+            <button
+              type="submit"
+              className={styles.submitButton}
+              disabled={loading}
+            >
+              {loading ? "Signing in..." : "Sign in"}
+            </button>
+          </form>
+
+          <p className={styles.footer}>
+            Do not have an account?{" "}
+            <Link to="/register">Create one</Link>
+          </p>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }

@@ -1,30 +1,28 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./SavedCourses.module.scss";
-import { getSavedCourses, type Course } from "../../services/courses.service";
+import {
+  getSavedCourses,
+  type Course,
+} from "../../services/courses.service";
 import CourseCard from "../courseCard/CourseCard";
 import { useAuth } from "../../context/AuthContext";
 
-
-/* ================= COMPONENT ================= */
-
 const SavedCourses = () => {
   const { user, loading: authLoading } = useAuth();
-
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
-
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user?._id) return; // ✅ wait for auth
+    if (!user?._id) return;
 
     const fetchSaved = async () => {
       try {
         const data = await getSavedCourses();
         setCourses(data);
-      } catch (err) {
-        console.error("Failed to fetch saved courses:", err);
+      } catch (error) {
+        console.error("Failed to fetch saved courses:", error);
       } finally {
         setLoading(false);
       }
@@ -33,44 +31,54 @@ const SavedCourses = () => {
     fetchSaved();
   }, [user]);
 
-  // ⛔ block until auth ready
   if (authLoading || !user) {
     return <p className={styles.state}>Loading...</p>;
   }
 
   return (
-    <div className={styles.page}>
-      {/* HEADER */}
+    <section className={styles.page}>
       <div className={styles.header}>
-        <h2>❤️ Saved Courses</h2>
-        <p>Your bookmarked learning content</p>
+        <div>
+          <span className={styles.kicker}>Saved</span>
+          <h2>Your saved courses</h2>
+          <p>
+            Everything you bookmarked for later comparison or
+            booking.
+          </p>
+        </div>
+
+        <div className={styles.snapshot}>
+          <span className={styles.snapshotLabel}>Collection</span>
+          <strong>{courses.length} saved items</strong>
+          <span className={styles.snapshotHint}>
+            Curate your shortlist before you request sessions.
+          </span>
+        </div>
       </div>
 
-      {/* LOADING */}
-      {loading && <p className={styles.state}>Loading...</p>}
+      {loading ? <p className={styles.state}>Loading...</p> : null}
 
-      {/* EMPTY STATE */}
-      {!loading && courses.length === 0 && (
+      {!loading && courses.length === 0 ? (
         <div className={styles.emptyBox}>
           <h3>No saved courses yet</h3>
           <p>Start exploring and save courses to see them here.</p>
 
           <button
+            type="button"
             className={styles.exploreBtn}
-            onClick={() => navigate("/discover")}
+            onClick={() => navigate("/explore")}
           >
-            Explore Courses
+            Explore courses
           </button>
         </div>
-      )}
+      ) : null}
 
-      {/* COURSES */}
       <div className={styles.grid}>
         {courses.map((course) => (
           <CourseCard key={course._id} course={course} />
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 

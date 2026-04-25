@@ -1,7 +1,6 @@
-import { useParams } from "react-router-dom";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import styles from "./CourseDetails.module.scss";
-
 import CourseHero from "./CourseHero";
 import CourseSidebar from "./CourseSidebar";
 import ReviewSection from "./ReviewSection";
@@ -11,7 +10,6 @@ import RequestSession from "../requestSession/RequestSession";
 
 const CourseDetails = () => {
   const { id } = useParams();
-
   const [open, setOpen] = useState(false);
 
   const {
@@ -32,10 +30,20 @@ const CourseDetails = () => {
 
   const { isSaved, handleSave } = useSaveCourse();
 
-  if (loading || !course) return <div>Loading...</div>;
+  if (loading || !course) {
+    return (
+      <section className={styles.page}>
+        <div className={styles.container}>
+          <div className={styles.loadingState}>
+            Loading course details...
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
-    <div className={styles.page}>
+    <section className={styles.page}>
       <div className={styles.container}>
         <div className={styles.hero}>
           <CourseHero
@@ -44,7 +52,7 @@ const CourseDetails = () => {
             setHover={setHover}
             userRating={userRating}
             handleRate={handleRate}
-            saved={isSaved(id!)} // ✅ FIXED
+            saved={isSaved(id!)}
             onSave={() => handleSave(id!)}
           />
 
@@ -61,11 +69,15 @@ const CourseDetails = () => {
           submitLoading={submitLoading}
           error={error}
         />
-        {open && (
-          <RequestSession course={course} onClose={() => setOpen(false)} />
-        )}
       </div>
-    </div>
+
+      {open ? (
+        <RequestSession
+          course={course}
+          onClose={() => setOpen(false)}
+        />
+      ) : null}
+    </section>
   );
 };
 

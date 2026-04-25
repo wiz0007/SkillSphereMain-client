@@ -1,291 +1,317 @@
 @use "../../styles/abstracts" as *;
 
-/* ================= NAVBAR ================= */
-
 .navbar {
-  @include flex(center, space-between);
-
-  height: 70px;
-  padding: 0 $space-6;
-
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  height: 76px;
+  padding: 0 1.5rem;
   position: sticky;
   top: 0;
   z-index: 1000;
-
-  background: rgba($color-surface, 0.9);
-  backdrop-filter: blur(10px);
-
-  border-bottom: 1px solid $color-border;
-
-  transition: transform 0.3s ease;
+  background: rgba(248, 250, 252, 0.9);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.92);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .hide {
   transform: translateY(-100%);
 }
 
-/* ================= LEFT ================= */
+.leftSection,
+.actions,
+.desktopLinks,
+.authButtons,
+.profile {
+  display: flex;
+  align-items: center;
+}
 
 .leftSection {
-  @include flex(center, flex-start, $space-3);
+  gap: 0.9rem;
 }
-
-/* ================= LOGO ================= */
 
 .logo {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.84);
+  border: 1px solid rgba(226, 232, 240, 0.92);
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.04);
   cursor: pointer;
+}
 
-  .fullLogo {
-    font-size: $font-lg;
-    font-weight: 700;
-    color: $color-primary;
+.fullLogo,
+.compactLogo {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
 
-    span {
-      color: $color-accent;
-    }
-  }
-
-  .compactLogo {
-    display: none;
-    font-weight: 700;
-    color: $color-accent;
+  span {
+    color: #2ec4b6;
   }
 }
 
-/* ================= LINKS ================= */
+.compactLogo {
+  display: none;
+}
 
 .desktopLinks {
-  @include flex(center, center, $space-6);
+  gap: 0.45rem;
+  padding: 0.35rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(226, 232, 240, 0.88);
+}
 
-  a {
-    font-size: $font-sm;
-    color: $color-text-secondary;
-    text-decoration: none;
-    position: relative;
-    transition: $transition;
+.desktopLinks a,
+.bottomNav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0.65rem 1rem;
+  border-radius: 999px;
+  color: #64748b;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 
-    &:hover,
-    &:global(.active) {
-      color: $color-primary;
-    }
-
-    &::after {
-      content: "";
-      position: absolute;
-      bottom: -6px;
-      left: 0;
-      width: 0%;
-      height: 2px;
-      background: $color-accent;
-      transition: width 0.25s ease;
-    }
-
-    &:hover::after,
-    &:global(.active)::after {
-      width: 100%;
-    }
+  &:hover,
+  &:global(.active) {
+    background: #0f172a;
+    color: #ffffff;
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
   }
 }
 
-/* ================= ACTIONS ================= */
+.becomeTutor {
+  background: rgba(255, 183, 3, 0.14);
+  color: #8a5a00 !important;
 
-.actions {
-  @include flex(center, center, $space-3);
+  &:hover,
+  &:global(.active) {
+    background: #ffb703 !important;
+    color: #111827 !important;
+    box-shadow: 0 12px 24px rgba(255, 183, 3, 0.22) !important;
+  }
 }
 
-/* ================= ICON ================= */
+.actions {
+  gap: 0.7rem;
+}
 
 .iconWrapper {
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-1px);
+    border-color: rgba(46, 196, 182, 0.3);
+    background: #ffffff;
+    box-shadow: 0 12px 22px rgba(15, 23, 42, 0.06);
+  }
 }
 
 .icon {
-  font-size: 1.4rem;
-  color: $color-text-secondary;
-
-  padding: 8px;
-  border-radius: 50%;
-
-  cursor: pointer;
-  transition: $transition;
-
-  &:hover {
-    background: rgba($color-accent, 0.1);
-    color: $color-primary;
-    transform: scale(1.08);
-  }
+  font-size: 1.2rem;
+  color: #334155;
 }
-
-/* ================= BADGE ================= */
 
 .badge {
   position: absolute;
-  top: 0;
-  right: 0;
-
-  min-width: 16px;
-  height: 16px;
-
+  top: -4px;
+  right: -3px;
+  min-width: 18px;
+  height: 18px;
   padding: 0 4px;
-
-  background: $color-cta;
-  color: black;
-
-  font-size: 10px;
-  font-weight: 600;
-
-  border-radius: 999px;
-
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-
-  transform: scale(0);
-  animation: badgePop 0.3s ease forwards;
+  border-radius: 999px;
+  background: #ffb703;
+  color: #111827;
+  font-size: 0.68rem;
+  font-weight: 800;
+  box-shadow: 0 6px 12px rgba(255, 183, 3, 0.24);
 }
-
-@keyframes badgePop {
-  to {
-    transform: scale(1);
-  }
-}
-
-/* ================= AUTH ================= */
 
 .authButtons {
-  @include flex(center, center, $space-2);
+  gap: 0.55rem;
+}
+
+.loginBtn,
+.registerBtn {
+  min-height: 42px;
+  padding: 0.75rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
 }
 
 .loginBtn {
-  @include button-outline;
+  @include button-secondary;
 }
 
 .registerBtn {
   @include button-cta;
 }
 
-/* ================= PROFILE ================= */
-
 .profile {
   position: relative;
-
-  @include flex(center, center, $space-2);
-
-  padding: 4px 10px;
+  gap: 0.65rem;
+  min-height: 46px;
+  padding: 0.3rem 0.45rem 0.3rem 0.35rem;
   border-radius: 999px;
-
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(226, 232, 240, 0.92);
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.04);
   cursor: pointer;
-  transition: $transition;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 
   &:hover {
-    background: rgba($color-border, 0.4);
+    transform: translateY(-1px);
+    border-color: rgba(46, 196, 182, 0.28);
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.07);
   }
 
   img {
     width: 36px;
     height: 36px;
-    border-radius: 50%;
+    border-radius: 12px;
     object-fit: cover;
   }
-
-  .username {
-    font-size: $font-sm;
-    color: $color-text-primary;
-  }
 }
 
-/* ================= BADGE ================= */
+.username {
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #0f172a;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
 
 .tutorBadge {
-  background: $color-accent;
-  color: white;
-  font-size: 10px;
-  padding: 2px 6px;
-  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: #ecfeff;
+  color: #0f766e;
+  font-size: 0.7rem;
+  font-weight: 800;
 }
-
-/* ================= DROPDOWN ================= */
 
 .dropdown {
   position: absolute;
-  top: 60px;
+  top: calc(100% + 0.8rem);
   right: 0;
-
-  min-width: 180px;
-  padding: $space-3;
-
-  border-radius: $radius-md;
-
-  background: $color-surface;
-  border: 1px solid $color-border;
-
-  box-shadow: $shadow-md;
-
+  min-width: 220px;
+  padding: 0.55rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  box-shadow: $shadow-lg;
   display: flex;
   flex-direction: column;
-  gap: $space-2;
-
-  animation: dropdownIn 0.2s ease;
+  gap: 0.2rem;
+  animation: dropdownIn 0.18s ease;
 
   a,
   button {
-    padding: 8px;
-    border-radius: $radius-sm;
-
-    background: none;
+    display: inline-flex;
+    align-items: center;
+    min-height: 42px;
+    padding: 0.75rem 0.9rem;
     border: none;
-
+    border-radius: 14px;
+    background: transparent;
+    color: #334155;
+    font-size: 0.88rem;
+    font-weight: 600;
     text-align: left;
-    color: $color-text-secondary;
+    text-decoration: none;
     cursor: pointer;
-
-    transition: $transition;
+    transition:
+      background 0.2s ease,
+      color 0.2s ease,
+      transform 0.2s ease;
 
     &:hover {
-      background: rgba($color-accent, 0.1);
-      color: $color-primary;
+      background: #f8fafc;
+      color: #0f172a;
+      transform: translateX(2px);
     }
   }
 }
 
-@keyframes dropdownIn {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ================= HAMBURGER ================= */
-
 .hamburger {
   display: none;
-
-  @include flex(center, center);
+  align-items: center;
+  justify-content: center;
   flex-direction: column;
+  width: 44px;
+  height: 44px;
   gap: 4px;
-
-  background: none;
-  border: none;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.82);
   cursor: pointer;
 
   span {
-    width: 20px;
+    width: 18px;
     height: 2px;
-    background: $color-primary;
+    border-radius: 999px;
+    background: #0f172a;
   }
 }
-
-/* ================= MOBILE NAV ================= */
 
 .bottomNav {
   display: none;
 }
 
-/* ================= RESPONSIVE ================= */
+@keyframes dropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 @media (max-width: 1024px) {
   .desktopLinks {
@@ -293,13 +319,13 @@
   }
 
   .hamburger {
-    display: flex;
+    display: inline-flex;
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
   .navbar {
-    padding: 0 $space-3;
+    padding: 0 1rem;
   }
 
   .fullLogo {
@@ -310,42 +336,37 @@
     display: inline;
   }
 
-  .profile .username {
+  .profile .username,
+  .authButtons {
     display: none;
   }
 
   .bottomNav {
     position: fixed;
-    bottom: 0;
-    left: 0;
-
-    width: 100%;
-    height: 60px;
-
-    background: $color-surface;
-    border-top: 1px solid $color-border;
-
-    @include flex(center, space-around);
-
+    bottom: 0.85rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    width: min(calc(100% - 1.5rem), 420px);
+    padding: 0.45rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid rgba(226, 232, 240, 0.95);
+    box-shadow: $shadow-lg;
     z-index: 1000;
 
     a {
-      font-size: 12px;
-      color: $color-text-secondary;
-
-      &:global(.active) {
-        color: $color-primary;
-      }
+      flex: 1;
+      min-width: 0;
+      padding: 0.72rem 0.5rem;
+      font-size: 0.76rem;
     }
   }
 
   body {
-    padding-bottom: 70px;
+    padding-bottom: 86px;
   }
-}
-
-/* ================= CTA ================= */
-
-.becomeTutor {
-  @include button-cta;
 }
