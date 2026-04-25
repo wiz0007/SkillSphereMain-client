@@ -14,9 +14,9 @@ export const sidebarItems: SidebarItem[] = [
   },
   {
     id: 2,
-    title: "Skill Discovery",
-    icon: "ri-search-line",
-    route: "/discover",
+    title: "Your Courses",
+    icon: "ri-book-open-line",
+    route: "/your-courses",
   },
   {
     id: 3,

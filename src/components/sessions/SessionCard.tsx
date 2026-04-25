@@ -101,7 +101,9 @@ const SessionCard = ({ session, onUpdate }: any) => {
           </>
         ) : null}
 
-        {counterpartId ? (
+        {!session.isTutor &&
+        counterpartId &&
+        ["accepted", "completed"].includes(session.status) ? (
           <button
             type="button"
             className={styles.secondary}

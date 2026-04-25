@@ -1,6 +1,5 @@
 import { api } from "../api/api";
 
-/* ================= TYPES ================= */
 export interface Tutor {
   _id: string;
   username: string;
@@ -16,12 +15,10 @@ export interface Course {
   skills?: string[];
   price?: number;
   duration?: string;
-
-  tutor: Tutor; // ✅ ADD THIS
-
+  isPublished?: boolean;
+  tutor: Tutor;
   averageRating?: number;
   totalRatings?: number;
-
   reviews?: Review[];
 }
 
@@ -38,7 +35,6 @@ export interface Review {
   createdAt: string;
 }
 
-
 export interface CoursePayload {
   title: string;
   description?: string;
@@ -47,9 +43,8 @@ export interface CoursePayload {
   skills?: string[];
   price?: number;
   duration?: string;
+  isPublished?: boolean;
 }
-
-/* ================= ERROR HANDLER ================= */
 
 const handleError = (error: any, context: string): never => {
   const message =
@@ -61,8 +56,6 @@ const handleError = (error: any, context: string): never => {
   throw new Error(message);
 };
 
-/* ================= PUBLIC COURSES ================= */
-
 export const getAllCourses = async (): Promise<Course[]> => {
   try {
     const res = await api.get("/courses");
@@ -71,8 +64,6 @@ export const getAllCourses = async (): Promise<Course[]> => {
     return handleError(error, "getAllCourses");
   }
 };
-
-/* ================= TUTOR COURSES ================= */
 
 export const getMyCourses = async (): Promise<Course[]> => {
   try {
@@ -83,8 +74,6 @@ export const getMyCourses = async (): Promise<Course[]> => {
   }
 };
 
-/* ================= GET SINGLE COURSE ================= */
-
 export const getCourseById = async (id: string): Promise<Course> => {
   try {
     const res = await api.get(`/courses/${id}`);
@@ -93,8 +82,6 @@ export const getCourseById = async (id: string): Promise<Course> => {
     return handleError(error, "getCourseById");
   }
 };
-
-/* ================= CREATE COURSE ================= */
 
 export const createCourse = async (
   data: CoursePayload
@@ -106,8 +93,6 @@ export const createCourse = async (
     return handleError(error, "createCourse");
   }
 };
-
-/* ================= UPDATE COURSE ================= */
 
 export const updateCourse = async (
   id: string,
@@ -121,7 +106,19 @@ export const updateCourse = async (
   }
 };
 
-/* ================= DELETE COURSE ================= */
+export const setCoursePublishStatus = async (
+  id: string,
+  isPublished: boolean
+): Promise<Course> => {
+  try {
+    const res = await api.patch(`/courses/${id}/publish`, {
+      isPublished,
+    });
+    return res.data;
+  } catch (error: any) {
+    return handleError(error, "setCoursePublishStatus");
+  }
+};
 
 export const deleteCourse = async (
   id: string
@@ -151,22 +148,17 @@ export const addReview = async (
   return res.data;
 };
 
-
 export const getSavedCourses = async () => {
   const res = await api.get("/courses/saved");
   return res.data;
 };
 
-/* SAVE */
 export const saveCourse = async (courseId: string) => {
   const res = await api.post(`/courses/${courseId}/save`);
   return res.data;
 };
 
-/* UNSAVE */
 export const unsaveCourse = async (courseId: string) => {
   const res = await api.delete(`/courses/${courseId}/save`);
   return res.data;
 };
-
-/* GET SAVED */

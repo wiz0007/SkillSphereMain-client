@@ -44,7 +44,7 @@ export function Login() {
       localStorage.setItem("token", token);
       setUser(user);
 
-      navigate(user.profileCompleted ? "/" : "/userdetails");
+      navigate(user.profileCompleted ? "/" : "/userDetails");
     } catch (err: any) {
       setError(
         err?.response?.data?.message ||

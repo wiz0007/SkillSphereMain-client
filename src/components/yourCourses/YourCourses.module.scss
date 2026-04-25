@@ -1,0 +1,221 @@
+@use "../../styles/abstracts" as *;
+
+.page {
+  @include app-page;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.8fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  @include respond(md) {
+    grid-template-columns: 1fr;
+  }
+
+  h1 {
+    margin: 0.35rem 0 0.4rem;
+    font-size: clamp(1.9rem, 4vw, 2.8rem);
+    line-height: 1.05;
+    color: #0f172a;
+  }
+
+  p {
+    max-width: 58ch;
+    color: #64748b;
+    font-size: 0.96rem;
+    line-height: 1.6;
+  }
+}
+
+.kicker {
+  @include section-kicker;
+}
+
+.snapshot {
+  @include hero-panel(1.35rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.snapshotLabel {
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.snapshot strong {
+  color: #0f172a;
+  font-size: 1.08rem;
+}
+
+.snapshotHint {
+  color: #64748b;
+  font-size: 0.88rem;
+}
+
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-height: 42px;
+    padding: 0.65rem 0.95rem;
+    border: 1px solid #dbe4ee;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #475569;
+    cursor: pointer;
+    transition:
+      transform 0.2s ease,
+      background 0.2s ease,
+      color 0.2s ease,
+      border-color 0.2s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+      border-color: rgba(46, 196, 182, 0.32);
+    }
+  }
+
+  span {
+    font-size: 0.84rem;
+    font-weight: 700;
+  }
+
+  strong {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 0.4rem;
+    border-radius: 999px;
+    background: #f1f5f9;
+    font-size: 0.74rem;
+  }
+}
+
+.activeTab {
+  background: #0f172a !important;
+  border-color: #0f172a !important;
+  color: #ffffff !important;
+
+  strong {
+    background: rgba(255, 255, 255, 0.12) !important;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.2rem;
+}
+
+.courseCard,
+.emptyPanel,
+.loading {
+  @include panel(22px, 1.25rem);
+}
+
+.courseCard {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background:
+    radial-gradient(circle at top right, rgba(46, 196, 182, 0.08), transparent 36%),
+    linear-gradient(180deg, #ffffff, #fbfdff);
+}
+
+.cardTop {
+  h3 {
+    margin: 0.45rem 0 0.25rem;
+    color: #0f172a;
+    font-size: 1.08rem;
+  }
+}
+
+.statusPill {
+  @include neutral-tag;
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.metaText {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.88rem;
+}
+
+.infoRows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.infoRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: #475569;
+  font-size: 0.86rem;
+  font-weight: 600;
+
+  svg {
+    color: #2ec4b6;
+    flex-shrink: 0;
+  }
+}
+
+.cardActions {
+  margin-top: auto;
+}
+
+.secondaryButton {
+  @include button-secondary;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.emptyPanel,
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 220px;
+  text-align: center;
+  color: #64748b;
+
+  strong {
+    color: #0f172a;
+  }
+
+  span {
+    max-width: 42ch;
+    line-height: 1.55;
+  }
+}
