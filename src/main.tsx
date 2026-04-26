@@ -1,13 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import "remixicon/fonts/remixicon.css";
 import { BrowserRouter } from "react-router-dom";
-import { ThemeProvider } from "./context/ThemeContext";
 import App from "./App";
-import { NotificationProvider } from "./context/NotificationContext";
 import { AuthProvider } from "./context/AuthContext";
-
-import "./index.css";
-import 'remixicon/fonts/remixicon.css'
+import { NotificationProvider } from "./context/NotificationContext";
+import { ThemeProvider } from "./context/ThemeContext";
+import "./styles/main.scss";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -22,4 +21,3 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     </AuthProvider>
   </React.StrictMode>
 );
-

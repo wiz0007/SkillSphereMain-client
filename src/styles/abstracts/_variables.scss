@@ -45,6 +45,13 @@ $shadow-sm: 0 2px 6px rgba(0,0,0,0.05);
 $shadow-md: 0 6px 20px rgba(0,0,0,0.08);
 $shadow-lg: 0 20px 48px rgba(15, 23, 42, 0.12);
 
+// APP SHELL
+$shell-sidebar-width: 292px;
+$shell-sidebar-width-mobile: 272px;
+$shell-gap: 1.75rem;
+$shell-navbar-height: 76px;
+$shell-content-max-width: 1480px;
+
 // TRANSITIONS
 $transition: all 0.2s ease-in-out;
 
