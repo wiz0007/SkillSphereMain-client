@@ -1,65 +1,162 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./UserOnboarding.module.scss";
 import { createProfile } from "../../services/profile.service";
 import BasicProfileSection from "./BasicProfileSection";
 import { useOnboardingForm } from "./userOnboardingForm";
 import { useAuth } from "../../context/AuthContext";
+import {
+  getOnboardingErrors,
+  getServerFieldErrors,
+  onboardingSchema,
+} from "./onboarding.validation";
+import type {
+  FormErrors,
+  FormState,
+  TouchedFields,
+} from "./onboarding.types";
 
 function UserOnboarding() {
   const navigate = useNavigate();
-  const { form, handleChange, setForm } = useOnboardingForm();
+  const { form, updateField } = useOnboardingForm();
   const { user, loading: authLoading, setUser } = useAuth();
 
   const [timezone, setTimezone] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [submitAttempted, setSubmitAttempted] = useState(false);
+  const [formError, setFormError] = useState("");
+  const [serverFieldErrors, setServerFieldErrors] =
+    useState<FormErrors>({});
+  const [touchedFields, setTouchedFields] =
+    useState<TouchedFields>({});
 
-  /* ================= AUTH GUARD ================= */
+  const validationErrors = useMemo(
+    () => getOnboardingErrors(form),
+    [form]
+  );
+
   useEffect(() => {
     if (!authLoading && !user) {
       navigate("/login");
     }
   }, [user, authLoading, navigate]);
 
-  /* ================= TIMEZONE ================= */
   useEffect(() => {
     setTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone);
   }, []);
 
-  /* ================= SUBMIT ================= */
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+  const markFieldTouched = (field: keyof FormState) => {
+    setTouchedFields((previous) =>
+      previous[field]
+        ? previous
+        : {
+            ...previous,
+            [field]: true,
+          }
+    );
+  };
+
+  const handleFieldChange = <K extends keyof FormState>(
+    field: K,
+    value: FormState[K]
+  ) => {
+    updateField(field, value);
+    setFormError("");
+
+    setServerFieldErrors((previous) => {
+      if (!previous[field]) {
+        return previous;
+      }
+
+      const next = { ...previous };
+      delete next[field];
+      return next;
+    });
+  };
+
+  const handleFieldBlur = (field: keyof FormState) => {
+    markFieldTouched(field);
+  };
+
+  const getVisibleError = (field: keyof FormState) => {
+    if (serverFieldErrors[field]) {
+      return serverFieldErrors[field];
+    }
+
+    return touchedFields[field] || submitAttempted
+      ? validationErrors[field]
+      : undefined;
+  };
+
+  const handleSubmit = async (
+    event: FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+    setSubmitAttempted(true);
+    setFormError("");
+    setServerFieldErrors({});
+
+    const parsed = onboardingSchema.safeParse(form);
+
+    if (!parsed.success) {
+      return;
+    }
 
     const payload = {
-      ...form,
+      ...parsed.data,
+      dob: parsed.data.dob || undefined,
+      gender: parsed.data.gender || undefined,
+      profilePhoto: parsed.data.profilePhoto || undefined,
       timezone,
     };
 
     try {
-      await createProfile(payload);
+      setSaving(true);
+      const createdProfile = await createProfile(payload);
 
-      setUser((prev: any) =>
-        prev
+      setUser((previous: any) =>
+        previous
           ? {
-              ...prev,
-              name: payload.fullName || prev.name,
-              profilePhoto: payload.profilePhoto || prev.profilePhoto,
+              ...previous,
+              name:
+                createdProfile.fullName ||
+                payload.fullName ||
+                previous.name,
+              profilePhoto:
+                createdProfile.profilePhoto ||
+                payload.profilePhoto ||
+                previous.profilePhoto,
               profileCompleted: true,
             }
-          : prev
+          : previous
       );
 
       navigate("/");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Profile creation failed:", error);
+
+      const apiMessage =
+        error?.response?.data?.message ||
+        "We could not save your profile right now.";
+
+      const fieldErrors = getServerFieldErrors(
+        error?.response?.data?.errors
+      );
+
+      if (Object.keys(fieldErrors).length > 0) {
+        setServerFieldErrors(fieldErrors);
+      }
+
+      setFormError(apiMessage);
+    } finally {
+      setSaving(false);
     }
   };
 
-  /* ================= LOADING ================= */
   if (authLoading || !user) {
     return <div className={styles.container}>Loading...</div>;
   }
 
-  /* ================= UI ================= */
   return (
     <div className={styles.container}>
       <form className={styles.form} onSubmit={handleSubmit}>
@@ -72,14 +169,23 @@ function UserOnboarding() {
           </p>
         </header>
 
+        {formError ? (
+          <div className={styles.errorBanner}>{formError}</div>
+        ) : null}
+
         <BasicProfileSection
           form={form}
-          handleChange={handleChange}
-          setForm={setForm}
+          onFieldChange={handleFieldChange}
+          onFieldBlur={handleFieldBlur}
+          getFieldError={getVisibleError}
         />
 
-        <button className={styles.submitBtn}>
-          Save Profile
+        <button
+          className={styles.submitBtn}
+          disabled={saving}
+          type="submit"
+        >
+          {saving ? "Saving profile..." : "Save Profile"}
         </button>
       </form>
     </div>
