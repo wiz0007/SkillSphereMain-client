@@ -8,7 +8,7 @@ const SessionCard = ({ session, onUpdate }: any) => {
 
   const updateStatus = async (status: string) => {
     try {
-      await api.patch(`/sessions/${session._id}`, { status });
+      await api.put(`/sessions/${session._id}`, { status });
       onUpdate(session._id, status);
     } catch (error: any) {
       alert(error?.response?.data?.message || "Error updating");
