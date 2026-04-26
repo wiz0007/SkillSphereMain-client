@@ -20,17 +20,50 @@ export const LOCATION_SUGGESTIONS = {
     Hesse: ["Frankfurt", "Wiesbaden", "Darmstadt"],
   },
   India: {
+    "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Guntur"],
+    "Arunachal Pradesh": ["Itanagar", "Naharlagun", "Tawang"],
+    Assam: ["Guwahati", "Silchar", "Dibrugarh"],
+    Bihar: ["Patna", "Gaya", "Muzaffarpur"],
+    Chandigarh: ["Chandigarh"],
+    Chhattisgarh: ["Raipur", "Bhilai", "Bilaspur"],
+    Goa: ["Panaji", "Margao", "Vasco da Gama"],
     Delhi: ["New Delhi", "Dwarka", "Rohini"],
+    "Himachal Pradesh": ["Shimla", "Dharamshala", "Solan"],
+    "Jammu and Kashmir": ["Srinagar", "Jammu", "Anantnag"],
+    Jharkhand: ["Ranchi", "Jamshedpur", "Dhanbad"],
     Gujarat: ["Ahmedabad", "Surat", "Vadodara"],
     Haryana: ["Gurgaon", "Faridabad", "Panipat"],
     Karnataka: ["Bengaluru", "Mysuru", "Hubballi"],
     Kerala: ["Kochi", "Kozhikode", "Thiruvananthapuram"],
+    Ladakh: ["Leh", "Kargil"],
+    Lakshadweep: ["Kavaratti"],
+    "Madhya Pradesh": ["Bhopal", "Indore", "Jabalpur"],
     Maharashtra: ["Mumbai", "Pune", "Nagpur"],
+    Manipur: ["Imphal", "Thoubal", "Bishnupur"],
+    Meghalaya: ["Shillong", "Tura", "Jowai"],
+    Mizoram: ["Aizawl", "Lunglei", "Champhai"],
+    Nagaland: ["Kohima", "Dimapur", "Mokokchung"],
+    Odisha: ["Bhubaneswar", "Cuttack", "Rourkela"],
+    Puducherry: ["Puducherry", "Karaikal", "Yanam"],
+    Punjab: ["Ludhiana", "Amritsar", "Jalandhar"],
     Rajasthan: ["Jaipur", "Jodhpur", "Udaipur"],
+    Sikkim: ["Gangtok", "Namchi", "Gyalshing"],
     "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai"],
     Telangana: ["Hyderabad", "Warangal", "Nizamabad"],
+    Tripura: ["Agartala", "Dharmanagar", "Udaipur"],
     "Uttar Pradesh": ["Lucknow", "Noida", "Varanasi"],
+    Uttarakhand: ["Dehradun", "Haridwar", "Haldwani"],
     "West Bengal": ["Kolkata", "Durgapur", "Siliguri"],
+    "Andaman and Nicobar Islands": [
+      "Port Blair",
+      "Swaraj Dweep",
+      "Diglipur",
+    ],
+    "Dadra and Nagar Haveli and Daman and Diu": [
+      "Silvassa",
+      "Daman",
+      "Diu",
+    ],
   },
   Japan: {
     Hokkaido: ["Sapporo", "Hakodate", "Asahikawa"],
@@ -129,9 +162,13 @@ export const getCitySuggestions = (
     state
   );
 
-  return stateMatch
-    ? Array.from(
-        countryEntry[stateMatch as keyof typeof countryEntry]
-      ).sort()
-    : [];
+  if (!stateMatch) {
+    return [];
+  }
+
+  const cities = countryEntry[
+    stateMatch as keyof typeof countryEntry
+  ] as readonly string[];
+
+  return [...cities].sort();
 };

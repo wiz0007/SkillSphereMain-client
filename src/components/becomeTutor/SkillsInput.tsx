@@ -25,6 +25,7 @@ const SUGGESTIONS = [
 const SkillsInput: React.FC<Props> = ({ value, onChange }) => {
   const [input, setInput] = useState("");
   const [filtered, setFiltered] = useState<string[]>([]);
+  const trimmedInput = input.trim();
 
   const addSkill = (skill: string) => {
     if (!skill || value.includes(skill)) return;
@@ -60,6 +61,11 @@ const SkillsInput: React.FC<Props> = ({ value, onChange }) => {
     }
   };
 
+  const handleAddClick = () => {
+    if (!trimmedInput) return;
+    addSkill(trimmedInput);
+  };
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.tags}>
@@ -75,12 +81,23 @@ const SkillsInput: React.FC<Props> = ({ value, onChange }) => {
           </span>
         ))}
 
-        <input
-          value={input}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-          placeholder="Type a skill and press Enter"
-        />
+        <div className={styles.composer}>
+          <input
+            value={input}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            placeholder="Type a skill"
+          />
+
+          <button
+            type="button"
+            className={styles.addButton}
+            onClick={handleAddClick}
+            disabled={!trimmedInput}
+          >
+            Add
+          </button>
+        </div>
       </div>
 
       {filtered.length > 0 ? (

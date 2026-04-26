@@ -55,8 +55,6 @@ const YourCourses = () => {
     fetchSessions();
   }, [authLoading, user?._id]);
 
-  const now = Date.now();
-
   const confirmedSessions = useMemo(
     () =>
       sessions.filter((session) =>
@@ -68,22 +66,15 @@ const YourCourses = () => {
   const ongoingCourses = useMemo(
     () =>
       confirmedSessions.filter(
-        (session) =>
-          session.status === "accepted" &&
-          new Date(session.date).getTime() >= now
+        (session) => session.status === "accepted"
       ),
-    [confirmedSessions, now]
+    [confirmedSessions]
   );
 
   const pastCourses = useMemo(
     () =>
-      confirmedSessions.filter(
-        (session) =>
-          session.status === "completed" ||
-          (session.status === "accepted" &&
-            new Date(session.date).getTime() < now)
-      ),
-    [confirmedSessions, now]
+      confirmedSessions.filter((session) => session.status === "completed"),
+    [confirmedSessions]
   );
 
   const visibleCourses = tab === "ongoing" ? ongoingCourses : pastCourses;
@@ -120,7 +111,7 @@ const YourCourses = () => {
               ? `${pastCourses.length} completed course${
                   pastCourses.length > 1 ? "s" : ""
                 } in your history`
-              : "Your accepted history will show up here"}
+              : "Completed courses will show up here"}
           </span>
         </div>
       </div>
@@ -153,7 +144,7 @@ const YourCourses = () => {
           <span>
             {tab === "ongoing"
               ? "Courses appear here only after the tutor accepts your booking."
-              : "Completed accepted bookings will appear here once they finish."}
+              : "Completed accepted bookings will appear here after the session is marked complete."}
           </span>
         </div>
       ) : (
