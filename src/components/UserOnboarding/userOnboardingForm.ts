@@ -15,18 +15,24 @@ export function useOnboardingForm() {
     profilePhoto: "",
   });
 
+  const updateField = <K extends keyof FormState>(
+    field: K,
+    value: FormState[K]
+  ) => {
+    setForm((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
     const { name, value } = e.target;
-
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    updateField(name as keyof FormState, value);
   };
 
-  return { form, setForm, handleChange };
+  return { form, setForm, handleChange, updateField };
 }

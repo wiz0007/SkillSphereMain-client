@@ -16,8 +16,6 @@ const SkillDiscovery: React.FC = () => {
   const [level, setLevel] = useState("");
 
   useEffect(() => {
-    if (authLoading || !user?._id) return;
-
     const fetchCourses = async () => {
       try {
         const data = await getAllCourses();
@@ -29,8 +27,8 @@ const SkillDiscovery: React.FC = () => {
       }
     };
 
-    fetchCourses();
-  }, [user, authLoading]);
+    void fetchCourses();
+  }, []);
 
   const categories = useMemo(() => {
     return Array.from(new Set(courses.map((c) => c.category).filter(Boolean)));
@@ -61,10 +59,6 @@ const SkillDiscovery: React.FC = () => {
 
     return result;
   }, [courses, search, category, level, user]);
-
-  if (authLoading || !user) {
-    return <div className={styles.loading}>Loading...</div>;
-  }
 
   return (
     <div className={styles.container}>
@@ -108,7 +102,7 @@ const SkillDiscovery: React.FC = () => {
       </div>
 
       {/* CONTENT */}
-      {loading ? (
+      {loading || authLoading ? (
         <div className={styles.loading}>Loading skills...</div>
       ) : filteredCourses.length === 0 ? (
         <div className={styles.empty}>

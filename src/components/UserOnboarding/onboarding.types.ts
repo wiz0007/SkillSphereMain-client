@@ -10,3 +10,9 @@ export interface FormState {
   gender: string;
   profilePhoto: string;
 }
+
+export type FormErrors = Partial<Record<keyof FormState, string>>;
+
+export type TouchedFields = Partial<
+  Record<keyof FormState, boolean>
+>;

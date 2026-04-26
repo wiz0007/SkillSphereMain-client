@@ -25,12 +25,20 @@ const AllRoutes = () => {
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
-      <Route path="/userDetails" element={<UserDetailFormPage />} />
+
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/explore" element={<HomePage />} />
+        <Route path="/course/:id" element={<CourseDetailsPage />} />
+        <Route
+          path="/public-profile/:userId"
+          element={<PublicProfilePage />}
+        />
+      </Route>
 
       <Route element={<ProtectedRoute />}>
         <Route element={<MainLayout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/explore" element={<HomePage />} />
+          <Route path="/userDetails" element={<UserDetailFormPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/your-courses" element={<YourCoursesPage />} />
           <Route path="/sessions" element={<SessionPage />} />
@@ -39,14 +47,9 @@ const AllRoutes = () => {
           <Route path="/become-tutor" element={<TutorPage />} />
           <Route path="/add-course" element={<AddCoursePage />} />
           <Route path="/add-course/:id" element={<AddCoursePage />} />
-          <Route path="/course/:id" element={<CourseDetailsPage />} />
           <Route path="/saved-courses" element={<SavedCoursesPage />} />
           <Route path="/notifications" element={<NotificationPage />} />
           <Route path="/messages" element={<MessagesPage />} />
-          <Route
-            path="/public-profile/:userId"
-            element={<PublicProfilePage />}
-          />
         </Route>
       </Route>
 
