@@ -8,7 +8,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 292px;
+  width: $shell-sidebar-width;
   height: 100vh;
   padding: 1.25rem 1rem;
   background:
@@ -166,6 +166,6 @@
 
 @media (max-width: 1024px) {
   .sidebar {
-    width: 272px;
+    width: $shell-sidebar-width-mobile;
   }
 }

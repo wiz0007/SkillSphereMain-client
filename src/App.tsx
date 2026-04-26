@@ -1,6 +1,5 @@
-import "./App.css";
-import AllRoutes from "./routes/AllRoutes";
 import MoveToTop from "./components/moveToTop/MoveToTop";
+import AllRoutes from "./routes/AllRoutes";
 
 function App() {
   return (

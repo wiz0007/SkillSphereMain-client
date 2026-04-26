@@ -1,6 +1,14 @@
 @use '../abstracts' as *;
 
+html,
 body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+body {
+  margin: 0;
   font-family: $font-family;
   background: $color-bg;
   color: $color-text-primary;
@@ -21,5 +29,6 @@ a {
 }
 
 #root {
+  width: 100%;
   min-height: 100vh;
 }

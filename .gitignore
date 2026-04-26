@@ -12,6 +12,12 @@ dist
 dist-ssr
 *.local
 
+# Live Sass Compiler output is redundant in this Vite app.
+src/**/*.module.css
+src/**/*.css.map
+src/styles/main.css
+src/styles/main.css.map
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

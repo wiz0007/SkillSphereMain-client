@@ -1,22 +1,24 @@
+import { useState } from "react";
+import { Outlet } from "react-router-dom";
 import Navbar from "../components/navbar/Navbar";
 import Sidebar from "../components/sidebar/Sidebar";
-import { Outlet } from "react-router-dom";
-import { useState } from "react";
 import styles from "./Page.module.scss";
 
 const MainLayout = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
     <div className={styles.layout}>
       <Sidebar
-        isCollapsed={!sidebarOpen}
-        toggleSidebar={() => setSidebarOpen((prev) => !prev)}
+        isOpen={isSidebarOpen}
+        onToggle={() => setIsSidebarOpen((previous) => !previous)}
       />
 
       <div className={styles.shell}>
         <Navbar
-          toggleSidebar={() => setSidebarOpen((prev) => !prev)}
+          onToggleSidebar={() =>
+            setIsSidebarOpen((previous) => !previous)
+          }
         />
 
         <main className={styles.main}>

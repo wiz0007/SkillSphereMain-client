@@ -1,14 +1,9 @@
 @use "../styles/abstracts" as *;
 
-/* ================= ROOT LAYOUT ================= */
-
 .layout {
-  --sidebar-width: 292px;
-  --shell-gap: 1.75rem;
-
   width: 100%;
   min-height: 100vh;
-  background: #f8fafc;
+  background: $color-bg;
 }
 
 .shell {
@@ -20,11 +15,9 @@
 }
 
 .main {
-  min-height: calc(100vh - 76px);
+  min-height: calc(100vh - #{$shell-navbar-height});
   padding: 1.75rem 2rem 2.5rem;
 }
-
-/* ================= CONTENT WRAP ================= */
 
 .main > * {
   width: 100%;
@@ -33,15 +26,13 @@
 @media (min-width: 1024px) {
   .shell {
     width: min(
-      calc(100% - var(--sidebar-width) - var(--shell-gap)),
-      1480px
+      calc(100% - #{$shell-sidebar-width} - #{$shell-gap}),
+      $shell-content-max-width
     );
-    margin-left: calc(var(--sidebar-width) + var(--shell-gap));
+    margin-left: calc(#{$shell-sidebar-width} + #{$shell-gap});
     margin-right: auto;
   }
 }
-
-/* ================= TABLET ================= */
 
 @media (max-width: 1024px) {
   .shell {
@@ -54,11 +45,9 @@
   }
 }
 
-/* ================= MOBILE ================= */
-
 @media (max-width: 500px) {
   .main {
     padding: 1rem;
-    padding-bottom: 80px; // space for bottom nav if any
+    padding-bottom: 80px;
   }
 }

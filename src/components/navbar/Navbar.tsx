@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
+import { FiChevronDown, FiMessageSquare } from "react-icons/fi";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import styles from "./Navbar.module.scss";
-import { FiMessageSquare, FiChevronDown } from "react-icons/fi";
 import { useAuth } from "../../context/AuthContext";
 import NavbarBell from "./NavbarBell";
+import styles from "./Navbar.module.scss";
 
 interface NavbarProps {
-  toggleSidebar: () => void;
+  onToggleSidebar: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
+const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
   const { user, logout, loading } = useAuth();
   const navigate = useNavigate();
 
@@ -23,7 +23,6 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
   const isExploreActive =
     location.pathname === "/" || location.pathname === "/explore";
 
-  /* ================= SCROLL HIDE ================= */
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > lastScrollY.current && window.scrollY > 80) {
@@ -38,25 +37,30 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  /* ================= CLICK OUTSIDE ================= */
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(event.target as Node)
+      ) {
         setProfileOpen(false);
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
     <>
       <nav className={`${styles.navbar} ${hideNav ? styles.hide : ""}`}>
-        
-        {/* LEFT */}
         <div className={styles.leftSection}>
-          <button className={styles.hamburger} onClick={toggleSidebar}>
+          <button
+            type="button"
+            className={styles.hamburger}
+            onClick={onToggleSidebar}
+          >
             <span></span>
             <span></span>
             <span></span>
@@ -70,9 +74,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
           </div>
         </div>
 
-        {/* CENTER */}
         <div className={styles.desktopLinks}>
-
           <NavLink
             to="/explore"
             className={({ isActive }) =>
@@ -85,21 +87,17 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
           <NavLink to="/sessions">Sessions</NavLink>
           <NavLink to="/dashboard">Dashboard</NavLink>
 
-          {/* ✅ Only show if NOT tutor */}
-          {user && !user.isTutor && (
+          {user && !user.isTutor ? (
             <NavLink
               to="/become-tutor"
               className={styles.becomeTutor}
             >
               Become a Tutor
             </NavLink>
-          )}
-
+          ) : null}
         </div>
 
-        {/* RIGHT */}
         <div className={styles.actions}>
-
           <div className={styles.iconWrapper}>
             <NavbarBell />
           </div>
@@ -120,7 +118,10 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
               <NavLink to="/login" className={styles.loginBtn}>
                 Login
               </NavLink>
-              <NavLink to="/register" className={styles.registerBtn}>
+              <NavLink
+                to="/register"
+                className={styles.registerBtn}
+              >
                 Register
               </NavLink>
             </div>
@@ -134,39 +135,34 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
                 src={user.profilePhoto || "https://i.pravatar.cc/40"}
                 alt="profile"
               />
-              
 
               <span className={styles.username}>{user.username}</span>
 
-              {/* ✅ Tutor Badge */}
-              {user.isTutor && (
+              {user.isTutor ? (
                 <span className={styles.tutorBadge}>Tutor</span>
-              )}
+              ) : null}
 
               <FiChevronDown />
 
-              {profileOpen && (
+              {profileOpen ? (
                 <div className={styles.dropdown}>
                   <NavLink to="/profile">Profile</NavLink>
                   <NavLink to="/settings">Settings</NavLink>
 
-                  {/* ✅ Conditional inside dropdown */}
-                  {!user.isTutor && (
+                  {!user.isTutor ? (
                     <NavLink to="/become-tutor">
                       Become Tutor
                     </NavLink>
-                  )}
+                  ) : null}
 
                   <button onClick={logout}>Logout</button>
                 </div>
-              )}
+              ) : null}
             </div>
           )}
-
         </div>
       </nav>
 
-      {/* MOBILE NAV */}
       <div className={styles.bottomNav}>
         <NavLink
           to="/explore"
@@ -180,10 +176,9 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
         <NavLink to="/sessions">Sessions</NavLink>
         <NavLink to="/dashboard">Dashboard</NavLink>
 
-        {/* ✅ Mobile Tutor CTA */}
-        {user && !user.isTutor && (
+        {user && !user.isTutor ? (
           <NavLink to="/become-tutor">Tutor</NavLink>
-        )}
+        ) : null}
       </div>
     </>
   );
