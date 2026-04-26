@@ -21,6 +21,7 @@ const CATEGORY_OPTIONS = [
   "Blockchain",
   "Game Development",
   "Programming Basics",
+  "Others"
 ];
 
 const CategorySelect: React.FC<Props> = ({ value, onChange }) => {
