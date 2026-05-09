@@ -252,9 +252,9 @@ const Messages = () => {
           <span className={styles.kicker}>Messages</span>
           <h1>Keep learner and tutor conversations in one place</h1>
           <p>
-            Chat becomes available only after a tutor accepts your
-            course booking, so every thread here is tied to a confirmed
-            learning relationship.
+            Chat becomes available only after a tutor confirms a
+            session booking, so every thread here is tied to a real,
+            accepted learning relationship.
           </p>
         </div>
 
@@ -298,8 +298,8 @@ const Messages = () => {
               <div className={styles.emptyState}>
                 <strong>No contacts yet</strong>
                 <span>
-                  Tutor conversations appear here only after one of your
-                  bookings has been accepted.
+                  Conversations appear here once a session request has
+                  been accepted.
                 </span>
               </div>
             ) : (

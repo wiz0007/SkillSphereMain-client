@@ -3,6 +3,7 @@ import { FiChevronDown, FiMessageSquare } from "react-icons/fi";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import NavbarBell from "./NavbarBell";
+import SkillCoinWallet from "./SkillCoinWallet";
 import styles from "./Navbar.module.scss";
 
 interface NavbarProps {
@@ -98,6 +99,8 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
         </div>
 
         <div className={styles.actions}>
+          {user ? <SkillCoinWallet /> : null}
+
           <div className={styles.iconWrapper}>
             <NavbarBell />
           </div>

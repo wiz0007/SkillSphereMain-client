@@ -49,6 +49,8 @@
 .field label {
   text-transform: uppercase;
   letter-spacing: 0.06em;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .kicker {
@@ -158,6 +160,8 @@
   color: #64748b;
   font-size: 0.9rem;
   font-weight: 600;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .summary {
@@ -166,6 +170,8 @@
   font-size: 0.96rem;
   line-height: 1.65;
   max-width: 62ch;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .snapshot {
@@ -187,6 +193,8 @@
     color: #0f172a;
     font-size: 1.06rem;
     line-height: 1.45;
+    user-select: none;
+    -webkit-user-select: none;
   }
 }
 
@@ -200,6 +208,8 @@
   color: #64748b;
   font-size: 0.88rem;
   line-height: 1.55;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .headerActions {
@@ -299,6 +309,8 @@
   color: #0f172a;
   font-size: 1rem;
   line-height: 1.4;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .statMeta {
@@ -307,6 +319,8 @@
   color: #64748b;
   font-size: 0.84rem;
   line-height: 1.45;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .contentGrid {
@@ -417,6 +431,8 @@
   color: #334155;
   font-size: 0.92rem;
   line-height: 1.65;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .inlineDetail {
@@ -446,6 +462,8 @@
   color: #0f172a;
   font-size: 0.8rem;
   font-weight: 600;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .chipButton {
@@ -546,6 +564,8 @@
   color: #334155;
   font-size: 0.86rem;
   line-height: 1.5;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .loader {

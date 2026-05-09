@@ -4,15 +4,20 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import { getCurrentUser } from "../services/auth.service";
+import { socket } from "../utils/socket";
 
 export interface User {
   username: string;
   _id: string;
-  name: string;
+  name?: string;
   email: string;
   profilePhoto?: string;
   profileCompleted?: boolean;
   isTutor: boolean;
+  skillCoinBalance: number;
+  lockedSkillCoins: number;
+  availableSkillCoins: number;
 }
 
 interface AuthContextType {
@@ -20,6 +25,7 @@ interface AuthContextType {
   loading: boolean;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   logout: () => void;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(
@@ -31,6 +37,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const refreshUser = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setUser(null);
+      return;
+    }
+
+    try {
+      const { user: nextUser } = await getCurrentUser();
+      setUser(nextUser);
+    } catch {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      setUser(null);
+    }
+  };
 
   // ✅ Load user from storage
   useEffect(() => {
@@ -44,6 +68,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           setUser({
             ...parsed,
             _id: String(parsed._id),
+            skillCoinBalance: Number(parsed.skillCoinBalance || 0),
+            lockedSkillCoins: Number(parsed.lockedSkillCoins || 0),
+            availableSkillCoins: Number(
+              parsed.availableSkillCoins ||
+                Number(parsed.skillCoinBalance || 0) -
+                  Number(parsed.lockedSkillCoins || 0)
+            ),
           });
         } else {
           localStorage.removeItem("user");
@@ -56,6 +87,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, []);
 
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      void refreshUser();
+    }
+  }, []);
+
   // ✅ Sync user to storage
   useEffect(() => {
     if (user) {
@@ -64,6 +101,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       localStorage.removeItem("user");
     }
   }, [user]);
+
+  useEffect(() => {
+    if (!user?._id) {
+      return;
+    }
+
+    socket.emit("register", user._id);
+
+    const handleWalletUpdate = (wallet: {
+      skillCoinBalance: number;
+      lockedSkillCoins: number;
+      availableSkillCoins: number;
+    }) => {
+      setUser((previous) =>
+        previous
+          ? {
+              ...previous,
+              ...wallet,
+            }
+          : previous
+      );
+    };
+
+    socket.on("wallet:update", handleWalletUpdate);
+
+    return () => {
+      socket.off("wallet:update", handleWalletUpdate);
+    };
+  }, [user?._id]);
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -74,7 +140,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, setUser, logout }}
+      value={{ user, loading, setUser, logout, refreshUser }}
     >
       {children}
     </AuthContext.Provider>

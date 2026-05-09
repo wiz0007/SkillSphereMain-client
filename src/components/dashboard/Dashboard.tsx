@@ -159,6 +159,12 @@ const Dashboard: React.FC = () => {
   const stats = useMemo(() => {
     const baseStats = [
       {
+        title: "Available SkillCoin",
+        value: `${user?.availableSkillCoins || 0} SC`,
+        tone: "accent" as const,
+        meta: `${user?.lockedSkillCoins || 0} SC currently locked`,
+      },
+      {
         title: "Total Sessions",
         value: String(sessions.length),
         tone: "default" as const,
@@ -181,7 +187,7 @@ const Dashboard: React.FC = () => {
       },
     ];
 
-    if (!user?.isTutor) {
+      if (!user?.isTutor) {
       return baseStats;
     }
 
@@ -256,11 +262,23 @@ const Dashboard: React.FC = () => {
               : "No live commitments"}
           </strong>
           <span className={styles.snapshotHint}>
-            {pendingSessions.length
-              ? `${pendingSessions.length} request${
-                  pendingSessions.length > 1 ? "s" : ""
-                } waiting on you`
-              : "Everything is up to date"}
+            {user.availableSkillCoins} SC available,{" "}
+            {user.lockedSkillCoins} SC locked in sessions
+          </span>
+          <div className={styles.walletBar}>
+            <div
+              className={styles.walletBarFill}
+              style={{
+                width: `${
+                  user.skillCoinBalance
+                    ? (user.lockedSkillCoins / user.skillCoinBalance) * 100
+                    : 0
+                }%`,
+              }}
+            />
+          </div>
+          <span className={styles.walletLegend}>
+            1 INR = 1 SC. Recharged SkillCoin funds bookings and tutor payouts.
           </span>
         </div>
       </motion.div>

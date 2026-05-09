@@ -193,6 +193,11 @@
   color: #c2410c;
 }
 
+.expired {
+  background: #fff1f2;
+  color: #be123c;
+}
+
 .accepted {
   background: #ecfdf5;
   color: #047857;
@@ -221,6 +226,7 @@
 .primary,
 .secondary,
 .danger,
+.ghost,
 .waiting {
   flex: 1;
   min-height: 42px;
@@ -239,6 +245,23 @@
 
 .secondary {
   @include button-secondary;
+}
+
+.ghost {
+  border: 1px solid #dbe4ee;
+  background: #ffffff;
+  color: #64748b;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    border-color: rgba(15, 23, 42, 0.18);
+    color: #0f172a;
+  }
 }
 
 .waiting {

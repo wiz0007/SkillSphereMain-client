@@ -21,7 +21,7 @@ interface Props {
 }
 
 const RequestModal: React.FC<Props> = ({ course, onClose }) => {
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, refreshUser } = useAuth();
   const durationOptions = [30, 60, 90];
 
   const [date, setDate] = useState("");
@@ -60,6 +60,7 @@ const RequestModal: React.FC<Props> = ({ course, onClose }) => {
         message,
       });
 
+      await refreshUser();
       setSuccess(true);
     } catch (err: any) {
       alert(
@@ -74,6 +75,9 @@ const RequestModal: React.FC<Props> = ({ course, onClose }) => {
   const estimatedPrice = course.price
     ? Math.round((course.price / 60) * duration)
     : 0;
+  const availableSkillCoins = user?.availableSkillCoins || 0;
+  const lockedSkillCoins = user?.lockedSkillCoins || 0;
+  const hasEnoughSkillCoins = availableSkillCoins >= estimatedPrice;
 
   const selectedDateLabel = useMemo(() => {
     if (!date || !time) return "Choose a date and time";
@@ -115,7 +119,9 @@ const RequestModal: React.FC<Props> = ({ course, onClose }) => {
           <h2 id="request-session-success">Your request is on its way</h2>
           <p className={styles.successNote}>
             The tutor can now review your preferred time, session
-            length, and message before confirming.
+            length, and message before confirming. The matching
+            SkillCoin amount stays locked until the request is
+            declined or the session is completed and confirmed.
           </p>
 
           <div className={styles.summaryCard}>
@@ -135,6 +141,12 @@ const RequestModal: React.FC<Props> = ({ course, onClose }) => {
               <span className={styles.summaryLabel}>Status</span>
               <strong className={styles.summaryValue}>
                 Pending approval
+              </strong>
+            </div>
+            <div className={styles.summaryItem}>
+              <span className={styles.summaryLabel}>SkillCoin lock</span>
+              <strong className={styles.summaryValue}>
+                {estimatedPrice} SC reserved
               </strong>
             </div>
           </div>
@@ -189,6 +201,7 @@ const RequestModal: React.FC<Props> = ({ course, onClose }) => {
             <p>
               Pick a time that works for you, add context for the
               tutor, and send a focused request in one step.
+              SkillCoin follows a simple rule: 1 INR = 1 SC.
             </p>
           </div>
 
@@ -283,10 +296,14 @@ const RequestModal: React.FC<Props> = ({ course, onClose }) => {
               <button
                 type="submit"
                 className={styles.primaryAction}
-                disabled={loading}
+                disabled={loading || !hasEnoughSkillCoins}
               >
                 <Send size={16} />
-                {loading ? "Sending..." : "Send request"}
+                {loading
+                  ? "Sending..."
+                  : hasEnoughSkillCoins
+                    ? "Send request"
+                    : "Recharge SkillCoin"}
               </button>
             </div>
           </form>
@@ -306,6 +323,18 @@ const RequestModal: React.FC<Props> = ({ course, onClose }) => {
               </strong>
             </div>
             <div className={styles.summaryItem}>
+              <span className={styles.summaryLabel}>Available now</span>
+              <strong className={styles.summaryValue}>
+                {availableSkillCoins} SC available
+              </strong>
+            </div>
+            <div className={styles.summaryItem}>
+              <span className={styles.summaryLabel}>Already locked</span>
+              <strong className={styles.summaryValue}>
+                {lockedSkillCoins} SC in holds
+              </strong>
+            </div>
+            <div className={styles.summaryItem}>
               <span className={styles.summaryLabel}>Session length</span>
               <strong className={styles.summaryValue}>
                 {duration} minutes
@@ -317,10 +346,32 @@ const RequestModal: React.FC<Props> = ({ course, onClose }) => {
               </span>
               <strong className={styles.summaryValue}>
                 {course.price
-                  ? `Rs ${formatAmount(estimatedPrice)}`
+                  ? `${formatAmount(estimatedPrice)} SC`
                   : "Shared with tutor"}
               </strong>
             </div>
+            <div className={styles.balanceBar}>
+              <div
+                className={styles.balanceFill}
+                style={{
+                  width: `${
+                    availableSkillCoins + lockedSkillCoins
+                      ? (lockedSkillCoins /
+                          (availableSkillCoins + lockedSkillCoins)) *
+                        100
+                      : 0
+                  }%`,
+                }}
+              />
+            </div>
+            <p className={styles.lockCopy}>
+              {hasEnoughSkillCoins
+                ? `${estimatedPrice} SC will be locked immediately when you send this request.`
+                : `You need ${Math.max(
+                    0,
+                    estimatedPrice - availableSkillCoins
+                  )} more SC before you can book this session.`}
+            </p>
           </aside>
         </div>
       </div>

@@ -14,6 +14,10 @@ interface Session {
   _id: string;
   title: string;
   date: string;
+  duration: number;
+  skillCoinAmount: number;
+  coinStatus: "locked" | "released" | "settled";
+  studentConfirmedCompletionAt?: string;
   status: "pending" | "accepted" | "completed" | "cancelled";
   tutor: SessionParticipant | string;
   student: SessionParticipant | string;
@@ -69,14 +73,25 @@ const Sessions = () => {
 
       const isTutor = tutorId === userId;
       const isStudent = studentId === userId;
+      const requestedAt = new Date(session.date);
+      const sessionEndsAt = new Date(
+        requestedAt.getTime() + (session.duration || 0) * 60000
+      );
+      const hasEnded = sessionEndsAt.getTime() < Date.now();
+      const isExpired =
+        session.status === "pending" &&
+        requestedAt.getTime() < Date.now();
 
       let type: SessionTab | null = null;
 
-      if (session.status === "pending") {
+      if (isExpired) {
+        if (isTutor) type = "received";
+        if (isStudent) type = "sent";
+      } else if (session.status === "pending") {
         if (isTutor) type = "received";
         if (isStudent) type = "sent";
       } else if (session.status === "accepted") {
-        type = "upcoming";
+        type = hasEnded ? "completed" : "upcoming";
       } else if (
         ["completed", "cancelled"].includes(session.status)
       ) {
@@ -88,6 +103,8 @@ const Sessions = () => {
         type,
         isTutor,
         isStudent,
+        isExpired,
+        hasEnded,
       };
     });
   }, [sessions, user?._id]);
@@ -117,14 +134,21 @@ const Sessions = () => {
 
   const handleUpdate = (
     sessionId: string,
-    status: Session["status"]
+    status: Session["status"],
+    extra?: Partial<Session>
   ) => {
     setSessions((previous) =>
       previous.map((session) =>
         session._id === sessionId
-          ? { ...session, status }
+          ? { ...session, status, ...extra }
           : session
       )
+    );
+  };
+
+  const handleHide = (sessionId: string) => {
+    setSessions((previous) =>
+      previous.filter((session) => session._id !== sessionId)
     );
   };
 
@@ -192,6 +216,7 @@ const Sessions = () => {
               key={session._id}
               session={session}
               onUpdate={handleUpdate}
+              onHide={handleHide}
             />
           ))}
         </div>

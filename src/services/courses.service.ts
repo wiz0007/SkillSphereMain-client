@@ -20,6 +20,11 @@ export interface Course {
   averageRating?: number;
   totalRatings?: number;
   reviews?: Review[];
+  reviewEligibility?: {
+    canReview: boolean;
+    hasEnrolled: boolean;
+    hasReviewed: boolean;
+  };
 }
 
 export interface ReviewUser {

@@ -16,3 +16,23 @@ export const createSession = async (payload: {
   const { data } = await api.post("/sessions", payload);
   return data;
 };
+
+export const hideSession = async (sessionId: string) => {
+  const { data } = await api.post(`/sessions/${sessionId}/hide`);
+  return data;
+};
+
+export const updateSessionStatus = async (
+  sessionId: string,
+  status: "accepted" | "completed" | "cancelled"
+) => {
+  const { data } = await api.put(`/sessions/${sessionId}`, { status });
+  return data;
+};
+
+export const confirmSessionCompletion = async (sessionId: string) => {
+  const { data } = await api.post(
+    `/sessions/${sessionId}/confirm-completion`
+  );
+  return data;
+};

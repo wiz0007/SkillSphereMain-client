@@ -73,6 +73,26 @@
   font-size: 0.9rem;
 }
 
+.walletBar {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.2);
+  overflow: hidden;
+  margin-top: 0.2rem;
+}
+
+.walletBarFill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #ffb703, #f59e0b);
+}
+
+.walletLegend {
+  color: #64748b;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));

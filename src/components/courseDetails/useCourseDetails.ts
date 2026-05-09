@@ -22,6 +22,24 @@ export const useCourseDetails = (id?: string) => {
 
     getCourseById(id).then((data) => {
       setCourse(data);
+      const currentUserReview = data.reviews?.find((review: any) => {
+        const reviewUserId =
+          review.user?._id?.toString?.() ||
+          review.user?.toString?.() ||
+          "";
+
+        return (
+          reviewUserId &&
+          reviewUserId ===
+            JSON.parse(localStorage.getItem("user") || "null")?._id
+        );
+      });
+
+      if (currentUserReview) {
+        setReviewRating(currentUserReview.rating || 0);
+        setReviewText(currentUserReview.comment || "");
+      }
+
       setLoading(false);
     });
   }, [id]);

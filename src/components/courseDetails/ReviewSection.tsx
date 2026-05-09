@@ -10,6 +10,8 @@ const ReviewSection = ({
   handleReviewSubmit,
   submitLoading,
   error,
+  canReview,
+  reviewHint,
 }: any) => {
   const total = course.totalRatings || 0;
   const average = course.averageRating || 0;
@@ -100,49 +102,65 @@ const ReviewSection = ({
         </div>
       </div>
 
-      <div className={styles.reviewComposer}>
-        <div className={styles.composerHeader}>
-          <div>
-            <span className={styles.summaryLabel}>Add your review</span>
-            <h3>Share what stood out</h3>
+      {canReview ? (
+        <div className={styles.reviewComposer}>
+          <div className={styles.composerHeader}>
+            <div>
+              <span className={styles.summaryLabel}>Add your review</span>
+              <h3>Share what stood out</h3>
+            </div>
+            <PenLine size={18} className={styles.composerIcon} />
           </div>
-          <PenLine size={18} className={styles.composerIcon} />
+
+          <p className={styles.composerNote}>{reviewHint}</p>
+
+          <div className={styles.reviewStars}>
+            {[1, 2, 3, 4, 5].map((star) => (
+              <button
+                key={star}
+                type="button"
+                className={`${styles.starButton} ${
+                  star <= reviewRating ? styles.activeStar : ""
+                }`}
+                onClick={() => setReviewRating(star)}
+                aria-label={`Select ${star} star rating`}
+              >
+                <Star size={17} fill="currentColor" />
+              </button>
+            ))}
+          </div>
+
+          <textarea
+            value={reviewText}
+            placeholder="Describe the pace, clarity, and what made the course useful for you."
+            onChange={(event) => setReviewText(event.target.value)}
+          />
+
+          {error ? <p className={styles.error}>{error}</p> : null}
+
+          <button
+            type="button"
+            className={styles.composeButton}
+            onClick={handleReviewSubmit}
+            disabled={!reviewRating || !reviewText.trim()}
+          >
+            <MessageSquareText size={16} />
+            {submitLoading ? "Submitting..." : "Submit review"}
+          </button>
         </div>
+      ) : (
+        <div className={styles.reviewComposer}>
+          <div className={styles.composerHeader}>
+            <div>
+              <span className={styles.summaryLabel}>Review access</span>
+              <h3>Reviews are for enrolled learners</h3>
+            </div>
+            <PenLine size={18} className={styles.composerIcon} />
+          </div>
 
-        <div className={styles.reviewStars}>
-          {[1, 2, 3, 4, 5].map((star) => (
-            <button
-              key={star}
-              type="button"
-              className={`${styles.starButton} ${
-                star <= reviewRating ? styles.activeStar : ""
-              }`}
-              onClick={() => setReviewRating(star)}
-              aria-label={`Select ${star} star rating`}
-            >
-              <Star size={17} fill="currentColor" />
-            </button>
-          ))}
+          <p className={styles.composerNote}>{reviewHint}</p>
         </div>
-
-        <textarea
-          value={reviewText}
-          placeholder="Describe the pace, clarity, and what made the course useful for you."
-          onChange={(event) => setReviewText(event.target.value)}
-        />
-
-        {error ? <p className={styles.error}>{error}</p> : null}
-
-        <button
-          type="button"
-          className={styles.composeButton}
-          onClick={handleReviewSubmit}
-          disabled={!reviewRating || !reviewText.trim()}
-        >
-          <MessageSquareText size={16} />
-          {submitLoading ? "Submitting..." : "Submit review"}
-        </button>
-      </div>
+      )}
 
       <div className={styles.reviewList}>
         {reviews.length ? (

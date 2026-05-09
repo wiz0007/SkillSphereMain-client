@@ -7,10 +7,12 @@ import ReviewSection from "./ReviewSection";
 import { useCourseDetails } from "./useCourseDetails";
 import { useSaveCourse } from "./useSaveCourse";
 import RequestSession from "../requestSession/RequestSession";
+import { useAuth } from "../../context/AuthContext";
 
 const CourseDetails = () => {
   const { id } = useParams();
   const [open, setOpen] = useState(false);
+  const { user } = useAuth();
 
   const {
     course,
@@ -29,6 +31,15 @@ const CourseDetails = () => {
   } = useCourseDetails(id);
 
   const { isSaved, handleSave } = useSaveCourse();
+  const reviewEligibility = course?.reviewEligibility;
+  const canReview = Boolean(reviewEligibility?.canReview);
+  const reviewHint = !user
+    ? "Sign in and complete an enrollment before leaving a review."
+    : canReview
+      ? reviewEligibility?.hasReviewed
+        ? "Update your review any time based on your learning experience."
+        : "You have enrolled in this course, so you can leave a review."
+      : "Review submission unlocks after you have an accepted booking for this course.";
 
   if (loading || !course) {
     return (
@@ -68,6 +79,8 @@ const CourseDetails = () => {
           handleReviewSubmit={handleReviewSubmit}
           submitLoading={submitLoading}
           error={error}
+          canReview={canReview}
+          reviewHint={reviewHint}
         />
       </div>
 
