@@ -16,6 +16,7 @@ import NotificationPage from "../pages/notification/NotificationPage";
 import PublicProfilePage from "../pages/publicProfile/PublicProfilePage";
 import MessagesPage from "../pages/messages/MessagesPage";
 import YourCoursesPage from "../pages/yourCourses/YourCoursesPage";
+import WalletPage from "../pages/wallet/WalletPage";
 
 import MainLayout from "../layout/MainLayout";
 import ProtectedRoute from "./ProtectedRoute";
@@ -50,6 +51,7 @@ const AllRoutes = () => {
           <Route path="/saved-courses" element={<SavedCoursesPage />} />
           <Route path="/notifications" element={<NotificationPage />} />
           <Route path="/messages" element={<MessagesPage />} />
+          <Route path="/wallet" element={<WalletPage />} />
         </Route>
       </Route>
 

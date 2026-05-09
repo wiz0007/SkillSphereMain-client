@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styles from "./CourseDetails.module.scss";
 import CourseHero from "./CourseHero";
 import CourseSidebar from "./CourseSidebar";
@@ -13,6 +13,8 @@ const CourseDetails = () => {
   const { id } = useParams();
   const [open, setOpen] = useState(false);
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const {
     course,
@@ -53,6 +55,17 @@ const CourseDetails = () => {
     );
   }
 
+  const handleOpenRequest = () => {
+    if (!user) {
+      navigate("/login", {
+        state: { from: location.pathname },
+      });
+      return;
+    }
+
+    setOpen(true);
+  };
+
   return (
     <section className={styles.page}>
       <div className={styles.container}>
@@ -67,7 +80,7 @@ const CourseDetails = () => {
             onSave={() => handleSave(id!)}
           />
 
-          <CourseSidebar course={course} onOpen={() => setOpen(true)} />
+          <CourseSidebar course={course} onOpen={handleOpenRequest} />
         </div>
 
         <ReviewSection

@@ -1,16 +1,16 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Coins } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./Navbar.module.scss";
-import { useAuth } from "../../context/AuthContext";
+import { ArrowLeft } from "lucide-react";
 import {
   createWalletRechargeOrder,
   getWalletProof,
   getWalletTransactions,
   verifyWalletRecharge,
 } from "../../services/auth.service";
-import WalletPanelContent from "./WalletPanelContent";
-import { type WalletHistoryItem } from "./walletHelpers";
+import { useAuth } from "../../context/AuthContext";
+import WalletPanelContent from "../../components/navbar/WalletPanelContent";
+import { type WalletHistoryItem } from "../../components/navbar/walletHelpers";
+import styles from "../../components/navbar/Navbar.module.scss";
 
 declare global {
   interface Window {
@@ -49,15 +49,13 @@ const loadRazorpayScript = () =>
     document.body.appendChild(script);
   });
 
-const SkillCoinWallet = () => {
+const WalletPage = () => {
   const { user, refreshUser } = useAuth();
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState("250");
   const [loading, setLoading] = useState(false);
   const [transactions, setTransactions] = useState<WalletHistoryItem[]>([]);
   const [proofLoadingId, setProofLoadingId] = useState("");
-  const rootRef = useRef<HTMLDivElement>(null);
 
   const lockedRatio = useMemo(() => {
     if (!user?.skillCoinBalance) {
@@ -68,41 +66,19 @@ const SkillCoinWallet = () => {
   }, [user?.lockedSkillCoins, user?.skillCoinBalance]);
 
   useEffect(() => {
-    if (!open) {
-      return;
-    }
-
     void getWalletTransactions()
       .then(setTransactions)
       .catch((error) => {
         console.error("Failed to load wallet history:", error);
       });
-  }, [open]);
-
-  useEffect(() => {
-    const handleOutside = (event: MouseEvent) => {
-      if (
-        rootRef.current &&
-        !rootRef.current.contains(event.target as Node)
-      ) {
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleOutside);
-    return () => document.removeEventListener("mousedown", handleOutside);
   }, []);
 
   if (!user) {
     return null;
   }
 
-  const isMobile = typeof window !== "undefined" && window.innerWidth <= 640;
-
   const startRecharge = async (requestedAmount?: number) => {
-    const rechargeAmount = Math.round(
-      requestedAmount || Number(amount || 0)
-    );
+    const rechargeAmount = Math.round(requestedAmount || Number(amount || 0));
 
     if (!rechargeAmount || rechargeAmount <= 0) {
       alert("Enter a valid SkillCoin recharge amount");
@@ -137,7 +113,6 @@ const SkillCoinWallet = () => {
           await refreshUser();
           const latestTransactions = await getWalletTransactions();
           setTransactions(latestTransactions);
-          setOpen(true);
         },
         prefill: {
           name: user.name || user.username,
@@ -187,52 +162,38 @@ const SkillCoinWallet = () => {
   };
 
   return (
-    <div className={styles.walletWrap} ref={rootRef}>
-      <button
-        type="button"
-        className={styles.walletTrigger}
-        onClick={() => {
-          if (isMobile) {
-            navigate("/wallet");
-            return;
-          }
+    <section className={styles.walletPage}>
+      <div className={styles.walletPageHeader}>
+        <button
+          type="button"
+          className={styles.walletPageBack}
+          onClick={() => navigate(-1)}
+        >
+          <ArrowLeft size={18} />
+          Back
+        </button>
+        <div>
+          <span className={styles.walletKicker}>Mobile wallet</span>
+          <h1>SkillCoin</h1>
+        </div>
+      </div>
 
-          setOpen((previous) => !previous);
-        }}
-        aria-label="Open SkillCoin wallet"
-      >
-        <div className={styles.walletIcon}>
-          <Coins size={16} />
-        </div>
-        <div className={styles.walletMeta}>
-          <span>SkillCoin</span>
-          <strong>{user.availableSkillCoins} SC</strong>
-          <div className={styles.walletMiniBar}>
-            <div
-              className={styles.walletMiniFill}
-              style={{ width: `${lockedRatio}%` }}
-            />
-          </div>
-        </div>
-      </button>
-
-      {open ? (
-        <div className={styles.walletPanel}>
-          <WalletPanelContent
-            user={user}
-            loading={loading}
-            amount={amount}
-            setAmount={setAmount}
-            transactions={transactions}
-            proofLoadingId={proofLoadingId}
-            lockedRatio={lockedRatio}
-            onRecharge={startRecharge}
-            onViewProof={handleViewProof}
-          />
-        </div>
-      ) : null}
-    </div>
+      <div className={styles.walletPageCard}>
+        <WalletPanelContent
+          user={user}
+          loading={loading}
+          amount={amount}
+          setAmount={setAmount}
+          transactions={transactions}
+          proofLoadingId={proofLoadingId}
+          lockedRatio={lockedRatio}
+          onRecharge={startRecharge}
+          onViewProof={handleViewProof}
+          compact
+        />
+      </div>
+    </section>
   );
 };
 
-export default SkillCoinWallet;
+export default WalletPage;

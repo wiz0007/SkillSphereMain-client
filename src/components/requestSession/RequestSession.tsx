@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   CalendarDays,
   CheckCircle2,
@@ -22,6 +23,8 @@ interface Props {
 
 const RequestModal: React.FC<Props> = ({ course, onClose }) => {
   const { user, loading: authLoading, refreshUser } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
   const durationOptions = [30, 60, 90];
 
   const [date, setDate] = useState("");
@@ -34,7 +37,10 @@ const RequestModal: React.FC<Props> = ({ course, onClose }) => {
 
   const handleSubmit = async () => {
     if (authLoading || !user?._id) {
-      alert("Please login first");
+      onClose();
+      navigate("/login", {
+        state: { from: location.pathname },
+      });
       return;
     }
 

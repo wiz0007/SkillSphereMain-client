@@ -101,18 +101,24 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
         <div className={styles.actions}>
           {user ? <SkillCoinWallet /> : null}
 
-          <div className={styles.iconWrapper}>
-            <NavbarBell />
-          </div>
+          {user ? (
+            <>
+              <div
+                className={`${styles.iconWrapper} ${styles.mobileAuxAction}`}
+              >
+                <NavbarBell />
+              </div>
 
-          <button
-            type="button"
-            className={styles.iconWrapper}
-            onClick={() => navigate("/messages")}
-            aria-label="Open messages"
-          >
-            <FiMessageSquare className={styles.icon} />
-          </button>
+              <button
+                type="button"
+                className={`${styles.iconWrapper} ${styles.mobileAuxAction}`}
+                onClick={() => navigate("/messages")}
+                aria-label="Open messages"
+              >
+                <FiMessageSquare className={styles.icon} />
+              </button>
+            </>
+          ) : null}
 
           {loading ? (
             <div className={styles.skeleton}></div>
