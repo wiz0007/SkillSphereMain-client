@@ -8,15 +8,20 @@ import {
 } from "lucide-react";
 import styles from "./CourseDetails.module.scss";
 
-const CourseSidebar = ({ course, onOpen }: any) => {
+const CourseSidebar = ({
+  course,
+  onOpen,
+  canRequestSession = true,
+}: any) => {
   return (
     <aside className={styles.right}>
       <div className={styles.previewCard}>
         <span className={styles.sidebarKicker}>Course snapshot</span>
         <h3>{course.category || "Personalized learning"}</h3>
         <p>
-          Book a live session to turn the course material into a
-          focused working plan with direct tutor guidance.
+          {canRequestSession
+            ? "Book a live session to turn the course material into a focused working plan with direct tutor guidance."
+            : "Review how this course is presented to learners, including pricing, positioning, ratings, and written feedback."}
         </p>
 
         <div className={styles.previewTags}>
@@ -37,14 +42,16 @@ const CourseSidebar = ({ course, onOpen }: any) => {
           </p>
         </div>
 
-        <button
-          type="button"
-          className={styles.requestButton}
-          onClick={onOpen}
-        >
-          Request session
-          <ArrowRight size={16} />
-        </button>
+        {canRequestSession ? (
+          <button
+            type="button"
+            className={styles.requestButton}
+            onClick={onOpen}
+          >
+            Request session
+            <ArrowRight size={16} />
+          </button>
+        ) : null}
 
         <div className={styles.sidebarList}>
           <div className={styles.sidebarItem}>

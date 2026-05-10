@@ -12,6 +12,7 @@ const ReviewSection = ({
   error,
   canReview,
   reviewHint,
+  isOwnCourse,
 }: any) => {
   const total = course.totalRatings || 0;
   const average = course.averageRating || 0;
@@ -153,7 +154,11 @@ const ReviewSection = ({
           <div className={styles.composerHeader}>
             <div>
               <span className={styles.summaryLabel}>Review access</span>
-              <h3>Reviews are for enrolled learners</h3>
+              <h3>
+                {isOwnCourse
+                  ? "Learner feedback only"
+                  : "Reviews are for enrolled learners"}
+              </h3>
             </div>
             <PenLine size={18} className={styles.composerIcon} />
           </div>

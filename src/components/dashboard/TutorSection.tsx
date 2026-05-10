@@ -59,6 +59,10 @@ const TutorSection = ({ summary }: TutorSectionProps) => {
     });
   };
 
+  const handleView = (id: string) => {
+    navigate(`/course/${id}`);
+  };
+
   const handleDelete = async (id: string) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this course?"
@@ -144,6 +148,7 @@ const TutorSection = ({ summary }: TutorSectionProps) => {
                 onSelect={toggleSelect}
                 onDelete={handleDelete}
                 onEdit={handleEdit}
+                onView={handleView}
               />
             ))}
           </div>

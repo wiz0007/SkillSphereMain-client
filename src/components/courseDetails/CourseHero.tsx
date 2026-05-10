@@ -16,6 +16,7 @@ const CourseHero = ({
   handleRate,
   saved,
   onSave,
+  isOwnCourse = false,
 }: any) => {
   const navigate = useNavigate();
 
@@ -33,16 +34,18 @@ const CourseHero = ({
       <div className={styles.heroTop}>
         <span className={styles.kicker}>Course details</span>
 
-        <button
-          type="button"
-          className={`${styles.saveButton} ${
-            saved ? styles.saved : ""
-          }`}
-          onClick={onSave}
-        >
-          {saved ? <BookmarkCheck size={16} /> : <Bookmark size={16} />}
-          {saved ? "Saved" : "Save course"}
-        </button>
+        {!isOwnCourse ? (
+          <button
+            type="button"
+            className={`${styles.saveButton} ${
+              saved ? styles.saved : ""
+            }`}
+            onClick={onSave}
+          >
+            {saved ? <BookmarkCheck size={16} /> : <Bookmark size={16} />}
+            {saved ? "Saved" : "Save course"}
+          </button>
+        ) : null}
       </div>
 
       <h1>{course.title}</h1>
@@ -97,28 +100,43 @@ const CourseHero = ({
 
       <div className={styles.ratePanel}>
         <div>
-          <span className={styles.rateLabel}>Rate this course</span>
+          <span className={styles.rateLabel}>
+            {isOwnCourse ? "Course sentiment" : "Rate this course"}
+          </span>
           <p className={styles.rateCopy}>
-            Share a quick signal to help other learners judge the fit.
+            {isOwnCourse
+              ? "This owner view shows how learners currently rate the course."
+              : "Share a quick signal to help other learners judge the fit."}
           </p>
         </div>
 
         <div className={styles.ratingStars}>
-          {[1, 2, 3, 4, 5].map((star) => (
-            <button
-              key={star}
-              type="button"
-              className={`${styles.starButton} ${
-                star <= active ? styles.activeStar : ""
-              }`}
-              onClick={() => handleRate(star)}
-              onMouseEnter={() => setHover(star)}
-              onMouseLeave={() => setHover(0)}
-              aria-label={`Rate ${star} out of 5`}
-            >
-              <Star size={17} fill="currentColor" />
-            </button>
-          ))}
+          {[1, 2, 3, 4, 5].map((star) =>
+            isOwnCourse ? (
+              <span
+                key={star}
+                className={`${styles.starButton} ${
+                  star <= active ? styles.activeStar : ""
+                }`}
+              >
+                <Star size={17} fill="currentColor" />
+              </span>
+            ) : (
+              <button
+                key={star}
+                type="button"
+                className={`${styles.starButton} ${
+                  star <= active ? styles.activeStar : ""
+                }`}
+                onClick={() => handleRate(star)}
+                onMouseEnter={() => setHover(star)}
+                onMouseLeave={() => setHover(0)}
+                aria-label={`Rate ${star} out of 5`}
+              >
+                <Star size={17} fill="currentColor" />
+              </button>
+            )
+          )}
         </div>
 
         <span className={styles.ratingText}>

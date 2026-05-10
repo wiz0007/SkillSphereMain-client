@@ -156,6 +156,18 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
               {profileOpen ? (
                 <div className={styles.dropdown}>
                   <NavLink to="/profile">Profile</NavLink>
+                  <NavLink
+                    to="/notifications"
+                    className={styles.mobileMenuOnly}
+                  >
+                    Notifications
+                  </NavLink>
+                  <NavLink
+                    to="/messages"
+                    className={styles.mobileMenuOnly}
+                  >
+                    Messages
+                  </NavLink>
                   <NavLink to="/settings">Settings</NavLink>
 
                   {!user.isTutor ? (

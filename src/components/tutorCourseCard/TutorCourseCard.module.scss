@@ -45,6 +45,27 @@
   }
 }
 
+.previewTrigger,
+.previewPanel {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.previewTrigger {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.previewPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .categoryRow {
   display: flex;
   align-items: center;

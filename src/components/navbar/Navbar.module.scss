@@ -649,6 +649,10 @@
   }
 }
 
+.mobileMenuOnly {
+  display: none !important;
+}
+
 .hamburger {
   display: none;
   align-items: center;
@@ -810,6 +814,10 @@
 
   .mobileAuxAction {
     display: none;
+  }
+
+  .mobileMenuOnly {
+    display: inline-flex !important;
   }
 
   .walletPanel {

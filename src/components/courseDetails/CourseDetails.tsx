@@ -33,15 +33,22 @@ const CourseDetails = () => {
   } = useCourseDetails(id);
 
   const { isSaved, handleSave } = useSaveCourse();
+  const isOwnCourse = Boolean(
+    user?._id &&
+      course?.tutor?._id &&
+      user._id.toString() === course.tutor._id.toString()
+  );
   const reviewEligibility = course?.reviewEligibility;
-  const canReview = Boolean(reviewEligibility?.canReview);
-  const reviewHint = !user
-    ? "Sign in and complete an enrollment before leaving a review."
-    : canReview
-      ? reviewEligibility?.hasReviewed
-        ? "Update your review any time based on your learning experience."
-        : "You have enrolled in this course, so you can leave a review."
-      : "Review submission unlocks after you have an accepted booking for this course.";
+  const canReview = !isOwnCourse && Boolean(reviewEligibility?.canReview);
+  const reviewHint = isOwnCourse
+    ? "Learner ratings and written feedback are shown here. Review submission is disabled while previewing your own course."
+    : !user
+      ? "Sign in and complete an enrollment before leaving a review."
+      : canReview
+        ? reviewEligibility?.hasReviewed
+          ? "Update your review any time based on your learning experience."
+          : "You have enrolled in this course, so you can leave a review."
+        : "Review submission unlocks after you have an accepted booking for this course.";
 
   if (loading || !course) {
     return (
@@ -78,9 +85,14 @@ const CourseDetails = () => {
             handleRate={handleRate}
             saved={isSaved(id!)}
             onSave={() => handleSave(id!)}
+            isOwnCourse={isOwnCourse}
           />
 
-          <CourseSidebar course={course} onOpen={handleOpenRequest} />
+          <CourseSidebar
+            course={course}
+            onOpen={handleOpenRequest}
+            canRequestSession={!isOwnCourse}
+          />
         </div>
 
         <ReviewSection
@@ -94,10 +106,11 @@ const CourseDetails = () => {
           error={error}
           canReview={canReview}
           reviewHint={reviewHint}
+          isOwnCourse={isOwnCourse}
         />
       </div>
 
-      {open ? (
+      {open && !isOwnCourse ? (
         <RequestSession
           course={course}
           onClose={() => setOpen(false)}

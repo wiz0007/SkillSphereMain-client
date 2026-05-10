@@ -16,6 +16,7 @@ interface Props {
   onSelect?: (id: string) => void;
   onDelete: (id: string) => void;
   onEdit: (course: Course) => void;
+  onView: (id: string) => void;
 }
 
 const TutorCourseCard: React.FC<Props> = ({
@@ -25,6 +26,7 @@ const TutorCourseCard: React.FC<Props> = ({
   onSelect,
   onDelete,
   onEdit,
+  onView,
 }) => {
   const description =
     course.description?.trim() ||
@@ -61,11 +63,22 @@ const TutorCourseCard: React.FC<Props> = ({
           ) : null}
         </div>
 
-        <h3>{course.title || "Untitled Course"}</h3>
-        <p className={styles.description}>{description}</p>
+        <button
+          type="button"
+          className={styles.previewTrigger}
+          onClick={() => onView(course._id)}
+        >
+          <h3>{course.title || "Untitled Course"}</h3>
+          <p className={styles.description}>{description}</p>
+        </button>
       </div>
 
-      <div className={styles.metrics}>
+      <button
+        type="button"
+        className={styles.previewPanel}
+        onClick={() => onView(course._id)}
+      >
+        <div className={styles.metrics}>
         <div className={styles.metric}>
           <Layers3 size={16} className={styles.metricIcon} />
           <div>
@@ -100,17 +113,18 @@ const TutorCourseCard: React.FC<Props> = ({
             <strong>{rating}</strong>
           </div>
         </div>
-      </div>
-
-      {visibleSkills.length ? (
-        <div className={styles.tags}>
-          {visibleSkills.map((skill) => (
-            <span key={skill} className={styles.tag}>
-              {skill}
-            </span>
-          ))}
         </div>
-      ) : null}
+
+        {visibleSkills.length ? (
+          <div className={styles.tags}>
+            {visibleSkills.map((skill) => (
+              <span key={skill} className={styles.tag}>
+                {skill}
+              </span>
+            ))}
+          </div>
+        ) : null}
+      </button>
 
       <div className={styles.actions}>
         <button
