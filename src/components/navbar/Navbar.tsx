@@ -87,6 +87,7 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
 
           <NavLink to="/sessions">Sessions</NavLink>
           <NavLink to="/dashboard">Dashboard</NavLink>
+          <NavLink to="/help-center">Help</NavLink>
 
           {user && !user.isTutor ? (
             <NavLink
@@ -156,6 +157,8 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
               {profileOpen ? (
                 <div className={styles.dropdown}>
                   <NavLink to="/profile">Profile</NavLink>
+                  <NavLink to="/help-center">Help Center</NavLink>
+                  <NavLink to="/support">Support</NavLink>
                   <NavLink
                     to="/notifications"
                     className={styles.mobileMenuOnly}

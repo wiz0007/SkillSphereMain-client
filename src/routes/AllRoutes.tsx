@@ -17,6 +17,8 @@ import PublicProfilePage from "../pages/publicProfile/PublicProfilePage";
 import MessagesPage from "../pages/messages/MessagesPage";
 import YourCoursesPage from "../pages/yourCourses/YourCoursesPage";
 import WalletPage from "../pages/wallet/WalletPage";
+import HelpCenterPage from "../pages/helpCenter/HelpCenterPage";
+import SupportPage from "../pages/support/SupportPage";
 
 import MainLayout from "../layout/MainLayout";
 import ProtectedRoute from "./ProtectedRoute";
@@ -30,6 +32,15 @@ const AllRoutes = () => {
       <Route element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/explore" element={<HomePage />} />
+        <Route path="/help-center" element={<HelpCenterPage />} />
+        <Route
+          path="/help-center/category/:categorySlug"
+          element={<HelpCenterPage />}
+        />
+        <Route
+          path="/help-center/article/:articleSlug"
+          element={<HelpCenterPage />}
+        />
         <Route path="/course/:id" element={<CourseDetailsPage />} />
         <Route
           path="/public-profile/:userId"
@@ -52,6 +63,7 @@ const AllRoutes = () => {
           <Route path="/notifications" element={<NotificationPage />} />
           <Route path="/messages" element={<MessagesPage />} />
           <Route path="/wallet" element={<WalletPage />} />
+          <Route path="/support" element={<SupportPage />} />
         </Route>
       </Route>
 

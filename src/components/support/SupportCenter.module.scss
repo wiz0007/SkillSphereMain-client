@@ -1,0 +1,502 @@
+@use "../../styles/abstracts" as *;
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 1.2rem;
+  border: 1px solid rgba(226, 232, 240, 0.92);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 183, 3, 0.14), transparent 32%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(236, 254, 255, 0.98));
+  box-shadow: $shadow-sm;
+
+  h1 {
+    margin: 0.2rem 0 0.45rem;
+    color: #0f172a;
+    font-size: clamp(1.7rem, 3vw, 2.6rem);
+    line-height: 1.05;
+  }
+
+  p {
+    margin: 0;
+    max-width: 62ch;
+    color: #64748b;
+    line-height: 1.7;
+  }
+}
+
+.kicker,
+.snapshotLabel,
+.chatKicker {
+  color: #0f766e;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.snapshot {
+  min-width: 250px;
+  padding: 0.95rem 1rem;
+  border: 1px solid rgba(226, 232, 240, 0.92);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.9);
+
+  strong,
+  span {
+    display: block;
+  }
+
+  strong {
+    margin: 0.25rem 0;
+    color: #0f172a;
+    font-size: 1rem;
+  }
+}
+
+.snapshotHint {
+  color: #64748b;
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(320px, 400px) minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.sidebar,
+.chatPanel {
+  min-height: 640px;
+  border: 1px solid rgba(226, 232, 240, 0.92);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: $shadow-sm;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1rem;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 48px;
+  padding: 0 0.9rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: #f8fafc;
+
+  svg {
+    color: #64748b;
+  }
+
+  input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #0f172a;
+    font-size: 0.9rem;
+  }
+}
+
+.createCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 1rem;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top left, rgba(46, 196, 182, 0.14), transparent 38%),
+    #fbfdff;
+  border: 1px solid #dbeafe;
+
+  select,
+  input,
+  textarea {
+    width: 100%;
+    border: 1px solid #dbe4f0;
+    border-radius: 16px;
+    background: #ffffff;
+    color: #0f172a;
+    font-size: 0.9rem;
+  }
+
+  select,
+  input {
+    min-height: 44px;
+    padding: 0 0.9rem;
+  }
+
+  textarea {
+    min-height: 120px;
+    padding: 0.8rem 0.9rem;
+    resize: vertical;
+  }
+}
+
+.createHeader {
+  display: flex;
+  gap: 0.75rem;
+
+  strong,
+  span {
+    display: block;
+  }
+
+  strong {
+    color: #0f172a;
+    font-size: 0.96rem;
+  }
+
+  span {
+    margin-top: 0.25rem;
+    color: #64748b;
+    font-size: 0.84rem;
+    line-height: 1.55;
+  }
+}
+
+.iconWrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 16px;
+  background: #ecfeff;
+  color: #0f766e;
+  flex-shrink: 0;
+}
+
+.primaryButton,
+.sendButton,
+.statusActions button,
+.helpLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 42px;
+  padding: 0.72rem 1rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 0.86rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.threadCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.9rem;
+  border: 1px solid #edf2f7;
+  border-radius: 20px;
+  background: #fbfdff;
+  text-align: left;
+  cursor: pointer;
+
+  strong {
+    color: #0f172a;
+    font-size: 0.95rem;
+  }
+
+  p {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.84rem;
+    line-height: 1.55;
+  }
+}
+
+.threadCardActive {
+  border-color: rgba(46, 196, 182, 0.5);
+  box-shadow: 0 0 0 3px rgba(46, 196, 182, 0.12);
+}
+
+.threadTop,
+.threadBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem;
+}
+
+.threadTopic,
+.threadDate,
+.unreadBadge {
+  font-size: 0.74rem;
+  font-weight: 800;
+}
+
+.threadTopic {
+  color: #0f766e;
+}
+
+.threadDate {
+  color: #94a3b8;
+}
+
+.unreadBadge {
+  min-width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #ffb703;
+  color: #111827;
+}
+
+.open,
+.waiting_on_support,
+.waiting_on_user,
+.resolved {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0.24rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: capitalize;
+}
+
+.open {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.waiting_on_support {
+  background: #fff7ed;
+  color: #b45309;
+}
+
+.waiting_on_user {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.resolved {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.chatPanel {
+  display: flex;
+  flex-direction: column;
+}
+
+.chatHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1rem 0.9rem;
+  border-bottom: 1px solid #edf2f7;
+
+  h2 {
+    margin: 0.22rem 0 0.35rem;
+    color: #0f172a;
+    font-size: 1.25rem;
+  }
+
+  p {
+    margin: 0;
+    color: #64748b;
+    line-height: 1.6;
+  }
+}
+
+.statusActions {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+
+  button {
+    min-height: 36px;
+    padding: 0.55rem 0.85rem;
+    background: #ffffff;
+    color: #0f172a;
+    border-color: #e2e8f0;
+  }
+}
+
+.messagesArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1rem;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.messageRow {
+  display: flex;
+}
+
+.mine {
+  justify-content: flex-end;
+}
+
+.theirs {
+  justify-content: flex-start;
+}
+
+.messageBubble {
+  max-width: min(560px, 78%);
+  padding: 0.8rem 0.9rem;
+  border-radius: 20px;
+  background: #f8fafc;
+  border: 1px solid #edf2f7;
+
+  p {
+    margin: 0;
+    color: #0f172a;
+    line-height: 1.65;
+  }
+
+  span {
+    display: block;
+    margin-top: 0.45rem;
+    color: #64748b;
+    font-size: 0.74rem;
+  }
+}
+
+.mine .messageBubble {
+  background: #0f172a;
+  border-color: #0f172a;
+
+  p,
+  span,
+  .senderLabel {
+    color: #ffffff;
+  }
+}
+
+.senderLabel {
+  margin: 0 0 0.4rem !important;
+  font-size: 0.72rem !important;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.composer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-top: 1px solid #edf2f7;
+
+  textarea {
+    min-height: 74px;
+    padding: 0.85rem 0.95rem;
+    border: 1px solid #dbe4f0;
+    border-radius: 18px;
+    resize: none;
+    outline: none;
+    font: inherit;
+    color: #0f172a;
+  }
+}
+
+.placeholder,
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  text-align: center;
+  color: #64748b;
+  padding: 1.25rem;
+
+  strong {
+    color: #0f172a;
+  }
+}
+
+.placeholder {
+  flex: 1;
+}
+
+.placeholderIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 18px;
+  background: #ecfeff;
+  color: #0f766e;
+}
+
+.error {
+  margin: 0;
+  color: #dc2626;
+  font-size: 0.82rem;
+}
+
+.loading {
+  padding: 2rem;
+  text-align: center;
+  color: #64748b;
+}
+
+@media (max-width: 1100px) {
+  .header,
+  .layout {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+  }
+
+  .snapshot {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 720px) {
+  .composer {
+    grid-template-columns: 1fr;
+  }
+
+  .chatHeader {
+    flex-direction: column;
+  }
+
+  .messageBubble {
+    max-width: 100%;
+  }
+}

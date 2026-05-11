@@ -133,9 +133,16 @@ export const createWalletRechargeOrder = async (amount: number) => {
     keyId: string;
     conversion: {
       rupees: number;
+      baseSkillCoins: number;
+      bonusSkillCoins: number;
       skillCoins: number;
       rate: string;
     };
+    offers: Array<{
+      amountRupees: number;
+      bonusSkillCoins: number;
+      label: string;
+    }>;
   };
 };
 

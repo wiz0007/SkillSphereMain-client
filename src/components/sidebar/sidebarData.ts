@@ -48,4 +48,10 @@ export const sidebarItems: SidebarItem[] = [
     icon: "ri-settings-3-line",
     route: "/settings",
   },
+  {
+    id: 8,
+    title: "Help Center",
+    icon: "ri-question-line",
+    route: "/help-center",
+  },
 ];

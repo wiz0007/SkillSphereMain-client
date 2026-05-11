@@ -10,7 +10,10 @@ import {
   verifyWalletRecharge,
 } from "../../services/auth.service";
 import WalletPanelContent from "./WalletPanelContent";
-import { type WalletHistoryItem } from "./walletHelpers";
+import {
+  getRechargeBonus,
+  type WalletHistoryItem,
+} from "./walletHelpers";
 
 declare global {
   interface Window {
@@ -120,13 +123,17 @@ const SkillCoinWallet = () => {
       }
 
       const order = await createWalletRechargeOrder(rechargeAmount);
+      const bonusSkillCoins = order.conversion.bonusSkillCoins;
+      const totalSkillCoins = order.conversion.skillCoins;
 
       const razorpay = new window.Razorpay({
         key: order.keyId,
         amount: order.amount,
         currency: order.currency,
         name: "SkillSphere",
-        description: `Recharge ${order.conversion.skillCoins} SkillCoin`,
+        description: bonusSkillCoins
+          ? `Recharge ${rechargeAmount} INR and get ${totalSkillCoins} SC`
+          : `Recharge ${totalSkillCoins} SkillCoin`,
         order_id: order.orderId,
         handler: async (response: Record<string, unknown>) => {
           await verifyWalletRecharge({
@@ -226,6 +233,9 @@ const SkillCoinWallet = () => {
             transactions={transactions}
             proofLoadingId={proofLoadingId}
             lockedRatio={lockedRatio}
+            selectedBonus={getRechargeBonus(
+              Math.round(Number(amount || 0))
+            )}
             onRecharge={startRecharge}
             onViewProof={handleViewProof}
           />

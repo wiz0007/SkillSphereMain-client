@@ -3,7 +3,9 @@ import styles from "./Navbar.module.scss";
 import {
   formatTransactionAmount,
   getExplorerUrl,
+  getRechargeBonus,
   QUICK_AMOUNTS,
+  RECHARGE_OFFERS,
   type WalletHistoryItem,
 } from "./walletHelpers";
 
@@ -19,6 +21,7 @@ type Props = {
   transactions: WalletHistoryItem[];
   proofLoadingId: string;
   lockedRatio: number;
+  selectedBonus: number;
   onRecharge: (requestedAmount?: number) => Promise<void>;
   onViewProof: (transactionId: string) => Promise<void>;
   compact?: boolean;
@@ -32,6 +35,7 @@ const WalletPanelContent = ({
   transactions,
   proofLoadingId,
   lockedRatio,
+  selectedBonus,
   onRecharge,
   onViewProof,
   compact = false,
@@ -57,6 +61,24 @@ const WalletPanelContent = ({
       1 INR = 1 SC. Requested sessions lock coins, and they settle only
       after completion is confirmed.
     </p>
+
+    <div className={styles.walletOfferStrip}>
+      {RECHARGE_OFFERS.map((offer) => (
+        <button
+          key={offer.amountRupees}
+          type="button"
+          className={styles.walletOfferCard}
+          onClick={() => {
+            setAmount(String(offer.amountRupees));
+            void onRecharge(offer.amountRupees);
+          }}
+        >
+          <span>{offer.amountRupees} INR</span>
+          <strong>{offer.amountRupees + offer.bonusSkillCoins} SC</strong>
+          <small>on {offer.amountRupees}+ recharge</small>
+        </button>
+      ))}
+    </div>
 
     <div className={styles.walletStats}>
       <div className={styles.walletStat}>
@@ -90,7 +112,7 @@ const WalletPanelContent = ({
             void onRecharge(quickAmount);
           }}
         >
-          +{quickAmount} SC
+          +{quickAmount + getRechargeBonus(quickAmount)} SC
         </button>
       ))}
     </div>
@@ -114,6 +136,16 @@ const WalletPanelContent = ({
           Pay
         </button>
       </div>
+      {selectedBonus ? (
+        <small className={styles.walletOfferHint}>
+          Current offer unlocked: {amount || "0"} INR qualifies for +
+          {selectedBonus} bonus SC.
+        </small>
+      ) : (
+        <small className={styles.walletOfferHint}>
+          Bonus tiers start at 500 INR and 1000 INR recharge thresholds.
+        </small>
+      )}
     </label>
 
     <div className={styles.walletHistory}>
