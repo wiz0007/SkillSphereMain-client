@@ -161,3 +161,32 @@ export const verifyWalletRecharge = async (payload: {
     };
   };
 };
+
+export const getPendingAdminGift = async () => {
+  const res = await api.get("/auth/admin-gifts/pending");
+  return res.data as {
+    gift: null | {
+      _id: string;
+      amount: number;
+      note: string;
+      createdAt: string;
+    };
+  };
+};
+
+export const claimAdminGift = async (giftId: string) => {
+  const res = await api.post(`/auth/admin-gifts/${giftId}/claim`);
+  return res.data as {
+    message: string;
+    wallet: {
+      skillCoinBalance: number;
+      lockedSkillCoins: number;
+      availableSkillCoins: number;
+    };
+    gift: {
+      _id: string;
+      amount: number;
+      note: string;
+    };
+  };
+};

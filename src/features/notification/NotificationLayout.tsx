@@ -50,7 +50,9 @@ const NotificationsLayout = () => {
       console.error(err);
     }
 
-    if (notification.entityId) {
+    if (notification.metadata?.kind === "admin_skillcoin_gift") {
+      navigate("/wallet");
+    } else if (notification.entityId) {
       navigate(`/sessions?sessionId=${notification.entityId}`);
     } else {
       navigate("/sessions");
@@ -136,7 +138,9 @@ const NotificationsLayout = () => {
                 </div>
 
                 <p>
-                  {notification.entityId
+                  {notification.metadata?.kind === "admin_skillcoin_gift"
+                    ? "Open your wallet to claim the gift and read the admin note."
+                    : notification.entityId
                     ? "Open the related session to review details and take action."
                     : "Open your sessions feed to see the latest context."}
                 </p>

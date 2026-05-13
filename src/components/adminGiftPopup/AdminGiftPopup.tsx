@@ -1,111 +1,153 @@
 import { useEffect, useMemo, useState } from "react";
+import { claimAdminGift, getPendingAdminGift } from "../../services/auth.service";
 import { markAsRead } from "../../services/activity.service";
 import { useAuth } from "../../context/AuthContext";
 import { useNotifications } from "../../context/NotificationContext";
 import styles from "./AdminGiftPopup.module.scss";
 
-type GiftNotification = {
+type PendingGift = {
   _id: string;
-  type?: string;
-  action?: string;
-  message?: string;
+  amount: number;
+  note: string;
   createdAt: string;
-  isRead?: boolean;
-  metadata?: Record<string, unknown>;
 };
 
 const AdminGiftPopup = () => {
-  const { user } = useAuth();
-  const { notifications, markLocalAsRead } = useNotifications();
-  const [openedGiftId, setOpenedGiftId] = useState<string | null>(null);
-  const [dismissedGiftIds, setDismissedGiftIds] = useState<string[]>([]);
+  const { user, refreshUser } = useAuth();
+  const { notifications, markLocalAsRead, refresh } = useNotifications();
+  const [pendingGift, setPendingGift] = useState<PendingGift | null>(null);
+  const [opened, setOpened] = useState(false);
+  const [claiming, setClaiming] = useState(false);
+  const [claimedAmount, setClaimedAmount] = useState<number | null>(null);
 
-  const pendingGift = useMemo(() => {
-    return (notifications as GiftNotification[]).find((notification) => {
-      const kind = String(notification.metadata?.kind || "");
+  const relatedNotification = useMemo(() => {
+    if (!pendingGift?._id) return null;
+
+    return notifications.find((notification: any) => {
+      const kind = String(notification?.metadata?.kind || "");
+      const giftId = String(notification?.metadata?.giftId || "");
       return (
-        !notification.isRead &&
-        !dismissedGiftIds.includes(notification._id) &&
-        notification.type === "SYSTEM" &&
-        notification.action === "ADMIN_GIFT" &&
-        kind === "admin_skillcoin_gift"
+        kind === "admin_skillcoin_gift" &&
+        giftId === pendingGift._id
       );
-    });
-  }, [dismissedGiftIds, notifications]);
+    }) as any;
+  }, [notifications, pendingGift?._id]);
 
   useEffect(() => {
     if (!user?._id) {
-      setOpenedGiftId(null);
-      setDismissedGiftIds([]);
+      setPendingGift(null);
+      setOpened(false);
+      setClaimedAmount(null);
+      return;
     }
-  }, [user?._id]);
 
-  const openGift = async () => {
+    void getPendingAdminGift()
+      .then((response) => {
+        setPendingGift(response.gift);
+        if (!response.gift) {
+          setOpened(false);
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to fetch pending admin gift:", error);
+      });
+  }, [user?._id, notifications.length]);
+
+  const handleClaim = async () => {
     if (!pendingGift) return;
 
-    setOpenedGiftId(pendingGift._id);
-
     try {
-      await markAsRead(pendingGift._id);
-      markLocalAsRead(pendingGift._id);
-    } catch (error) {
-      console.error("Failed to mark admin gift as read:", error);
+      setClaiming(true);
+      const result = await claimAdminGift(pendingGift._id);
+      setClaimedAmount(result.gift.amount);
+      await refreshUser();
+
+      if (relatedNotification?._id) {
+        try {
+          await markAsRead(relatedNotification._id);
+          markLocalAsRead(relatedNotification._id);
+        } catch (error) {
+          console.error("Failed to mark gift notification as read:", error);
+        }
+      }
+
+      await refresh();
+      setPendingGift(null);
+    } catch (error: any) {
+      alert(
+        error?.response?.data?.message ||
+          error?.message ||
+          "The gift could not be claimed right now"
+      );
+    } finally {
+      setClaiming(false);
     }
   };
 
-  const activeGift =
-    (notifications as GiftNotification[]).find(
-      (notification) => notification._id === openedGiftId
-    ) || pendingGift;
-
-  if (!user || !pendingGift) {
+  if (!user || (!pendingGift && !claimedAmount)) {
     return null;
   }
 
-  const amount = Number(activeGift?.metadata?.amount || 0);
-  const note = String(activeGift?.metadata?.note || "").trim();
-
   return (
     <>
-      <button
-        type="button"
-        className={styles.floatingGift}
-        onClick={() => void openGift()}
-      >
-        <span className={styles.icon}>🎁</span>
-        <span>
-          <strong>Gift from admin</strong>
-          <small>Tap to open</small>
-        </span>
-      </button>
+      {pendingGift ? (
+        <button
+          type="button"
+          className={styles.floatingGift}
+          onClick={() => setOpened(true)}
+        >
+          <span className={styles.icon}>🎁</span>
+          <span>
+            <strong>Gift from admin</strong>
+            <small>Tap to receive</small>
+          </span>
+        </button>
+      ) : null}
 
-      {openedGiftId ? (
+      {opened ? (
         <div className={styles.overlay} role="dialog" aria-modal="true">
           <div className={styles.card}>
             <span className={styles.badge}>Admin gift</span>
             <div className={styles.heroIcon}>🎁</div>
-            <h2>{amount} SkillCoin added</h2>
-            <p>{activeGift?.message || "You received a SkillCoin gift from admin."}</p>
+            <h2>
+              {claimedAmount
+                ? `${claimedAmount} SkillCoin received`
+                : `${pendingGift?.amount || 0} SkillCoin waiting`}
+            </h2>
+            <p>
+              {claimedAmount
+                ? "The gift has been added to your wallet."
+                : "Admin sent you a gift. Open it to add the SkillCoin to your wallet."}
+            </p>
 
-            {note ? (
+            {pendingGift?.note ? (
               <div className={styles.noteBox}>
                 <span>Admin note</span>
-                <strong>{note}</strong>
+                <strong>{pendingGift.note}</strong>
               </div>
             ) : null}
 
-            <button
-              type="button"
-              className={styles.primaryAction}
-              onClick={() => {
-                setOpenedGiftId(null);
-                setDismissedGiftIds((previous) =>
-                  activeGift ? [...previous, activeGift._id] : previous
-                );
-              }}
-            >
-              Opened
-            </button>
+            {claimedAmount ? (
+              <button
+                type="button"
+                className={styles.primaryAction}
+                onClick={() => {
+                  setOpened(false);
+                  setClaimedAmount(null);
+                }}
+              >
+                Continue
+              </button>
+            ) : (
+              <button
+                type="button"
+                className={styles.primaryAction}
+                onClick={() => void handleClaim()}
+                disabled={claiming}
+              >
+                {claiming ? "Receiving..." : "Receive gift"}
+              </button>
+            )}
           </div>
         </div>
       ) : null}
