@@ -34,8 +34,36 @@ const RequestModal: React.FC<Props> = ({ course, onClose }) => {
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [submitAttempted, setSubmitAttempted] = useState(false);
+  const [formError, setFormError] = useState("");
+
+  const selectedDate = date && time ? new Date(`${date}T${time}`) : null;
+  const fieldErrors = {
+    date: !date ? "Choose a date." : "",
+    time: !time ? "Choose a time." : "",
+    timing:
+      selectedDate && selectedDate <= new Date()
+        ? "Pick a future date and time."
+        : "",
+  };
+
+  const handleRechargeRedirect = () => {
+    onClose();
+    navigate("/wallet", {
+      state: {
+        from: location.pathname,
+        suggestedRechargeAmount: Math.max(
+          estimatedPrice,
+          estimatedPrice - availableSkillCoins
+        ),
+      },
+    });
+  };
 
   const handleSubmit = async () => {
+    setSubmitAttempted(true);
+    setFormError("");
+
     if (authLoading || !user?._id) {
       onClose();
       navigate("/login", {
@@ -44,15 +72,12 @@ const RequestModal: React.FC<Props> = ({ course, onClose }) => {
       return;
     }
 
-    if (!date || !time) {
-      alert("Please select date and time");
+    if (fieldErrors.date || fieldErrors.time || fieldErrors.timing) {
       return;
     }
 
-    const selectedDate = new Date(`${date}T${time}`);
-
-    if (selectedDate <= new Date()) {
-      alert("Please select a future time");
+    const requestDate = selectedDate;
+    if (!requestDate) {
       return;
     }
 
@@ -61,7 +86,7 @@ const RequestModal: React.FC<Props> = ({ course, onClose }) => {
 
       await createSession({
         courseId: course._id,
-        date: selectedDate.toISOString(),
+        date: requestDate.toISOString(),
         duration,
         message,
       });
@@ -69,7 +94,7 @@ const RequestModal: React.FC<Props> = ({ course, onClose }) => {
       await refreshUser();
       setSuccess(true);
     } catch (err: any) {
-      alert(
+      setFormError(
         err?.response?.data?.message ||
           "Failed to request session"
       );
@@ -98,6 +123,15 @@ const RequestModal: React.FC<Props> = ({ course, onClose }) => {
     new Intl.NumberFormat("en-IN", {
       maximumFractionDigits: 0,
     }).format(value);
+
+  const handlePrimaryAction = async () => {
+    if (hasEnoughSkillCoins) {
+      await handleSubmit();
+      return;
+    }
+
+    handleRechargeRedirect();
+  };
 
   if (success) {
     return (
@@ -227,8 +261,27 @@ const RequestModal: React.FC<Props> = ({ course, onClose }) => {
               void handleSubmit();
             }}
           >
+            {submitAttempted &&
+            (fieldErrors.date ||
+              fieldErrors.time ||
+              fieldErrors.timing ||
+              formError) ? (
+              <div className={styles.errorBanner} role="alert">
+                {formError ||
+                  fieldErrors.date ||
+                  fieldErrors.time ||
+                  fieldErrors.timing}
+              </div>
+            ) : null}
+
             <div className={styles.grid}>
-              <div className={styles.field}>
+              <div
+                className={`${styles.field} ${
+                  submitAttempted && fieldErrors.date
+                    ? styles.fieldInvalid
+                    : ""
+                }`}
+              >
                 <label className={styles.label} htmlFor="session-date">
                   <CalendarDays size={16} />
                   Date
@@ -240,9 +293,21 @@ const RequestModal: React.FC<Props> = ({ course, onClose }) => {
                   min={new Date().toISOString().split("T")[0]}
                   onChange={(event) => setDate(event.target.value)}
                 />
+                {submitAttempted && fieldErrors.date ? (
+                  <small className={styles.errorText}>
+                    {fieldErrors.date}
+                  </small>
+                ) : null}
               </div>
 
-              <div className={styles.field}>
+              <div
+                className={`${styles.field} ${
+                  submitAttempted &&
+                  (fieldErrors.time || fieldErrors.timing)
+                    ? styles.fieldInvalid
+                    : ""
+                }`}
+              >
                 <label className={styles.label} htmlFor="session-time">
                   <Clock3 size={16} />
                   Time
@@ -253,6 +318,12 @@ const RequestModal: React.FC<Props> = ({ course, onClose }) => {
                   value={time}
                   onChange={(event) => setTime(event.target.value)}
                 />
+                {submitAttempted &&
+                (fieldErrors.time || fieldErrors.timing) ? (
+                  <small className={styles.errorText}>
+                    {fieldErrors.time || fieldErrors.timing}
+                  </small>
+                ) : null}
               </div>
             </div>
 
@@ -300,9 +371,14 @@ const RequestModal: React.FC<Props> = ({ course, onClose }) => {
                 Cancel
               </button>
               <button
-                type="submit"
+                type={hasEnoughSkillCoins ? "submit" : "button"}
                 className={styles.primaryAction}
-                disabled={loading || !hasEnoughSkillCoins}
+                disabled={loading}
+                onClick={
+                  hasEnoughSkillCoins
+                    ? undefined
+                    : () => void handlePrimaryAction()
+                }
               >
                 <Send size={16} />
                 {loading

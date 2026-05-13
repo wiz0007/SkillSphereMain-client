@@ -30,6 +30,11 @@ const CourseDetails = () => {
     handleReviewSubmit,
     submitLoading,
     error,
+    recordedActionLoading,
+    recordedError,
+    handleRecordedPurchaseRequest,
+    handleApproveRecordedRequest,
+    handleRejectRecordedRequest,
   } = useCourseDetails(id);
 
   const { isSaved, handleSave } = useSaveCourse();
@@ -92,6 +97,13 @@ const CourseDetails = () => {
             course={course}
             onOpen={handleOpenRequest}
             canRequestSession={!isOwnCourse}
+            isOwnCourse={isOwnCourse}
+            isLoggedIn={Boolean(user)}
+            onRecordedPurchaseRequest={handleRecordedPurchaseRequest}
+            onApproveRecordedRequest={handleApproveRecordedRequest}
+            onRejectRecordedRequest={handleRejectRecordedRequest}
+            recordedActionLoading={recordedActionLoading}
+            recordedError={recordedError}
           />
         </div>
 

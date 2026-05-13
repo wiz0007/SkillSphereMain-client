@@ -15,6 +15,7 @@ export interface User {
   profilePhoto?: string;
   profileCompleted?: boolean;
   isTutor: boolean;
+  isAdmin: boolean;
   skillCoinBalance: number;
   lockedSkillCoins: number;
   availableSkillCoins: number;

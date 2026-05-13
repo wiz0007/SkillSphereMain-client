@@ -19,9 +19,11 @@ import YourCoursesPage from "../pages/yourCourses/YourCoursesPage";
 import WalletPage from "../pages/wallet/WalletPage";
 import HelpCenterPage from "../pages/helpCenter/HelpCenterPage";
 import SupportPage from "../pages/support/SupportPage";
+import AdminPage from "../pages/admin/AdminPage";
 
 import MainLayout from "../layout/MainLayout";
 import ProtectedRoute from "./ProtectedRoute";
+import AdminRoute from "./AdminRoute";
 
 const AllRoutes = () => {
   return (
@@ -64,6 +66,12 @@ const AllRoutes = () => {
           <Route path="/messages" element={<MessagesPage />} />
           <Route path="/wallet" element={<WalletPage />} />
           <Route path="/support" element={<SupportPage />} />
+        </Route>
+      </Route>
+
+      <Route element={<AdminRoute />}>
+        <Route element={<MainLayout />}>
+          <Route path="/admin" element={<AdminPage />} />
         </Route>
       </Route>
 

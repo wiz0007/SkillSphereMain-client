@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { CheckCircle2, Sparkles } from "lucide-react";
 import styles from "./BecomeTutor.module.scss";
 import { becomeTutor } from "../../services/profile.service";
@@ -29,6 +29,31 @@ const BecomeTutor: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
+  const [submitAttempted, setSubmitAttempted] = useState(false);
+
+  const headlineRef = useRef<HTMLInputElement | null>(null);
+  const bioRef = useRef<HTMLTextAreaElement | null>(null);
+
+  const validationErrors = useMemo(
+    () => ({
+      headline: !form.headline.trim() ? "Headline is required." : "",
+      bio:
+        !form.bio.trim() || form.bio.trim().length < 20
+          ? "Bio must be at least 20 characters."
+          : "",
+      skills:
+        form.skills.length < 2 ? "Add at least 2 skills." : "",
+      categories:
+        form.categories.length === 0
+          ? "Select at least 1 category."
+          : "",
+      availability:
+        form.availability === null
+          ? "Please choose your availability."
+          : "",
+    }),
+    [form.availability, form.bio, form.categories.length, form.headline, form.skills.length]
+  );
 
   const handleChange = (
     event: React.ChangeEvent<
@@ -45,36 +70,39 @@ const BecomeTutor: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    setSubmitAttempted(true);
 
     setLoading(true);
     setError("");
 
-    if (!form.headline.trim()) {
-      setError("Headline is required.");
+    if (validationErrors.headline) {
+      setError(validationErrors.headline);
+      headlineRef.current?.focus();
       setLoading(false);
       return;
     }
 
-    if (!form.bio || form.bio.length < 20) {
-      setError("Bio must be at least 20 characters.");
+    if (validationErrors.bio) {
+      setError(validationErrors.bio);
+      bioRef.current?.focus();
       setLoading(false);
       return;
     }
 
-    if (form.skills.length < 2) {
-      setError("Add at least 2 skills.");
+    if (validationErrors.skills) {
+      setError(validationErrors.skills);
       setLoading(false);
       return;
     }
 
-    if (form.categories.length === 0) {
-      setError("Select at least 1 category.");
+    if (validationErrors.categories) {
+      setError(validationErrors.categories);
       setLoading(false);
       return;
     }
 
-    if (form.availability === null) {
-      setError("Please choose your availability.");
+    if (validationErrors.availability) {
+      setError(validationErrors.availability);
       setLoading(false);
       return;
     }
@@ -167,23 +195,43 @@ const BecomeTutor: React.FC = () => {
           <label className={`${styles.field} ${styles.fieldWide}`}>
             <span>Headline</span>
             <input
+              ref={headlineRef}
               name="headline"
               value={form.headline}
               onChange={handleChange}
               placeholder="What outcome do you help learners achieve?"
-              required
+              className={
+                submitAttempted && validationErrors.headline
+                  ? styles.inputError
+                  : undefined
+              }
             />
+            {submitAttempted && validationErrors.headline ? (
+              <small className={styles.errorText}>
+                {validationErrors.headline}
+              </small>
+            ) : null}
           </label>
 
           <label className={`${styles.field} ${styles.fieldWide}`}>
             <span>Bio</span>
             <textarea
+              ref={bioRef}
               name="bio"
               value={form.bio}
               placeholder="Describe your teaching style, experience, and strengths."
               onChange={handleChange}
-              required
+              className={
+                submitAttempted && validationErrors.bio
+                  ? styles.inputError
+                  : undefined
+              }
             />
+            {submitAttempted && validationErrors.bio ? (
+              <small className={styles.errorText}>
+                {validationErrors.bio}
+              </small>
+            ) : null}
           </label>
 
           <div className={styles.field}>
@@ -194,6 +242,11 @@ const BecomeTutor: React.FC = () => {
                 setForm((previous) => ({ ...previous, skills }))
               }
             />
+            {submitAttempted && validationErrors.skills ? (
+              <small className={styles.errorText}>
+                {validationErrors.skills}
+              </small>
+            ) : null}
           </div>
 
           <div className={styles.field}>
@@ -207,6 +260,11 @@ const BecomeTutor: React.FC = () => {
                 }))
               }
             />
+            {submitAttempted && validationErrors.categories ? (
+              <small className={styles.errorText}>
+                {validationErrors.categories}
+              </small>
+            ) : null}
           </div>
 
           <label className={styles.field}>
@@ -305,6 +363,11 @@ const BecomeTutor: React.FC = () => {
                 <span>Not available right now</span>
               </label>
             </div>
+            {submitAttempted && validationErrors.availability ? (
+              <small className={styles.errorText}>
+                {validationErrors.availability}
+              </small>
+            ) : null}
           </div>
         </div>
 

@@ -59,6 +59,7 @@ const SupportCenter = () => {
   );
   const [openingMessage, setOpeningMessage] = useState("");
   const [createError, setCreateError] = useState("");
+  const [createAttempted, setCreateAttempted] = useState(false);
 
   const selectedConversationId =
     searchParams.get("conversationId") || "";
@@ -207,6 +208,8 @@ const SupportCenter = () => {
   };
 
   const handleCreateConversation = async () => {
+    setCreateAttempted(true);
+
     if (!topic || !subject.trim() || !openingMessage.trim()) {
       setCreateError("Topic, subject, and opening message are required.");
       return;
@@ -370,6 +373,9 @@ const SupportCenter = () => {
               <select
                 value={topic}
                 onChange={(event) => setTopic(event.target.value)}
+                className={
+                  createAttempted && !topic ? styles.inputError : ""
+                }
               >
                 {topics.map((item) => (
                   <option key={item} value={item}>
@@ -382,6 +388,11 @@ const SupportCenter = () => {
                 value={subject}
                 onChange={(event) => setSubject(event.target.value)}
                 placeholder="Short subject line"
+                className={
+                  createAttempted && !subject.trim()
+                    ? styles.inputError
+                    : ""
+                }
               />
 
               <textarea
@@ -390,6 +401,11 @@ const SupportCenter = () => {
                   setOpeningMessage(event.target.value)
                 }
                 placeholder="Describe the issue, what you expected, and any session or payment details that might help."
+                className={
+                  createAttempted && !openingMessage.trim()
+                    ? styles.inputError
+                    : ""
+                }
               />
 
               {createError ? (

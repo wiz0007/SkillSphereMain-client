@@ -56,6 +56,34 @@
   font-weight: 600;
 }
 
+.summaryBanner {
+  margin-bottom: 1.1rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  border-radius: 16px;
+  background: #fff9ef;
+  color: #8a5a0a;
+}
+
+.summaryHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.summaryList {
+  display: grid;
+  gap: 0.3rem;
+  margin-top: 0.65rem;
+
+  span {
+    font-size: 0.82rem;
+    line-height: 1.45;
+  }
+}
+
 .section {
   margin-bottom: 1.4rem;
 }

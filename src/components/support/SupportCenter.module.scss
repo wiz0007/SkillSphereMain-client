@@ -150,6 +150,12 @@
   }
 }
 
+.inputError {
+  border-color: rgba(225, 29, 72, 0.55) !important;
+  box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.08);
+  background: #fffafc !important;
+}
+
 .createHeader {
   display: flex;
   gap: 0.75rem;
@@ -182,6 +188,14 @@
   background: #ecfeff;
   color: #0f766e;
   flex-shrink: 0;
+}
+
+.error {
+  margin: 0;
+  color: #be123c;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.45;
 }
 
 .primaryButton,

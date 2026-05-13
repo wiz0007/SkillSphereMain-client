@@ -1,10 +1,13 @@
 import React, {
   useState,
   useEffect,
+  useMemo,
+  useRef,
   type ChangeEvent,
   type FormEvent,
 } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { AlertTriangle } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Register.module.scss";
 import {
@@ -43,6 +46,16 @@ const Register: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [cooldown, setCooldown] = useState(0);
+  const [submitAttempted, setSubmitAttempted] = useState(false);
+  const [touched, setTouched] = useState<
+    Partial<Record<keyof RegisterForm | "terms" | "otp", boolean>>
+  >({});
+
+  const usernameRef = useRef<HTMLInputElement | null>(null);
+  const emailRef = useRef<HTMLInputElement | null>(null);
+  const passwordRef = useRef<HTMLInputElement | null>(null);
+  const confirmPasswordRef = useRef<HTMLInputElement | null>(null);
+  const otpRef = useRef<HTMLInputElement | null>(null);
 
   const checks = {
     length: form.password.length >= 8,
@@ -56,6 +69,52 @@ const Register: React.FC = () => {
   const isMatch =
     form.confirmPassword.length > 0 &&
     form.password === form.confirmPassword;
+
+  const validationErrors = useMemo(
+    () => ({
+      username: !form.username.trim()
+        ? "Choose a username."
+        : !/^[a-zA-Z0-9_]+$/.test(form.username.trim())
+          ? "Use only letters, numbers, and underscores."
+          : form.username.trim().length < 3
+            ? "Username must be at least 3 characters."
+            : usernameStatus === "taken"
+              ? "That username is already taken."
+              : "",
+      email: !form.email.trim()
+        ? "Enter your email address."
+        : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())
+          ? "Enter a valid email address."
+          : "",
+      password: !form.password
+        ? "Create a password."
+        : !isPasswordValid
+          ? "Password does not meet the required strength."
+          : "",
+      confirmPassword: !form.confirmPassword
+        ? "Confirm your password."
+        : !isMatch
+          ? "Passwords do not match."
+          : "",
+      terms: acceptedTerms ? "" : "Accept the terms to continue.",
+      otp: !otp.trim() ? "Enter the verification code first." : "",
+    }),
+    [
+      acceptedTerms,
+      form.confirmPassword,
+      form.email,
+      form.password,
+      form.username,
+      isMatch,
+      isPasswordValid,
+      otp,
+      usernameStatus,
+    ]
+  );
+
+  const visibleError = (
+    field: keyof typeof validationErrors
+  ) => ((touched[field] || submitAttempted) ? validationErrors[field] : "");
 
   useEffect(() => {
     if (!form.username.trim()) {
@@ -95,19 +154,36 @@ const Register: React.FC = () => {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setFeedback("");
+    setSubmitAttempted(true);
+    setTouched({
+      username: true,
+      email: true,
+      password: true,
+      confirmPassword: true,
+      terms: true,
+    });
 
-    if (!isPasswordValid) {
-      setFeedback("Password does not meet the required strength.");
+    if (validationErrors.username) {
+      usernameRef.current?.focus();
       return;
     }
 
-    if (!isMatch) {
-      setFeedback("Passwords do not match.");
+    if (validationErrors.email) {
+      emailRef.current?.focus();
       return;
     }
 
-    if (!acceptedTerms) {
-      setFeedback("Please accept the terms to continue.");
+    if (validationErrors.password) {
+      passwordRef.current?.focus();
+      return;
+    }
+
+    if (validationErrors.confirmPassword) {
+      confirmPasswordRef.current?.focus();
+      return;
+    }
+
+    if (validationErrors.terms) {
       return;
     }
 
@@ -139,8 +215,10 @@ const Register: React.FC = () => {
   };
 
   const handleVerifyOtp = async () => {
-    if (!otp.trim()) {
-      setFeedback("Enter the verification code first.");
+    setTouched((previous) => ({ ...previous, otp: true }));
+
+    if (validationErrors.otp) {
+      otpRef.current?.focus();
       return;
     }
 
@@ -205,45 +283,86 @@ const Register: React.FC = () => {
               <label className={styles.field}>
                 <span>Username</span>
                 <input
+                  ref={usernameRef}
                   name="username"
                   placeholder="Choose a username"
                   value={form.username}
                   onChange={handleChange}
-                  required
+                  onBlur={() =>
+                    setTouched((previous) => ({
+                      ...previous,
+                      username: true,
+                    }))
+                  }
+                  aria-invalid={Boolean(visibleError("username"))}
+                  className={
+                    visibleError("username")
+                      ? styles.inputError
+                      : undefined
+                  }
                 />
                 <small className={styles.inlineHint}>
-                  {usernameStatus === "checking" &&
-                    "Checking availability..."}
-                  {usernameStatus === "available" &&
-                    "Username is available."}
-                  {usernameStatus === "taken" &&
-                    "That username is already taken."}
-                  {usernameStatus === "idle" &&
-                    "Letters, numbers, and underscores work best."}
+                  {visibleError("username")
+                    ? visibleError("username")
+                    : usernameStatus === "checking"
+                      ? "Checking availability..."
+                      : usernameStatus === "available"
+                        ? "Username is available."
+                        : "Letters, numbers, and underscores work best."}
                 </small>
               </label>
 
               <label className={styles.field}>
                 <span>Email address</span>
                 <input
+                  ref={emailRef}
                   name="email"
                   type="email"
                   placeholder="you@example.com"
                   value={form.email}
                   onChange={handleChange}
-                  required
+                  onBlur={() =>
+                    setTouched((previous) => ({
+                      ...previous,
+                      email: true,
+                    }))
+                  }
+                  aria-invalid={Boolean(visibleError("email"))}
+                  className={
+                    visibleError("email")
+                      ? styles.inputError
+                      : undefined
+                  }
                 />
+                {visibleError("email") ? (
+                  <small className={styles.inlineHint}>
+                    {visibleError("email")}
+                  </small>
+                ) : null}
               </label>
 
               <label className={styles.field}>
                 <span>Password</span>
                 <div className={styles.passwordField}>
                   <input
+                    ref={passwordRef}
                     type={showPassword ? "text" : "password"}
                     name="password"
                     placeholder="Create a strong password"
                     value={form.password}
                     onChange={handleChange}
+                    onBlur={() =>
+                      setTouched((previous) => ({
+                        ...previous,
+                        password: true,
+                      }))
+                    }
+                    aria-invalid={Boolean(visibleError("password"))}
+                    className={
+                      visibleError("password")
+                        ? styles.inputError
+                        : undefined
+                    }
                   />
                   <button
                     type="button"
@@ -256,6 +375,11 @@ const Register: React.FC = () => {
                   </button>
                 </div>
               </label>
+              {visibleError("password") ? (
+                <small className={styles.inlineHint}>
+                  {visibleError("password")}
+                </small>
+              ) : null}
 
               <div className={styles.passwordRules}>
                 <span className={checks.length ? styles.valid : ""}>
@@ -279,11 +403,26 @@ const Register: React.FC = () => {
                 <span>Confirm password</span>
                 <div className={styles.passwordField}>
                   <input
+                    ref={confirmPasswordRef}
                     type={showConfirm ? "text" : "password"}
                     name="confirmPassword"
                     placeholder="Repeat your password"
                     value={form.confirmPassword}
                     onChange={handleChange}
+                    onBlur={() =>
+                      setTouched((previous) => ({
+                        ...previous,
+                        confirmPassword: true,
+                      }))
+                    }
+                    aria-invalid={Boolean(
+                      visibleError("confirmPassword")
+                    )}
+                    className={
+                      visibleError("confirmPassword")
+                        ? styles.inputError
+                        : undefined
+                    }
                   />
                   <button
                     type="button"
@@ -297,9 +436,10 @@ const Register: React.FC = () => {
                 </div>
                 {form.confirmPassword ? (
                   <small className={styles.inlineHint}>
-                    {isMatch
+                    {visibleError("confirmPassword") ||
+                      (isMatch
                       ? "Passwords match."
-                      : "Passwords do not match yet."}
+                      : "Passwords do not match yet.")}
                   </small>
                 ) : null}
               </label>
@@ -311,6 +451,12 @@ const Register: React.FC = () => {
                   checked={acceptedTerms}
                   onChange={(event) =>
                     setAcceptedTerms(event.target.checked)
+                  }
+                  onBlur={() =>
+                    setTouched((previous) => ({
+                      ...previous,
+                      terms: true,
+                    }))
                   }
                 />
                 <span>
@@ -325,6 +471,26 @@ const Register: React.FC = () => {
                   .
                 </span>
               </label>
+              {visibleError("terms") ? (
+                <small className={styles.inlineHint}>
+                  {visibleError("terms")}
+                </small>
+              ) : null}
+
+              {submitAttempted &&
+              (validationErrors.username ||
+                validationErrors.email ||
+                validationErrors.password ||
+                validationErrors.confirmPassword ||
+                validationErrors.terms) ? (
+                <div className={styles.summaryBanner} role="alert">
+                  <AlertTriangle size={16} />
+                  <span>
+                    Fix the highlighted fields before creating the
+                    account.
+                  </span>
+                </div>
+              ) : null}
 
               <button
                 type="submit"
@@ -345,10 +511,26 @@ const Register: React.FC = () => {
               <label className={styles.field}>
                 <span>Verification code</span>
                 <input
+                  ref={otpRef}
                   value={otp}
                   onChange={(event) => setOtp(event.target.value)}
+                  onBlur={() =>
+                    setTouched((previous) => ({
+                      ...previous,
+                      otp: true,
+                    }))
+                  }
                   placeholder="Enter the OTP from your email"
+                  aria-invalid={Boolean(visibleError("otp"))}
+                  className={
+                    visibleError("otp") ? styles.inputError : undefined
+                  }
                 />
+                {visibleError("otp") ? (
+                  <small className={styles.inlineHint}>
+                    {visibleError("otp")}
+                  </small>
+                ) : null}
               </label>
 
               <button

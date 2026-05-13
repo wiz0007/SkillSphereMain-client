@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { AlertTriangle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import styles from "./UserOnboarding.module.scss";
 import { createProfile } from "../../services/profile.service";
@@ -33,6 +34,13 @@ function UserOnboarding() {
   const validationErrors = useMemo(
     () => getOnboardingErrors(form),
     [form]
+  );
+  const visibleValidationEntries = useMemo(
+    () =>
+      Object.entries(validationErrors).filter(
+        ([, value]) => Boolean(value)
+      ),
+    [validationErrors]
   );
 
   useEffect(() => {
@@ -171,6 +179,25 @@ function UserOnboarding() {
 
         {formError ? (
           <div className={styles.errorBanner}>{formError}</div>
+        ) : null}
+
+        {submitAttempted && visibleValidationEntries.length > 0 ? (
+          <div className={styles.summaryBanner} role="alert">
+            <div className={styles.summaryHeader}>
+              <AlertTriangle size={16} />
+              <strong>
+                Please fix {visibleValidationEntries.length} profile field
+                {visibleValidationEntries.length > 1 ? "s" : ""} before saving.
+              </strong>
+            </div>
+            <div className={styles.summaryList}>
+              {visibleValidationEntries.map(([field, value]) => (
+                <span key={field}>
+                  {field}: {value}
+                </span>
+              ))}
+            </div>
+          </div>
         ) : null}
 
         <BasicProfileSection

@@ -64,6 +64,7 @@ export const getCurrentUser = async () => {
       profilePhoto?: string;
       profileCompleted?: boolean;
       isTutor: boolean;
+      isAdmin: boolean;
       skillCoinBalance: number;
       lockedSkillCoins: number;
       availableSkillCoins: number;

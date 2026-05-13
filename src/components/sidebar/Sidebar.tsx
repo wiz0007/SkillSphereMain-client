@@ -12,7 +12,18 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
+  const items = user?.isAdmin
+    ? [
+        ...sidebarItems,
+        {
+          id: 999,
+          title: "Admin Portal",
+          icon: "ri-shield-star-line",
+          route: "/admin",
+        },
+      ]
+    : sidebarItems;
 
   return (
     <>
@@ -41,7 +52,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
         </div>
 
         <nav className={styles.menu}>
-          {sidebarItems.map((item) => {
+          {items.map((item) => {
             const isActive = location.pathname.startsWith(item.route);
 
             return (

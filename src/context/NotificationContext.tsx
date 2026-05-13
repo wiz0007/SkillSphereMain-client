@@ -8,11 +8,13 @@ import { useAuth } from "./AuthContext";
 
 interface Notification {
   _id: string;
+  type?: string;
   message?: string;
   action?: string;
   createdAt: string;
   entityId?: string;
   isRead?: boolean;
+  metadata?: Record<string, unknown>;
 }
 
 interface NotificationContextType {
@@ -59,11 +61,13 @@ export const NotificationProvider = ({ children }: any) => {
 
       const newNotification: Notification = {
         _id: data._id || Date.now().toString(),
+        type: data.type,
         message: data.message || data.action,
         action: data.action,
         createdAt: data.createdAt || new Date().toISOString(),
         entityId: data.entityId,
         isRead: false,
+        metadata: data.metadata || {},
       };
 
       setNotifications((prev) => [newNotification, ...prev]);

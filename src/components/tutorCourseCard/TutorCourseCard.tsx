@@ -50,6 +50,9 @@ const TutorCourseCard: React.FC<Props> = ({
           <span className={styles.category}>
             {course.category || "General"}
           </span>
+          <span className={styles.category}>
+            {course.type === "recorded" ? "Recorded" : "Live"}
+          </span>
 
           {selectable ? (
             <label className={styles.selector}>
@@ -94,7 +97,10 @@ const TutorCourseCard: React.FC<Props> = ({
           />
           <div>
             <span>Rate</span>
-            <strong>{course.price ?? 0}/hr</strong>
+            <strong>
+              {course.price ?? 0}
+              {course.type === "recorded" ? " SC" : "/hr"}
+            </strong>
           </div>
         </div>
 

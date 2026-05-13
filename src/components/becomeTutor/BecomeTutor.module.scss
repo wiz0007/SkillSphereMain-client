@@ -112,6 +112,19 @@
   }
 }
 
+.inputError {
+  border-color: rgba(225, 29, 72, 0.55) !important;
+  box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.08);
+  background: #fffafc;
+}
+
+.errorText {
+  color: #be123c;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
 .fieldWide {
   grid-column: 1 / -1;
 }

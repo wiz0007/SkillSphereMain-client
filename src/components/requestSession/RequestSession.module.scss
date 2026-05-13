@@ -3,7 +3,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: 120;
+  z-index: 1600;
   padding: 1.2rem;
   background: rgba(15, 23, 42, 0.58);
   backdrop-filter: blur(10px);
@@ -105,7 +105,7 @@
   grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.92fr);
   gap: 1rem;
 
-  @include respond(md) {
+  @media (max-width: 1180px) {
     grid-template-columns: 1fr;
   }
 }
@@ -132,6 +132,13 @@
   gap: 0.45rem;
 }
 
+.fieldInvalid input,
+.fieldInvalid textarea {
+  border-color: rgba(225, 29, 72, 0.55) !important;
+  box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.08);
+  background: #fffafc;
+}
+
 .label {
   display: inline-flex;
   align-items: center;
@@ -149,13 +156,34 @@
   @include textarea-surface(144px);
 }
 
+.errorBanner {
+  padding: 0.85rem 0.95rem;
+  border-radius: 16px;
+  border: 1px solid #fecaca;
+  background: #fff5f5;
+  color: #b42318;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.errorText {
+  color: #be123c;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
 .durationGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.75rem;
 
+  @media (max-width: 720px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   @include respond(sm) {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
   }
 }
 
@@ -315,4 +343,84 @@
   text-align: center;
   color: $color-text-secondary;
   font-size: 0.95rem;
+}
+
+@media (max-width: 1180px) {
+  .modal {
+    width: min(100%, 760px);
+  }
+
+  .summaryCard {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 760px) {
+  .overlay {
+    align-items: flex-start;
+    padding: 0.75rem;
+  }
+
+  .modal {
+    width: 100%;
+    max-height: calc(100vh - 1.5rem);
+    padding: 1.05rem;
+    border-radius: 24px;
+  }
+
+  .header {
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+
+    h2 {
+      font-size: clamp(1.3rem, 5vw, 1.7rem);
+    }
+
+    p {
+      font-size: 0.9rem;
+    }
+  }
+
+  .close {
+    top: 0.8rem;
+    right: 0.8rem;
+    width: 34px;
+    height: 34px;
+  }
+
+  .summaryCard {
+    padding: 1rem;
+  }
+
+  .summaryItem {
+    padding: 0.75rem 0.8rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .overlay {
+    padding: 0.5rem;
+  }
+
+  .modal {
+    max-height: calc(100vh - 1rem);
+    padding: 0.95rem;
+    border-radius: 20px;
+  }
+
+  .grid,
+  .durationGrid,
+  .actions {
+    grid-template-columns: 1fr;
+    flex-direction: column-reverse;
+  }
+
+  .durationOption {
+    min-height: 58px;
+  }
+
+  .primaryAction,
+  .secondaryAction {
+    width: 100%;
+  }
 }

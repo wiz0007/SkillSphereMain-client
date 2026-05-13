@@ -109,6 +109,27 @@
   }
 }
 
+.inputError {
+  border-color: rgba(225, 29, 72, 0.55) !important;
+  box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.08);
+  background: #fffafc;
+}
+
+.helperText,
+.errorText {
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.helperText {
+  color: #64748b;
+}
+
+.errorText {
+  color: #be123c;
+  font-weight: 600;
+}
+
 .passwordField {
   position: relative;
   width: 100%;
@@ -143,6 +164,19 @@
   min-height: 48px;
   margin-top: 0.25rem;
   border-radius: 999px;
+  font-weight: 700;
+}
+
+.summaryBanner {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: 16px;
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  background: #fff9ef;
+  color: #8a5a0a;
+  font-size: 0.84rem;
   font-weight: 700;
 }
 

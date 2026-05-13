@@ -71,6 +71,7 @@ const CourseHero = ({
       </button>
 
       <div className={styles.badges}>
+        <span>{course.type === "recorded" ? "Recorded" : "Live"}</span>
         <span>{course.category || "General"}</span>
         <span>{course.level || "All levels"}</span>
         <span>{course.duration || "Flexible pace"}</span>

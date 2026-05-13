@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import {
   addReview,
+  approveRecordedCourseAccess,
   getCourseById,
   rateCourse,
+  rejectRecordedCourseAccess,
+  requestRecordedCourseAccess,
 } from "../../services/courses.service";
 
 export const useCourseDetails = (id?: string) => {
@@ -16,12 +19,20 @@ export const useCourseDetails = (id?: string) => {
   const [reviewRating, setReviewRating] = useState(0);
   const [error, setError] = useState("");
   const [submitLoading, setSubmitLoading] = useState(false);
+  const [recordedActionLoading, setRecordedActionLoading] = useState("");
+  const [recordedError, setRecordedError] = useState("");
 
-  useEffect(() => {
-    if (!id) return;
+  const loadCourse = async () => {
+    if (!id) {
+      return;
+    }
 
-    getCourseById(id).then((data) => {
+    setLoading(true);
+
+    try {
+      const data = await getCourseById(id);
       setCourse(data);
+
       const currentUserReview = data.reviews?.find((review: any) => {
         const reviewUserId =
           review.user?._id?.toString?.() ||
@@ -39,12 +50,14 @@ export const useCourseDetails = (id?: string) => {
         setReviewRating(currentUserReview.rating || 0);
         setReviewText(currentUserReview.comment || "");
       }
-
+    } finally {
       setLoading(false);
-    });
-  }, [id]);
+    }
+  };
 
-  
+  useEffect(() => {
+    void loadCourse();
+  }, [id]);
 
   const handleRate = async (value: number) => {
     if (!id) return;
@@ -76,11 +89,8 @@ export const useCourseDetails = (id?: string) => {
         reviews: res.reviews,
         averageRating: res.averageRating,
         totalRatings: res.totalRatings,
-        ratings: res.ratings,
       }));
 
-      setReviewText("");
-      setReviewRating(0);
       setError("");
     } catch {
       setError("Failed to submit");
@@ -89,9 +99,53 @@ export const useCourseDetails = (id?: string) => {
     }
   };
 
+  const handleRecordedPurchaseRequest = async () => {
+    if (!id) {
+      return;
+    }
+
+    try {
+      setRecordedError("");
+      setRecordedActionLoading("purchase");
+      await requestRecordedCourseAccess(id);
+      await loadCourse();
+    } catch (nextError: any) {
+      setRecordedError(nextError?.message || "Failed to request unlock");
+    } finally {
+      setRecordedActionLoading("");
+    }
+  };
+
+  const handleApproveRecordedRequest = async (accessId: string) => {
+    try {
+      setRecordedError("");
+      setRecordedActionLoading(`approve:${accessId}`);
+      await approveRecordedCourseAccess(accessId);
+      await loadCourse();
+    } catch (nextError: any) {
+      setRecordedError(nextError?.message || "Failed to approve unlock");
+    } finally {
+      setRecordedActionLoading("");
+    }
+  };
+
+  const handleRejectRecordedRequest = async (accessId: string) => {
+    try {
+      setRecordedError("");
+      setRecordedActionLoading(`reject:${accessId}`);
+      await rejectRecordedCourseAccess(accessId);
+      await loadCourse();
+    } catch (nextError: any) {
+      setRecordedError(nextError?.message || "Failed to reject unlock");
+    } finally {
+      setRecordedActionLoading("");
+    }
+  };
+
   return {
     course,
     loading,
+    loadCourse,
 
     hover,
     setHover,
@@ -105,5 +159,11 @@ export const useCourseDetails = (id?: string) => {
     handleReviewSubmit,
     submitLoading,
     error,
+
+    recordedActionLoading,
+    recordedError,
+    handleRecordedPurchaseRequest,
+    handleApproveRecordedRequest,
+    handleRejectRecordedRequest,
   };
 };

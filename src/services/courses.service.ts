@@ -3,18 +3,60 @@ import { api } from "../api/api";
 export interface Tutor {
   _id: string;
   username: string;
+  fullName?: string;
   profilePhoto?: string | null;
+  isTutor?: boolean;
+}
+
+export interface ReviewUser {
+  _id: string;
+  name?: string;
+  username?: string;
+  avatar?: string;
+  profilePhoto?: string;
+}
+
+export interface Review {
+  _id?: string;
+  user: string | ReviewUser;
+  rating: number;
+  comment: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export interface RecordedAccessSummary {
+  hasAccess: boolean;
+  hasPendingRequest: boolean;
+  status: "none" | "pending" | "approved" | "rejected";
+  requestId: string | null;
+  canPurchase: boolean;
+  contentDriveLink: string;
+}
+
+export interface RecordedAccessRequest {
+  _id: string;
+  student: Tutor;
+  status: "pending" | "approved" | "rejected";
+  coinStatus: "locked" | "settled" | "released";
+  skillCoinAmount: number;
+  price: number;
+  createdAt: string;
+  approvedAt?: string | null;
+  rejectedAt?: string | null;
 }
 
 export interface Course {
   _id: string;
   title: string;
   description?: string;
+  type: "live" | "recorded";
   category?: string;
   level?: string;
   skills?: string[];
   price?: number;
   duration?: string;
+  contentDriveLink?: string;
   isPublished?: boolean;
   tutor: Tutor;
   averageRating?: number;
@@ -25,29 +67,20 @@ export interface Course {
     hasEnrolled: boolean;
     hasReviewed: boolean;
   };
-}
-
-export interface ReviewUser {
-  _id: string;
-  name: string;
-  avatar?: string;
-}
-
-export interface Review {
-  user: string | ReviewUser;
-  rating: number;
-  comment: string;
-  createdAt: string;
+  recordedAccess?: RecordedAccessSummary | null;
+  recordedRequests?: RecordedAccessRequest[];
 }
 
 export interface CoursePayload {
   title: string;
   description?: string;
+  type: "live" | "recorded";
   category?: string;
   level?: string;
   skills?: string[];
   price?: number;
   duration?: string;
+  contentDriveLink?: string;
   isPublished?: boolean;
 }
 
@@ -133,6 +166,33 @@ export const deleteCourse = async (
     return res.data;
   } catch (error: any) {
     return handleError(error, "deleteCourse");
+  }
+};
+
+export const requestRecordedCourseAccess = async (courseId: string) => {
+  try {
+    const res = await api.post(`/courses/${courseId}/recorded-access`);
+    return res.data;
+  } catch (error: any) {
+    return handleError(error, "requestRecordedCourseAccess");
+  }
+};
+
+export const approveRecordedCourseAccess = async (accessId: string) => {
+  try {
+    const res = await api.patch(`/courses/recorded-access/${accessId}/approve`);
+    return res.data;
+  } catch (error: any) {
+    return handleError(error, "approveRecordedCourseAccess");
+  }
+};
+
+export const rejectRecordedCourseAccess = async (accessId: string) => {
+  try {
+    const res = await api.patch(`/courses/recorded-access/${accessId}/reject`);
+    return res.data;
+  } catch (error: any) {
+    return handleError(error, "rejectRecordedCourseAccess");
   }
 };
 
