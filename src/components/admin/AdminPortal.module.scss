@@ -68,6 +68,7 @@
 }
 
 .errorBanner,
+.successBanner,
 .loadingState {
   @include panel(20px, 1rem);
 }
@@ -76,6 +77,12 @@
   border: 1px solid rgba(239, 68, 68, 0.2);
   color: #b91c1c;
   background: #fff5f5;
+}
+
+.successBanner {
+  border: 1px solid rgba(16, 185, 129, 0.18);
+  color: #047857;
+  background: #f0fdf4;
 }
 
 .stack {

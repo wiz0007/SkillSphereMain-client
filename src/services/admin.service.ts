@@ -152,10 +152,14 @@ export const adjustAdminUserWallet = async (
     const res = await api.patch(`/admin/users/${userId}/wallet`, payload);
     return res.data as {
       message: string;
-      wallet: {
+      wallet: null | {
         skillCoinBalance: number;
         lockedSkillCoins: number;
         availableSkillCoins: number;
+      };
+      gift: null | {
+        amount: number;
+        note: string;
       };
     };
   } catch (error: any) {

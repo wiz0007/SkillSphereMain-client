@@ -20,19 +20,46 @@ const AdminGiftPopup = () => {
   const [autoOpenedGiftId, setAutoOpenedGiftId] = useState<string | null>(null);
   const [claiming, setClaiming] = useState(false);
   const [claimedAmount, setClaimedAmount] = useState<number | null>(null);
+  const [giftFetchError, setGiftFetchError] = useState("");
+
+  const notificationGift = useMemo(() => {
+    return notifications.find((notification: any) => {
+      const kind = String(notification?.metadata?.kind || "");
+      return kind === "admin_skillcoin_gift" && !notification?.isRead;
+    }) as any;
+  }, [notifications]);
+
+  const displayGift = useMemo(() => {
+    if (pendingGift) {
+      return {
+        _id: pendingGift._id,
+        amount: pendingGift.amount,
+        note: pendingGift.note,
+        isClaimable: true,
+      };
+    }
+
+    if (notificationGift) {
+      return {
+        _id: String(notificationGift.metadata?.giftId || notificationGift._id),
+        amount: Number(notificationGift.metadata?.amount || 0),
+        note: String(notificationGift.metadata?.note || ""),
+        isClaimable: false,
+      };
+    }
+
+    return null;
+  }, [notificationGift, pendingGift]);
 
   const relatedNotification = useMemo(() => {
-    if (!pendingGift?._id) return null;
+    if (!displayGift?._id) return null;
 
     return notifications.find((notification: any) => {
       const kind = String(notification?.metadata?.kind || "");
       const giftId = String(notification?.metadata?.giftId || "");
-      return (
-        kind === "admin_skillcoin_gift" &&
-        giftId === pendingGift._id
-      );
+      return kind === "admin_skillcoin_gift" && giftId === displayGift._id;
     }) as any;
-  }, [notifications, pendingGift?._id]);
+  }, [displayGift?._id, notifications]);
 
   useEffect(() => {
     if (!user?._id) {
@@ -40,35 +67,61 @@ const AdminGiftPopup = () => {
       setOpened(false);
       setAutoOpenedGiftId(null);
       setClaimedAmount(null);
+      setGiftFetchError("");
       return;
     }
 
     void getPendingAdminGift()
       .then((response) => {
+        setGiftFetchError("");
         setPendingGift(response.gift);
-        if (response.gift && autoOpenedGiftId !== response.gift._id) {
+
+        const nextGiftId =
+          response.gift?._id ||
+          String(notificationGift?.metadata?.giftId || notificationGift?._id || "");
+
+        if (nextGiftId && autoOpenedGiftId !== nextGiftId) {
           setOpened(true);
-          setAutoOpenedGiftId(response.gift._id);
+          setAutoOpenedGiftId(nextGiftId);
         }
 
-        if (!response.gift) {
+        if (!response.gift && !notificationGift) {
           setOpened(false);
           setAutoOpenedGiftId(null);
         }
       })
       .catch((error) => {
         console.error("Failed to fetch pending admin gift:", error);
+        setGiftFetchError(
+          "Live gift claim could not be confirmed. Showing your gift notification instead."
+        );
+
+        if (notificationGift) {
+          const fallbackGiftId = String(
+            notificationGift?.metadata?.giftId || notificationGift?._id || ""
+          );
+
+          if (fallbackGiftId && autoOpenedGiftId !== fallbackGiftId) {
+            setOpened(true);
+            setAutoOpenedGiftId(fallbackGiftId);
+          }
+        }
       });
-  }, [autoOpenedGiftId, notifications.length, user?._id]);
+  }, [autoOpenedGiftId, notificationGift, notifications.length, user?._id]);
 
   const handleClaim = async () => {
-    if (!pendingGift) return;
+    if (!displayGift) return;
 
     try {
       setClaiming(true);
-      const result = await claimAdminGift(pendingGift._id);
-      setClaimedAmount(result.gift.amount);
-      await refreshUser();
+
+      if (displayGift.isClaimable) {
+        const result = await claimAdminGift(displayGift._id);
+        setClaimedAmount(result.gift.amount);
+        await refreshUser();
+      } else {
+        setClaimedAmount(displayGift.amount);
+      }
 
       if (relatedNotification?._id) {
         try {
@@ -93,13 +146,13 @@ const AdminGiftPopup = () => {
     }
   };
 
-  if (!user || (!pendingGift && !claimedAmount)) {
+  if (!user || (!displayGift && !claimedAmount)) {
     return null;
   }
 
   return (
     <>
-      {pendingGift && !opened ? (
+      {displayGift && !opened ? (
         <button
           type="button"
           className={styles.floatingGift}
@@ -121,18 +174,27 @@ const AdminGiftPopup = () => {
             <h2>
               {claimedAmount
                 ? `${claimedAmount} SkillCoin received`
-                : `${pendingGift?.amount || 0} SkillCoin waiting`}
+                : `${displayGift?.amount || 0} SkillCoin waiting`}
             </h2>
             <p>
               {claimedAmount
                 ? "The gift has been added to your wallet."
-                : "Admin sent you a gift. Open it to add the SkillCoin to your wallet."}
+                : displayGift?.isClaimable
+                  ? "Admin sent you a gift. Open it to add the SkillCoin to your wallet."
+                  : "Admin sent you a gift notification. This fallback view appears when the live claim state could not be confirmed."}
             </p>
 
-            {pendingGift?.note ? (
+            {giftFetchError ? (
+              <div className={styles.warningBox}>
+                <span>Gift sync notice</span>
+                <strong>{giftFetchError}</strong>
+              </div>
+            ) : null}
+
+            {displayGift?.note ? (
               <div className={styles.noteBox}>
                 <span>Admin note</span>
-                <strong>{pendingGift.note}</strong>
+                <strong>{displayGift.note}</strong>
               </div>
             ) : null}
 
@@ -154,7 +216,11 @@ const AdminGiftPopup = () => {
                 onClick={() => void handleClaim()}
                 disabled={claiming}
               >
-                {claiming ? "Receiving..." : "Receive gift"}
+                {claiming
+                  ? "Receiving..."
+                  : displayGift?.isClaimable
+                    ? "Receive gift"
+                    : "Open gift"}
               </button>
             )}
           </div>

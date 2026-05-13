@@ -46,6 +46,7 @@ const AdminPortal = () => {
   const [activeTab, setActiveTab] = useState<AdminTab>("overview");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [search, setSearch] = useState("");
   const [walletAmounts, setWalletAmounts] = useState<Record<string, string>>({});
   const [walletNotes, setWalletNotes] = useState<Record<string, string>>({});
@@ -62,6 +63,7 @@ const AdminPortal = () => {
     try {
       setLoading(true);
       setError("");
+      setSuccessMessage("");
 
       const [
         nextOverview,
@@ -174,20 +176,27 @@ const AdminPortal = () => {
         note,
       });
 
-      setUsers((previous) =>
-        previous.map((entry) =>
-          entry._id === user._id
-            ? {
-                ...entry,
-                skillCoinBalance: result.wallet.skillCoinBalance,
-                lockedSkillCoins: result.wallet.lockedSkillCoins,
-              }
-            : entry
-        )
-      );
+      if (result.wallet) {
+        setUsers((previous) =>
+          previous.map((entry) =>
+            entry._id === user._id
+              ? {
+                  ...entry,
+                  skillCoinBalance: result.wallet!.skillCoinBalance,
+                  lockedSkillCoins: result.wallet!.lockedSkillCoins,
+                }
+              : entry
+          )
+        );
+      }
       setWalletAmounts((previous) => ({ ...previous, [user._id]: "" }));
       setWalletNotes((previous) => ({ ...previous, [user._id]: "" }));
       setError("");
+      setSuccessMessage(
+        action === "credit"
+          ? `Gift sent to ${user.fullName || user.username}`
+          : `${amount} SC debited from ${user.fullName || user.username}`
+      );
       void loadAll(search);
     } catch (nextError: any) {
       setError(nextError?.message || "Failed to update user wallet");
@@ -206,6 +215,7 @@ const AdminPortal = () => {
     try {
       await deleteAdminUser(user._id);
       setUsers((previous) => previous.filter((entry) => entry._id !== user._id));
+      setSuccessMessage(`${user.fullName || user.username} deleted successfully`);
       void loadAll(search);
     } catch (nextError: any) {
       setError(nextError?.message || "Failed to delete user");
@@ -305,6 +315,9 @@ const AdminPortal = () => {
       </div>
 
       {error ? <div className={styles.errorBanner}>{error}</div> : null}
+      {successMessage ? (
+        <div className={styles.successBanner}>{successMessage}</div>
+      ) : null}
 
       {loading && !overview ? (
         <div className={styles.loadingState}>Loading admin workspace...</div>
