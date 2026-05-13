@@ -17,6 +17,7 @@ const AdminGiftPopup = () => {
   const { notifications, markLocalAsRead, refresh } = useNotifications();
   const [pendingGift, setPendingGift] = useState<PendingGift | null>(null);
   const [opened, setOpened] = useState(false);
+  const [autoOpenedGiftId, setAutoOpenedGiftId] = useState<string | null>(null);
   const [claiming, setClaiming] = useState(false);
   const [claimedAmount, setClaimedAmount] = useState<number | null>(null);
 
@@ -37,6 +38,7 @@ const AdminGiftPopup = () => {
     if (!user?._id) {
       setPendingGift(null);
       setOpened(false);
+      setAutoOpenedGiftId(null);
       setClaimedAmount(null);
       return;
     }
@@ -44,14 +46,20 @@ const AdminGiftPopup = () => {
     void getPendingAdminGift()
       .then((response) => {
         setPendingGift(response.gift);
+        if (response.gift && autoOpenedGiftId !== response.gift._id) {
+          setOpened(true);
+          setAutoOpenedGiftId(response.gift._id);
+        }
+
         if (!response.gift) {
           setOpened(false);
+          setAutoOpenedGiftId(null);
         }
       })
       .catch((error) => {
         console.error("Failed to fetch pending admin gift:", error);
       });
-  }, [user?._id, notifications.length]);
+  }, [autoOpenedGiftId, notifications.length, user?._id]);
 
   const handleClaim = async () => {
     if (!pendingGift) return;
@@ -73,6 +81,7 @@ const AdminGiftPopup = () => {
 
       await refresh();
       setPendingGift(null);
+      setAutoOpenedGiftId(null);
     } catch (error: any) {
       alert(
         error?.response?.data?.message ||
@@ -90,7 +99,7 @@ const AdminGiftPopup = () => {
 
   return (
     <>
-      {pendingGift ? (
+      {pendingGift && !opened ? (
         <button
           type="button"
           className={styles.floatingGift}
