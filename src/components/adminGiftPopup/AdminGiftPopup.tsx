@@ -30,36 +30,31 @@ const AdminGiftPopup = () => {
   }, [notifications]);
 
   const displayGift = useMemo(() => {
-    if (pendingGift) {
-      return {
-        _id: pendingGift._id,
-        amount: pendingGift.amount,
-        note: pendingGift.note,
-        isClaimable: true,
-      };
+    if (!pendingGift) {
+      return null;
     }
 
-    if (notificationGift) {
-      return {
-        _id: String(notificationGift.metadata?.giftId || notificationGift._id),
-        amount: Number(notificationGift.metadata?.amount || 0),
-        note: String(notificationGift.metadata?.note || ""),
-        isClaimable: false,
-      };
-    }
-
-    return null;
-  }, [notificationGift, pendingGift]);
+    return {
+      _id: pendingGift._id,
+      amount: pendingGift.amount,
+      note: pendingGift.note,
+    };
+  }, [pendingGift]);
 
   const relatedNotification = useMemo(() => {
-    if (!displayGift?._id) return null;
+    const targetGiftId =
+      displayGift?._id || String(notificationGift?.metadata?.giftId || "");
+    if (!targetGiftId) return null;
 
     return notifications.find((notification: any) => {
       const kind = String(notification?.metadata?.kind || "");
-      const giftId = String(notification?.metadata?.giftId || "");
-      return kind === "admin_skillcoin_gift" && giftId === displayGift._id;
+      const notificationGiftId = String(notification?.metadata?.giftId || "");
+      return (
+        kind === "admin_skillcoin_gift" &&
+        notificationGiftId === targetGiftId
+      );
     }) as any;
-  }, [displayGift?._id, notifications]);
+  }, [displayGift?._id, notificationGift, notifications]);
 
   useEffect(() => {
     if (!user?._id) {
@@ -72,56 +67,51 @@ const AdminGiftPopup = () => {
     }
 
     void getPendingAdminGift()
-      .then((response) => {
+      .then(async (response) => {
         setGiftFetchError("");
         setPendingGift(response.gift);
 
-        const nextGiftId =
-          response.gift?._id ||
-          String(notificationGift?.metadata?.giftId || notificationGift?._id || "");
+        if (response.gift) {
+          const nextGiftId = response.gift._id;
 
-        if (nextGiftId && autoOpenedGiftId !== nextGiftId) {
-          setOpened(true);
-          setAutoOpenedGiftId(nextGiftId);
-        }
-
-        if (!response.gift && !notificationGift) {
+          if (autoOpenedGiftId !== nextGiftId) {
+            setOpened(true);
+            setAutoOpenedGiftId(nextGiftId);
+          }
+        } else {
           setOpened(false);
           setAutoOpenedGiftId(null);
+
+          if (notificationGift?._id) {
+            try {
+              await markAsRead(notificationGift._id);
+              markLocalAsRead(notificationGift._id);
+              await refresh();
+            } catch (error) {
+              console.error("Failed to clear stale admin gift notification:", error);
+            }
+          }
         }
       })
       .catch((error) => {
         console.error("Failed to fetch pending admin gift:", error);
         setGiftFetchError(
-          "Live gift claim could not be confirmed. Showing your gift notification instead."
+          "The gift server could not be reached. Please refresh and try again."
         );
-
-        if (notificationGift) {
-          const fallbackGiftId = String(
-            notificationGift?.metadata?.giftId || notificationGift?._id || ""
-          );
-
-          if (fallbackGiftId && autoOpenedGiftId !== fallbackGiftId) {
-            setOpened(true);
-            setAutoOpenedGiftId(fallbackGiftId);
-          }
-        }
+        setPendingGift(null);
+        setOpened(false);
+        setAutoOpenedGiftId(null);
       });
-  }, [autoOpenedGiftId, notificationGift, notifications.length, user?._id]);
+  }, [autoOpenedGiftId, markLocalAsRead, notificationGift, refresh, user?._id]);
 
   const handleClaim = async () => {
     if (!displayGift) return;
 
     try {
       setClaiming(true);
-
-      if (displayGift.isClaimable) {
-        const result = await claimAdminGift(displayGift._id);
-        setClaimedAmount(result.gift.amount);
-        await refreshUser();
-      } else {
-        setClaimedAmount(displayGift.amount);
-      }
+      const result = await claimAdminGift(displayGift._id);
+      setClaimedAmount(result.gift.amount);
+      await refreshUser();
 
       if (relatedNotification?._id) {
         try {
@@ -179,9 +169,7 @@ const AdminGiftPopup = () => {
             <p>
               {claimedAmount
                 ? "The gift has been added to your wallet."
-                : displayGift?.isClaimable
-                  ? "Admin sent you a gift. Open it to add the SkillCoin to your wallet."
-                  : "Admin sent you a gift notification. This fallback view appears when the live claim state could not be confirmed."}
+                : "Admin sent you a gift. Open it to add the SkillCoin to your wallet."}
             </p>
 
             {giftFetchError ? (
@@ -216,11 +204,7 @@ const AdminGiftPopup = () => {
                 onClick={() => void handleClaim()}
                 disabled={claiming}
               >
-                {claiming
-                  ? "Receiving..."
-                  : displayGift?.isClaimable
-                    ? "Receive gift"
-                    : "Open gift"}
+                {claiming ? "Receiving..." : "Receive gift"}
               </button>
             )}
           </div>
