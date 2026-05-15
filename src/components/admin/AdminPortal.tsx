@@ -11,7 +11,9 @@ import {
   getAdminSupportConversations,
   getAdminSupportMessages,
   getAdminUsers,
+  getAdminVerificationRequests,
   getAdminWalletTransactions,
+  reviewAdminVerificationRequest,
   setAdminCoursePublishStatus,
   sendAdminSupportMessage,
   updateAdminSupportStatus,
@@ -22,6 +24,7 @@ import {
   type AdminSupportConversation,
   type AdminSupportMessage,
   type AdminUser,
+  type AdminVerificationRequest,
   type AdminWalletTransaction,
 } from "../../services/admin.service";
 import styles from "./AdminPortal.module.scss";
@@ -29,6 +32,7 @@ import styles from "./AdminPortal.module.scss";
 type AdminTab =
   | "overview"
   | "users"
+  | "verifications"
   | "courses"
   | "sessions"
   | "support"
@@ -64,6 +68,7 @@ type ActionFeedback = {
 const tabs: Array<{ id: AdminTab; label: string }> = [
   { id: "overview", label: "Overview" },
   { id: "users", label: "Users" },
+  { id: "verifications", label: "Verifications" },
   { id: "courses", label: "Courses" },
   { id: "sessions", label: "Sessions" },
   { id: "support", label: "Support" },
@@ -82,6 +87,8 @@ const AdminPortal = () => {
   const [pendingAction, setPendingAction] = useState<PendingAdminAction | null>(null);
   const [actionInFlight, setActionInFlight] = useState(false);
   const [actionFeedback, setActionFeedback] = useState<ActionFeedback | null>(null);
+  const [verificationNotes, setVerificationNotes] = useState<Record<string, string>>({});
+  const [verificationActionId, setVerificationActionId] = useState("");
   const [selectedSupportId, setSelectedSupportId] = useState("");
   const [supportMessages, setSupportMessages] = useState<AdminSupportMessage[]>([]);
   const [supportMessagesLoading, setSupportMessagesLoading] = useState(false);
@@ -92,6 +99,7 @@ const AdminPortal = () => {
   const [overview, setOverview] = useState<AdminOverview | null>(null);
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [courses, setCourses] = useState<AdminCourse[]>([]);
+  const [verifications, setVerifications] = useState<AdminVerificationRequest[]>([]);
   const [sessions, setSessions] = useState<AdminSession[]>([]);
   const [support, setSupport] = useState<AdminSupportConversation[]>([]);
   const [reviews, setReviews] = useState<AdminReview[]>([]);
@@ -106,6 +114,7 @@ const AdminPortal = () => {
       const [
         nextOverview,
         nextUsers,
+        nextVerifications,
         nextCourses,
         nextSessions,
         nextSupport,
@@ -114,6 +123,7 @@ const AdminPortal = () => {
       ] = await Promise.all([
         getAdminOverview(),
         getAdminUsers(userSearch),
+        getAdminVerificationRequests(),
         getAdminCourses(),
         getAdminSessions(),
         getAdminSupportConversations(),
@@ -123,6 +133,7 @@ const AdminPortal = () => {
 
       setOverview(nextOverview);
       setUsers(nextUsers);
+      setVerifications(nextVerifications);
       setCourses(nextCourses);
       setSessions(nextSessions);
       setSupport(nextSupport);
@@ -335,6 +346,32 @@ const AdminPortal = () => {
       kind: "deleteReview",
       review,
     });
+  };
+
+  const handleVerificationReview = async (
+    request: AdminVerificationRequest,
+    status: "approved" | "rejected" | "resubmission_required"
+  ) => {
+    try {
+      setVerificationActionId(request._id);
+      setError("");
+
+      const response = await reviewAdminVerificationRequest(request._id, {
+        status,
+        reviewNote: verificationNotes[request._id] || "",
+      });
+
+      setVerifications((previous) =>
+        previous.map((entry) =>
+          entry._id === request._id ? response.request : entry
+        )
+      );
+      setSuccessMessage(response.message);
+    } catch (nextError: any) {
+      setError(nextError?.message || "Failed to review verification request");
+    } finally {
+      setVerificationActionId("");
+    }
   };
 
   const confirmTitle = useMemo(() => {
@@ -783,6 +820,147 @@ const AdminPortal = () => {
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      ) : null}
+
+      {activeTab === "verifications" ? (
+        <div className={styles.panel}>
+          <div className={styles.panelHeader}>
+            <h2>Verification center</h2>
+          </div>
+          <div className={styles.verificationList}>
+            {verifications.map((request) => (
+              <article key={request._id} className={styles.verificationCard}>
+                <div className={styles.verificationCardHeader}>
+                  <div>
+                    <strong>
+                      {request.user?.fullName || request.user?.username || "Unknown user"}
+                    </strong>
+                    <span>
+                      {request.type} verification · {request.status.replaceAll("_", " ")}
+                    </span>
+                  </div>
+                  <span className={styles.statusPill}>
+                    {request.provider}
+                  </span>
+                </div>
+
+                <div className={styles.verificationMetaGrid}>
+                  <div>
+                    <span>User email</span>
+                    <strong>{request.user?.email || "Unknown"}</strong>
+                  </div>
+                  <div>
+                    <span>Submitted</span>
+                    <strong>{new Date(request.createdAt).toLocaleString()}</strong>
+                  </div>
+                  <div>
+                    <span>Document type</span>
+                    <strong>{request.documentType || "Tutor proof"}</strong>
+                  </div>
+                </div>
+
+                {request.note ? (
+                  <div className={styles.verificationNoteBlock}>
+                    <span>Applicant note</span>
+                    <strong>{request.note}</strong>
+                  </div>
+                ) : null}
+
+                <div className={styles.verificationAssets}>
+                  {request.assets.documentFrontUrl ? (
+                    <a
+                      className={styles.attachmentLink}
+                      href={request.assets.documentFrontUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      View document front
+                    </a>
+                  ) : null}
+                  {request.assets.documentBackUrl ? (
+                    <a
+                      className={styles.attachmentLink}
+                      href={request.assets.documentBackUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      View document back
+                    </a>
+                  ) : null}
+                  {request.assets.selfieUrl ? (
+                    <a
+                      className={styles.attachmentLink}
+                      href={request.assets.selfieUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      View selfie
+                    </a>
+                  ) : null}
+                  {request.assets.supportingDocumentUrl ? (
+                    <a
+                      className={styles.attachmentLink}
+                      href={request.assets.supportingDocumentUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Open {request.assets.supportingDocumentName || "supporting document"}
+                    </a>
+                  ) : null}
+                </div>
+
+                <textarea
+                  className={styles.supportReplyInput}
+                  rows={3}
+                  placeholder="Reviewer note for approval, rejection, or resubmission..."
+                  value={verificationNotes[request._id] || request.reviewNote || ""}
+                  onChange={(event) =>
+                    setVerificationNotes((previous) => ({
+                      ...previous,
+                      [request._id]: event.target.value,
+                    }))
+                  }
+                />
+
+                <div className={styles.verificationActions}>
+                  <button
+                    type="button"
+                    className={styles.secondaryAction}
+                    disabled={verificationActionId === request._id}
+                    onClick={() =>
+                      void handleVerificationReview(request, "approved")
+                    }
+                  >
+                    {verificationActionId === request._id ? "Updating..." : "Approve"}
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.secondaryAction}
+                    disabled={verificationActionId === request._id}
+                    onClick={() =>
+                      void handleVerificationReview(
+                        request,
+                        "resubmission_required"
+                      )
+                    }
+                  >
+                    Request resubmission
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.dangerAction}
+                    disabled={verificationActionId === request._id}
+                    onClick={() =>
+                      void handleVerificationReview(request, "rejected")
+                    }
+                  >
+                    Reject
+                  </button>
+                </div>
+              </article>
+            ))}
           </div>
         </div>
       ) : null}

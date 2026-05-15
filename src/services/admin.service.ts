@@ -87,6 +87,29 @@ export interface AdminReview {
   };
 }
 
+export interface AdminVerificationRequest {
+  _id: string;
+  type: "identity" | "tutor";
+  provider: "manual";
+  status: "pending" | "approved" | "rejected" | "resubmission_required";
+  documentType: string;
+  note: string;
+  reviewNote: string;
+  createdAt: string;
+  updatedAt: string;
+  reviewedAt: string | null;
+  user: AdminUser | null;
+  reviewedBy: AdminUser | null;
+  assets: {
+    documentFrontUrl: string | null;
+    documentBackUrl: string | null;
+    selfieUrl: string | null;
+    supportingDocumentUrl: string | null;
+    supportingDocumentName: string | null;
+    supportingDocumentMimeType: string | null;
+  };
+}
+
 export interface AdminWalletTransaction {
   _id: string;
   type: string;
@@ -265,6 +288,41 @@ export const getAdminSupportMessages = async (conversationId: string) => {
     };
   } catch (error: any) {
     return handleError(error, "getAdminSupportMessages");
+  }
+};
+
+export const getAdminVerificationRequests = async (): Promise<
+  AdminVerificationRequest[]
+> => {
+  try {
+    const res = await api.get("/admin/verifications");
+    return res.data;
+  } catch (error: any) {
+    return handleError(error, "getAdminVerificationRequests");
+  }
+};
+
+export const reviewAdminVerificationRequest = async (
+  requestId: string,
+  payload: {
+    status: "approved" | "rejected" | "resubmission_required";
+    reviewNote?: string;
+  }
+) => {
+  try {
+    const res = await api.patch(`/admin/verifications/${requestId}/review`, payload);
+    return res.data as {
+      message: string;
+      request: AdminVerificationRequest;
+      summary: {
+        emailVerified: boolean;
+        identityVerificationStatus: string;
+        tutorVerificationStatus: string;
+        verifiedBadgeLevel: string;
+      };
+    };
+  } catch (error: any) {
+    return handleError(error, "reviewAdminVerificationRequest");
   }
 };
 

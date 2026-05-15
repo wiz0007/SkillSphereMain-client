@@ -689,3 +689,121 @@
     display: none;
   }
 }
+
+.verificationList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.verificationCard {
+  padding: 1rem 1.05rem;
+  border: 1px solid #edf2f7;
+  border-radius: 22px;
+  background: #fbfdff;
+}
+
+.verificationCardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.8rem;
+
+  @include respond(sm) {
+    flex-direction: column;
+  }
+
+  strong,
+  span {
+    display: block;
+  }
+
+  strong {
+    color: $color-text-primary;
+    font-size: 0.95rem;
+  }
+
+  span {
+    margin-top: 0.22rem;
+    color: $color-text-secondary;
+    font-size: 0.82rem;
+  }
+}
+
+.verificationMetaGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.95rem;
+
+  @include respond(md) {
+    grid-template-columns: 1fr;
+  }
+
+  > div {
+    padding: 0.9rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    background: #fff;
+  }
+
+  span,
+  strong {
+    display: block;
+  }
+
+  span {
+    color: $color-text-secondary;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  strong {
+    margin-top: 0.35rem;
+    color: $color-text-primary;
+    line-height: 1.5;
+  }
+}
+
+.verificationNoteBlock {
+  margin-top: 0.95rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid rgba(46, 196, 182, 0.18);
+  border-radius: 18px;
+  background: rgba(236, 254, 255, 0.92);
+
+  span,
+  strong {
+    display: block;
+  }
+
+  span {
+    color: $color-text-secondary;
+    font-size: 0.76rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  strong {
+    margin-top: 0.35rem;
+    color: $color-text-primary;
+    line-height: 1.6;
+  }
+}
+
+.verificationAssets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 0.95rem;
+}
+
+.verificationActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 0.9rem;
+}

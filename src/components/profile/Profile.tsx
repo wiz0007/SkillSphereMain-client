@@ -21,6 +21,10 @@ import {
 import { useAuth } from "../../context/AuthContext";
 import {
   getMyProfile,
+  getVerificationSummary,
+  submitIdentityVerification,
+  submitTutorVerification,
+  type VerificationRequestRecord,
   updateProfile,
 } from "../../services/profile.service";
 import { uploadProfilePhoto } from "../../services/upload.service";
@@ -44,6 +48,7 @@ interface TutorProfile {
 
 interface ProfileData {
   username?: string;
+  isVerified?: boolean;
   fullName?: string;
   bio?: string;
   profilePhoto?: string;
@@ -56,6 +61,19 @@ interface ProfileData {
   dob?: string;
   gender?: string;
   isTutor?: boolean;
+  identityVerificationStatus?:
+    | "not_started"
+    | "pending"
+    | "approved"
+    | "rejected"
+    | "resubmission_required";
+  tutorVerificationStatus?:
+    | "not_started"
+    | "pending"
+    | "approved"
+    | "rejected"
+    | "resubmission_required";
+  verifiedBadgeLevel?: "none" | "basic" | "identity" | "tutor";
   tutorProfile?: TutorProfile;
 }
 
@@ -155,17 +173,42 @@ const Profile: React.FC = () => {
   const [saving, setSaving] = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [skillInput, setSkillInput] = useState("");
+  const [verificationRequests, setVerificationRequests] = useState<
+    VerificationRequestRecord[]
+  >([]);
+  const [verificationLoading, setVerificationLoading] = useState(true);
+  const [verificationMessage, setVerificationMessage] = useState("");
+  const [verificationError, setVerificationError] = useState("");
+  const [identityForm, setIdentityForm] = useState({
+    documentType: "aadhaar",
+    note: "",
+    documentFront: null as File | null,
+    documentBack: null as File | null,
+    selfie: null as File | null,
+  });
+  const [tutorVerificationForm, setTutorVerificationForm] = useState({
+    note: "",
+    supportingDocument: null as File | null,
+  });
+  const [submittingIdentity, setSubmittingIdentity] = useState(false);
+  const [submittingTutorVerification, setSubmittingTutorVerification] =
+    useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const data = await getMyProfile();
+        const [data, verification] = await Promise.all([
+          getMyProfile(),
+          getVerificationSummary(),
+        ]);
         setProfile(data);
         setDraft(createDraft(data));
+        setVerificationRequests(verification.requests);
       } catch (error) {
         console.error("Failed to load profile:", error);
       } finally {
         setLoading(false);
+        setVerificationLoading(false);
       }
     };
 
@@ -445,6 +488,95 @@ const Profile: React.FC = () => {
     .join(", ");
 
   const completion = getProfileCompletion(activeProfile);
+  const identityStatus =
+    activeProfile.identityVerificationStatus || "not_started";
+  const tutorVerificationStatus =
+    activeProfile.tutorVerificationStatus || "not_started";
+
+  const updateVerificationSummary = (
+    summary: Pick<
+      ProfileData,
+      "identityVerificationStatus" | "tutorVerificationStatus" | "verifiedBadgeLevel"
+    >
+  ) => {
+    setProfile((previous) => (previous ? { ...previous, ...summary } : previous));
+    setDraft((previous) => (previous ? { ...previous, ...summary } : previous));
+    setUser((previous) => (previous ? { ...previous, ...summary } : previous));
+  };
+
+  const handleIdentityVerificationSubmit = async () => {
+    if (!identityForm.documentFront || !identityForm.selfie) {
+      setVerificationError("Document front and selfie are required");
+      return;
+    }
+
+    try {
+      setSubmittingIdentity(true);
+      setVerificationError("");
+      setVerificationMessage("");
+
+      const response = await submitIdentityVerification({
+        documentType: identityForm.documentType,
+        note: identityForm.note,
+        documentFront: identityForm.documentFront,
+        documentBack: identityForm.documentBack,
+        selfie: identityForm.selfie,
+      });
+
+      setVerificationRequests((previous) => [response.request, ...previous]);
+      updateVerificationSummary(response.summary);
+      setIdentityForm({
+        documentType: "aadhaar",
+        note: "",
+        documentFront: null,
+        documentBack: null,
+        selfie: null,
+      });
+      setVerificationMessage(response.message);
+    } catch (error: any) {
+      setVerificationError(
+        error?.response?.data?.message ||
+          error?.message ||
+          "Failed to submit identity verification"
+      );
+    } finally {
+      setSubmittingIdentity(false);
+    }
+  };
+
+  const handleTutorVerificationSubmit = async () => {
+    if (!tutorVerificationForm.supportingDocument) {
+      setVerificationError("A supporting document is required for tutor verification");
+      return;
+    }
+
+    try {
+      setSubmittingTutorVerification(true);
+      setVerificationError("");
+      setVerificationMessage("");
+
+      const response = await submitTutorVerification({
+        note: tutorVerificationForm.note,
+        supportingDocument: tutorVerificationForm.supportingDocument,
+      });
+
+      setVerificationRequests((previous) => [response.request, ...previous]);
+      updateVerificationSummary(response.summary);
+      setTutorVerificationForm({
+        note: "",
+        supportingDocument: null,
+      });
+      setVerificationMessage(response.message);
+    } catch (error: any) {
+      setVerificationError(
+        error?.response?.data?.message ||
+          error?.message ||
+          "Failed to submit tutor verification"
+      );
+    } finally {
+      setSubmittingTutorVerification(false);
+    }
+  };
 
   return (
     <motion.div
@@ -486,6 +618,19 @@ const Profile: React.FC = () => {
               <div className={styles.badgeRow}>
                 {activeProfile.isTutor ? (
                   <span className={styles.badge}>Tutor</span>
+                ) : null}
+                {activeProfile.verifiedBadgeLevel &&
+                activeProfile.verifiedBadgeLevel !== "none" ? (
+                  <span
+                    className={`${styles.badge} ${styles.ghostBadge}`}
+                  >
+                    <ShieldCheck size={14} />
+                    {activeProfile.verifiedBadgeLevel === "tutor"
+                      ? "Verified Tutor"
+                      : activeProfile.verifiedBadgeLevel === "identity"
+                        ? "Identity Verified"
+                        : "Verified Email"}
+                  </span>
                 ) : null}
                 {activeProfile.isTutor &&
                 tutorProfile.isVerified ? (
@@ -1188,6 +1333,217 @@ const Profile: React.FC = () => {
           </section>
         </>
       ) : null}
+
+      <section className={styles.panel}>
+        <div className={styles.panelHeader}>
+          <div>
+            <span className={styles.eyebrow}>Verification</span>
+            <h2>Trust and verification center</h2>
+            <p>
+              Build trust on SkillSphere with manual identity review and tutor
+              verification approval.
+            </p>
+          </div>
+        </div>
+
+        {verificationError ? (
+          <p className={styles.verificationError}>{verificationError}</p>
+        ) : null}
+        {verificationMessage ? (
+          <p className={styles.verificationSuccess}>{verificationMessage}</p>
+        ) : null}
+
+        <div className={styles.verificationStatusGrid}>
+          <div className={styles.verificationStatusCard}>
+            <span>Email</span>
+            <strong>{activeProfile.isVerified ? "Verified" : "Not verified"}</strong>
+          </div>
+          <div className={styles.verificationStatusCard}>
+            <span>Identity</span>
+            <strong>{identityStatus.replaceAll("_", " ")}</strong>
+          </div>
+          <div className={styles.verificationStatusCard}>
+            <span>Tutor verification</span>
+            <strong>{tutorVerificationStatus.replaceAll("_", " ")}</strong>
+          </div>
+        </div>
+
+        <div className={styles.verificationGrid}>
+          <div className={styles.verificationCard}>
+            <h3>Identity verification</h3>
+            <p>Upload one government ID and a selfie for manual review.</p>
+            <div className={styles.fieldGrid}>
+              <label className={styles.field}>
+                <span>ID type</span>
+                <select
+                  className={styles.select}
+                  value={identityForm.documentType}
+                  onChange={(event) =>
+                    setIdentityForm((previous) => ({
+                      ...previous,
+                      documentType: event.target.value,
+                    }))
+                  }
+                >
+                  <option value="aadhaar">Aadhaar</option>
+                  <option value="pan">PAN</option>
+                  <option value="passport">Passport</option>
+                  <option value="driving_license">Driving License</option>
+                  <option value="other">Other</option>
+                </select>
+              </label>
+
+              <label className={styles.field}>
+                <span>Document front</span>
+                <input
+                  type="file"
+                  className={styles.input}
+                  accept=".jpg,.jpeg,.png,.webp,.pdf"
+                  onChange={(event) =>
+                    setIdentityForm((previous) => ({
+                      ...previous,
+                      documentFront: event.target.files?.[0] || null,
+                    }))
+                  }
+                />
+              </label>
+
+              <label className={styles.field}>
+                <span>Document back (optional)</span>
+                <input
+                  type="file"
+                  className={styles.input}
+                  accept=".jpg,.jpeg,.png,.webp,.pdf"
+                  onChange={(event) =>
+                    setIdentityForm((previous) => ({
+                      ...previous,
+                      documentBack: event.target.files?.[0] || null,
+                    }))
+                  }
+                />
+              </label>
+
+              <label className={styles.field}>
+                <span>Selfie</span>
+                <input
+                  type="file"
+                  className={styles.input}
+                  accept=".jpg,.jpeg,.png,.webp"
+                  onChange={(event) =>
+                    setIdentityForm((previous) => ({
+                      ...previous,
+                      selfie: event.target.files?.[0] || null,
+                    }))
+                  }
+                />
+              </label>
+
+              <label className={`${styles.field} ${styles.fieldWide}`}>
+                <span>Note (optional)</span>
+                <textarea
+                  className={styles.textarea}
+                  rows={3}
+                  value={identityForm.note}
+                  onChange={(event) =>
+                    setIdentityForm((previous) => ({
+                      ...previous,
+                      note: event.target.value,
+                    }))
+                  }
+                  placeholder="Add any context that helps the admin review your identity."
+                />
+              </label>
+            </div>
+
+            <button
+              type="button"
+              className={styles.primaryButton}
+              onClick={() => void handleIdentityVerificationSubmit()}
+              disabled={submittingIdentity}
+            >
+              {submittingIdentity ? "Submitting..." : "Submit identity verification"}
+            </button>
+          </div>
+
+          {activeProfile.isTutor ? (
+            <div className={styles.verificationCard}>
+              <h3>Tutor verification</h3>
+              <p>Upload one proof document so the admin can approve your tutor badge.</p>
+              <div className={styles.fieldGrid}>
+                <label className={styles.field}>
+                  <span>Supporting document</span>
+                  <input
+                    type="file"
+                    className={styles.input}
+                    accept=".jpg,.jpeg,.png,.webp,.pdf"
+                    onChange={(event) =>
+                      setTutorVerificationForm((previous) => ({
+                        ...previous,
+                        supportingDocument: event.target.files?.[0] || null,
+                      }))
+                    }
+                  />
+                </label>
+
+                <label className={`${styles.field} ${styles.fieldWide}`}>
+                  <span>Reviewer note</span>
+                  <textarea
+                    className={styles.textarea}
+                    rows={4}
+                    value={tutorVerificationForm.note}
+                    onChange={(event) =>
+                      setTutorVerificationForm((previous) => ({
+                        ...previous,
+                        note: event.target.value,
+                      }))
+                    }
+                    placeholder="Mention certifications, portfolio evidence, or teaching background."
+                  />
+                </label>
+              </div>
+
+              <button
+                type="button"
+                className={styles.primaryButton}
+                onClick={() => void handleTutorVerificationSubmit()}
+                disabled={submittingTutorVerification}
+              >
+                {submittingTutorVerification
+                  ? "Submitting..."
+                  : "Submit tutor verification"}
+              </button>
+            </div>
+          ) : null}
+        </div>
+
+        <div className={styles.verificationTimeline}>
+          <h3>Recent verification requests</h3>
+          {verificationLoading ? (
+            <p className={styles.emptyText}>Loading verification history...</p>
+          ) : verificationRequests.length ? (
+            verificationRequests.map((request) => (
+              <article key={request._id} className={styles.verificationHistoryCard}>
+                <div className={styles.verificationHistoryHeader}>
+                  <strong>
+                    {request.type === "identity"
+                      ? "Identity verification"
+                      : "Tutor verification"}
+                  </strong>
+                  <span>{request.status.replaceAll("_", " ")}</span>
+                </div>
+                <p>
+                  Submitted on {new Date(request.createdAt).toLocaleString()}
+                </p>
+                {request.reviewNote ? (
+                  <p className={styles.reviewNote}>Admin note: {request.reviewNote}</p>
+                ) : null}
+              </article>
+            ))
+          ) : (
+            <p className={styles.emptyText}>No verification requests submitted yet.</p>
+          )}
+        </div>
+      </section>
 
       <div className={styles.footerGrid}>
         <div className={styles.infoStrip}>

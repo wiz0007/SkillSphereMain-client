@@ -547,6 +547,138 @@
   }
 }
 
+.verificationError,
+.verificationSuccess {
+  padding: 0.9rem 1rem;
+  border-radius: 16px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.verificationError {
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  background: #fff5f5;
+  color: #b91c1c;
+}
+
+.verificationSuccess {
+  border: 1px solid rgba(16, 185, 129, 0.18);
+  background: #f0fdf4;
+  color: #047857;
+}
+
+.verificationStatusGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.85rem;
+}
+
+.verificationStatusCard {
+  padding: 1rem 1.05rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: #fbfdff;
+
+  span,
+  strong {
+    display: block;
+  }
+
+  span {
+    color: #64748b;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  strong {
+    margin-top: 0.35rem;
+    color: #0f172a;
+    text-transform: capitalize;
+  }
+}
+
+.verificationGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+
+  @include respond(md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.verificationCard {
+  padding: 1.1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 22px;
+  background: #fbfdff;
+
+  h3 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 1.05rem;
+  }
+
+  p {
+    margin: 0.4rem 0 0.95rem;
+    color: #64748b;
+    line-height: 1.6;
+  }
+}
+
+.verificationTimeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+
+  h3 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 1rem;
+  }
+}
+
+.verificationHistoryCard {
+  padding: 0.95rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: #fff;
+
+  p {
+    margin: 0.45rem 0 0;
+    color: #64748b;
+    line-height: 1.55;
+  }
+}
+
+.verificationHistoryHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+
+  strong {
+    color: #0f172a;
+  }
+
+  span {
+    color: #0f766e;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: capitalize;
+  }
+
+  @include respond(sm) {
+    flex-direction: column;
+  }
+}
+
+.reviewNote {
+  color: #0f172a !important;
+}
+
 .footerGrid {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 0.9rem;

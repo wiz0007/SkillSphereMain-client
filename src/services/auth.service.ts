@@ -65,6 +65,19 @@ export const getCurrentUser = async () => {
       profileCompleted?: boolean;
       isTutor: boolean;
       isAdmin: boolean;
+      identityVerificationStatus:
+        | "not_started"
+        | "pending"
+        | "approved"
+        | "rejected"
+        | "resubmission_required";
+      tutorVerificationStatus:
+        | "not_started"
+        | "pending"
+        | "approved"
+        | "rejected"
+        | "resubmission_required";
+      verifiedBadgeLevel: "none" | "basic" | "identity" | "tutor";
       skillCoinBalance: number;
       lockedSkillCoins: number;
       availableSkillCoins: number;
