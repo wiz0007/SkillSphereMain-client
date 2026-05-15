@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { CalendarDays, CircleDollarSign, Clock3 } from "lucide-react";
 import styles from "./Sessions.module.scss";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import AppDialog from "../ui/AppDialog";
 import {
   confirmSessionCompletion,
   hideSession,
@@ -11,6 +13,7 @@ import {
 const SessionCard = ({ session, onUpdate, onHide }: any) => {
   const navigate = useNavigate();
   const { refreshUser } = useAuth();
+  const [dialogMessage, setDialogMessage] = useState("");
 
   const updateStatus = async (
     status: "accepted" | "completed" | "cancelled"
@@ -20,7 +23,7 @@ const SessionCard = ({ session, onUpdate, onHide }: any) => {
       await refreshUser();
       onUpdate(session._id, status);
     } catch (error: any) {
-      alert(error?.response?.data?.message || "Error updating");
+      setDialogMessage(error?.response?.data?.message || "Error updating");
     }
   };
 
@@ -49,7 +52,7 @@ const SessionCard = ({ session, onUpdate, onHide }: any) => {
       await hideSession(session._id);
       onHide(session._id);
     } catch (error: any) {
-      alert(
+      setDialogMessage(
         error?.response?.data?.message ||
           "Could not remove this session from view"
       );
@@ -65,7 +68,7 @@ const SessionCard = ({ session, onUpdate, onHide }: any) => {
         coinStatus: "settled",
       });
     } catch (error: any) {
-      alert(
+      setDialogMessage(
         error?.response?.data?.message ||
           "Could not confirm this session yet"
       );
@@ -73,6 +76,7 @@ const SessionCard = ({ session, onUpdate, onHide }: any) => {
   };
 
   return (
+    <>
     <article className={styles.card}>
       <div className={styles.cardTop}>
         <div>
@@ -250,6 +254,14 @@ const SessionCard = ({ session, onUpdate, onHide }: any) => {
         ) : null}
       </div>
     </article>
+      <AppDialog
+        open={Boolean(dialogMessage)}
+        title="Session action unavailable"
+        message={dialogMessage}
+        tone="danger"
+        onClose={() => setDialogMessage("")}
+      />
+    </>
   );
 };
 

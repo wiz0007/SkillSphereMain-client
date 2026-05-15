@@ -74,8 +74,12 @@ const Register: React.FC = () => {
     () => ({
       username: !form.username.trim()
         ? "Choose a username."
-        : !/^[a-zA-Z0-9_]+$/.test(form.username.trim())
-          ? "Use only letters, numbers, and underscores."
+        : /\s/.test(form.username)
+          ? "Spaces are not allowed in usernames."
+          : /[A-Z]/.test(form.username)
+            ? "Capital letters are not allowed. Use lowercase only."
+            : !/^[a-z0-9_]+$/.test(form.username.trim())
+              ? "Use lowercase letters, numbers, and underscores only."
           : form.username.trim().length < 3
             ? "Username must be at least 3 characters."
             : usernameStatus === "taken"
@@ -117,7 +121,19 @@ const Register: React.FC = () => {
   ) => ((touched[field] || submitAttempted) ? validationErrors[field] : "");
 
   useEffect(() => {
+    const normalizedUsername = form.username.trim().toLowerCase();
+
     if (!form.username.trim()) {
+      setUsernameStatus("idle");
+      return;
+    }
+
+    if (
+      /\s/.test(form.username) ||
+      /[A-Z]/.test(form.username) ||
+      !/^[a-z0-9_]+$/.test(normalizedUsername) ||
+      normalizedUsername.length < 3
+    ) {
       setUsernameStatus("idle");
       return;
     }
@@ -126,7 +142,7 @@ const Register: React.FC = () => {
 
     const timer = setTimeout(async () => {
       try {
-        const res = await checkUsername(form.username.trim());
+        const res = await checkUsername(normalizedUsername);
         setUsernameStatus(res.available ? "available" : "taken");
       } catch {
         setUsernameStatus("idle");
@@ -308,7 +324,7 @@ const Register: React.FC = () => {
                       ? "Checking availability..."
                       : usernameStatus === "available"
                         ? "Username is available."
-                        : "Letters, numbers, and underscores work best."}
+                        : "Use lowercase letters, numbers, and underscores only."}
                 </small>
               </label>
 

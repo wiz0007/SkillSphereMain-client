@@ -9,6 +9,7 @@ import {
   getAdminReviews,
   getAdminSessions,
   getAdminSupportConversations,
+  getAdminSupportMessages,
   getAdminUsers,
   getAdminWalletTransactions,
   setAdminCoursePublishStatus,
@@ -18,6 +19,7 @@ import {
   type AdminReview,
   type AdminSession,
   type AdminSupportConversation,
+  type AdminSupportMessage,
   type AdminUser,
   type AdminWalletTransaction,
 } from "../../services/admin.service";
@@ -31,6 +33,32 @@ type AdminTab =
   | "support"
   | "reviews"
   | "wallet";
+
+type PendingAdminAction =
+  | {
+      kind: "wallet";
+      user: AdminUser;
+      walletAction: "credit" | "debit";
+      amount: number;
+      note: string;
+    }
+  | {
+      kind: "deleteUser";
+      user: AdminUser;
+    }
+  | {
+      kind: "deleteCourse";
+      course: AdminCourse;
+    }
+  | {
+      kind: "deleteReview";
+      review: AdminReview;
+    };
+
+type ActionFeedback = {
+  title: string;
+  message: string;
+};
 
 const tabs: Array<{ id: AdminTab; label: string }> = [
   { id: "overview", label: "Overview" },
@@ -50,6 +78,12 @@ const AdminPortal = () => {
   const [search, setSearch] = useState("");
   const [walletAmounts, setWalletAmounts] = useState<Record<string, string>>({});
   const [walletNotes, setWalletNotes] = useState<Record<string, string>>({});
+  const [pendingAction, setPendingAction] = useState<PendingAdminAction | null>(null);
+  const [actionInFlight, setActionInFlight] = useState(false);
+  const [actionFeedback, setActionFeedback] = useState<ActionFeedback | null>(null);
+  const [selectedSupportId, setSelectedSupportId] = useState("");
+  const [supportMessages, setSupportMessages] = useState<AdminSupportMessage[]>([]);
+  const [supportMessagesLoading, setSupportMessagesLoading] = useState(false);
 
   const [overview, setOverview] = useState<AdminOverview | null>(null);
   const [users, setUsers] = useState<AdminUser[]>([]);
@@ -88,6 +122,13 @@ const AdminPortal = () => {
       setCourses(nextCourses);
       setSessions(nextSessions);
       setSupport(nextSupport);
+      setSelectedSupportId((previous) => {
+        if (previous && nextSupport.some((thread) => thread._id === previous)) {
+          return previous;
+        }
+
+        return nextSupport[0]?._id || "";
+      });
       setReviews(nextReviews);
       setWallet(nextWallet);
     } catch (nextError: any) {
@@ -100,6 +141,44 @@ const AdminPortal = () => {
   useEffect(() => {
     void loadAll();
   }, []);
+
+  useEffect(() => {
+    if (!support.length) {
+      setSelectedSupportId("");
+      return;
+    }
+
+    if (!selectedSupportId || !support.some((thread) => thread._id === selectedSupportId)) {
+      setSelectedSupportId(support[0]._id);
+    }
+  }, [selectedSupportId, support]);
+
+  useEffect(() => {
+    const loadSupportMessages = async () => {
+      if (activeTab !== "support" || !selectedSupportId) {
+        return;
+      }
+
+      try {
+        setSupportMessagesLoading(true);
+        const payload = await getAdminSupportMessages(selectedSupportId);
+        setSupportMessages(payload.messages);
+        setSupport((previous) =>
+          previous.map((thread) =>
+            thread._id === payload.conversation._id
+              ? { ...thread, ...payload.conversation }
+              : thread
+          )
+        );
+      } catch (nextError: any) {
+        setError(nextError?.message || "Failed to load support messages");
+      } finally {
+        setSupportMessagesLoading(false);
+      }
+    };
+
+    void loadSupportMessages();
+  }, [activeTab, selectedSupportId]);
 
   const filteredUsers = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -159,86 +238,28 @@ const AdminPortal = () => {
       return;
     }
 
-    const confirmed = window.confirm(
-      `${action === "credit" ? "Credit" : "Debit"} ${amount} SC ${
-        action === "credit" ? "to" : "from"
-      } ${user.fullName || user.username}?`
-    );
-
-    if (!confirmed) {
-      return;
-    }
-
-    try {
-      const result = await adjustAdminUserWallet(user._id, {
-        action,
-        amount,
-        note,
-      });
-
-      if (result.wallet) {
-        setUsers((previous) =>
-          previous.map((entry) =>
-            entry._id === user._id
-              ? {
-                  ...entry,
-                  skillCoinBalance: result.wallet!.skillCoinBalance,
-                  lockedSkillCoins: result.wallet!.lockedSkillCoins,
-                }
-              : entry
-          )
-        );
-      }
-      setWalletAmounts((previous) => ({ ...previous, [user._id]: "" }));
-      setWalletNotes((previous) => ({ ...previous, [user._id]: "" }));
-      setError("");
-      setSuccessMessage(
-        action === "credit"
-          ? `Gift sent to ${user.fullName || user.username}`
-          : `${amount} SC debited from ${user.fullName || user.username}`
-      );
-      void loadAll(search);
-    } catch (nextError: any) {
-      setError(nextError?.message || "Failed to update user wallet");
-    }
+    setError("");
+    setPendingAction({
+      kind: "wallet",
+      user,
+      walletAction: action,
+      amount,
+      note,
+    });
   };
 
   const handleDeleteUser = async (user: AdminUser) => {
-    const confirmed = window.confirm(
-      `Delete ${user.fullName || user.username} from SkillSphere? This will remove their courses, sessions, reviews, messages, and wallet history.`
-    );
-
-    if (!confirmed) {
-      return;
-    }
-
-    try {
-      await deleteAdminUser(user._id);
-      setUsers((previous) => previous.filter((entry) => entry._id !== user._id));
-      setSuccessMessage(`${user.fullName || user.username} deleted successfully`);
-      void loadAll(search);
-    } catch (nextError: any) {
-      setError(nextError?.message || "Failed to delete user");
-    }
+    setPendingAction({
+      kind: "deleteUser",
+      user,
+    });
   };
 
   const handleDeleteCourse = async (course: AdminCourse) => {
-    const confirmed = window.confirm(
-      `Delete "${course.title}" from the platform?`
-    );
-
-    if (!confirmed) {
-      return;
-    }
-
-    try {
-      await deleteAdminCourse(course._id);
-      setCourses((previous) =>
-        previous.filter((entry) => entry._id !== course._id)
-      );
-    } catch (nextError: any) {
-      setError(nextError?.message || "Failed to delete course");
-    }
+    setPendingAction({
+      kind: "deleteCourse",
+      course,
+    });
   };
 
   const handleSupportStatus = async (
@@ -252,27 +273,176 @@ const AdminPortal = () => {
           entry._id === conversation._id ? { ...entry, status } : entry
         )
       );
+      setSuccessMessage(`Support status updated to ${status.replaceAll("_", " ")}`);
     } catch (nextError: any) {
       setError(nextError?.message || "Failed to update support status");
     }
   };
 
-  const handleDeleteReview = async (review: AdminReview) => {
-    const confirmed = window.confirm(
-      `Delete this review from ${review.user.username}?`
-    );
+  const selectedSupportConversation = useMemo(
+    () => support.find((thread) => thread._id === selectedSupportId) || null,
+    [selectedSupportId, support]
+  );
 
-    if (!confirmed) {
-      return;
+  const handleDeleteReview = async (review: AdminReview) => {
+    setPendingAction({
+      kind: "deleteReview",
+      review,
+    });
+  };
+
+  const confirmTitle = useMemo(() => {
+    if (!pendingAction) return "";
+
+    switch (pendingAction.kind) {
+      case "wallet":
+        return pendingAction.walletAction === "credit"
+          ? "Send SkillCoin gift"
+          : "Debit SkillCoin";
+      case "deleteUser":
+        return "Delete user";
+      case "deleteCourse":
+        return "Delete course";
+      case "deleteReview":
+        return "Delete review";
+      default:
+        return "";
     }
+  }, [pendingAction]);
+
+  const confirmDescription = useMemo(() => {
+    if (!pendingAction) return "";
+
+    switch (pendingAction.kind) {
+      case "wallet":
+        return pendingAction.walletAction === "credit"
+          ? `Send ${pendingAction.amount} SC to ${pendingAction.user.fullName || pendingAction.user.username} as an admin gift. The user will claim it from the gift popup before it reaches their wallet.`
+          : `Remove ${pendingAction.amount} SC from ${pendingAction.user.fullName || pendingAction.user.username}'s available wallet balance.`;
+      case "deleteUser":
+        return `Delete ${pendingAction.user.fullName || pendingAction.user.username} from SkillSphere. This will remove their courses, sessions, reviews, messages, and wallet history.`;
+      case "deleteCourse":
+        return `Delete "${pendingAction.course.title}" from the platform. This action removes the course and its linked reviews.`;
+      case "deleteReview":
+        return `Delete the review from ${pendingAction.review.user.fullName || pendingAction.review.user.username}.`;
+      default:
+        return "";
+    }
+  }, [pendingAction]);
+
+  const processingLabel = useMemo(() => {
+    if (!pendingAction) return "Processing...";
+
+    switch (pendingAction.kind) {
+      case "wallet":
+        return pendingAction.walletAction === "credit"
+          ? "Sending SkillCoin gift..."
+          : "Debiting SkillCoin...";
+      case "deleteUser":
+        return "Removing user and linked records...";
+      case "deleteCourse":
+        return "Deleting course...";
+      case "deleteReview":
+        return "Deleting review...";
+      default:
+        return "Processing...";
+    }
+  }, [pendingAction]);
+
+  const handleConfirmPendingAction = async () => {
+    if (!pendingAction) return;
 
     try {
-      await deleteAdminReview(review._id);
-      setReviews((previous) =>
-        previous.filter((entry) => entry._id !== review._id)
-      );
+      setActionInFlight(true);
+      setError("");
+
+      switch (pendingAction.kind) {
+        case "wallet": {
+          const { user, walletAction, amount, note } = pendingAction;
+          const result = await adjustAdminUserWallet(user._id, {
+            action: walletAction,
+            amount,
+            note,
+          });
+
+          if (result.wallet) {
+            setUsers((previous) =>
+              previous.map((entry) =>
+                entry._id === user._id
+                  ? {
+                      ...entry,
+                      skillCoinBalance: result.wallet!.skillCoinBalance,
+                      lockedSkillCoins: result.wallet!.lockedSkillCoins,
+                    }
+                  : entry
+              )
+            );
+          }
+
+          setWalletAmounts((previous) => ({ ...previous, [user._id]: "" }));
+          setWalletNotes((previous) => ({ ...previous, [user._id]: "" }));
+          setSuccessMessage(
+            walletAction === "credit"
+              ? `Gift sent to ${user.fullName || user.username}`
+              : `${amount} SC debited from ${user.fullName || user.username}`
+          );
+          setActionFeedback({
+            title:
+              walletAction === "credit" ? "Gift sent successfully" : "Debit completed",
+            message:
+              walletAction === "credit"
+                ? `${amount} SC has been sent to ${user.fullName || user.username}. They’ll receive it through the in-app gift flow.`
+                : `${amount} SC has been debited from ${user.fullName || user.username}'s wallet.`,
+          });
+          break;
+        }
+
+        case "deleteUser": {
+          const { user } = pendingAction;
+          await deleteAdminUser(user._id);
+          setUsers((previous) =>
+            previous.filter((entry) => entry._id !== user._id)
+          );
+          setSuccessMessage(`${user.fullName || user.username} deleted successfully`);
+          setActionFeedback({
+            title: "User removed",
+            message: `${user.fullName || user.username} and their linked platform records have been removed.`,
+          });
+          break;
+        }
+
+        case "deleteCourse": {
+          const { course } = pendingAction;
+          await deleteAdminCourse(course._id);
+          setCourses((previous) =>
+            previous.filter((entry) => entry._id !== course._id)
+          );
+          setActionFeedback({
+            title: "Course deleted",
+            message: `"${course.title}" has been removed from the platform.`,
+          });
+          break;
+        }
+
+        case "deleteReview": {
+          const { review } = pendingAction;
+          await deleteAdminReview(review._id);
+          setReviews((previous) =>
+            previous.filter((entry) => entry._id !== review._id)
+          );
+          setActionFeedback({
+            title: "Review deleted",
+            message: `The review from ${review.user.fullName || review.user.username} has been removed.`,
+          });
+          break;
+        }
+      }
+
+      void loadAll(search);
+      setPendingAction(null);
     } catch (nextError: any) {
-      setError(nextError?.message || "Failed to delete review");
+      setError(nextError?.message || "Failed to complete admin action");
+    } finally {
+      setActionInFlight(false);
     }
   };
 
@@ -317,6 +487,71 @@ const AdminPortal = () => {
       {error ? <div className={styles.errorBanner}>{error}</div> : null}
       {successMessage ? (
         <div className={styles.successBanner}>{successMessage}</div>
+      ) : null}
+
+      {pendingAction ? (
+        <div className={styles.modalOverlay} role="dialog" aria-modal="true">
+          <div className={styles.modalCard}>
+            <span className={styles.modalKicker}>Admin confirmation</span>
+            <h2>{confirmTitle}</h2>
+            <p>{confirmDescription}</p>
+
+            {pendingAction.kind === "wallet" && pendingAction.note ? (
+              <div className={styles.modalNote}>
+                <span>Admin note</span>
+                <strong>{pendingAction.note}</strong>
+              </div>
+            ) : null}
+
+            <div className={styles.modalActions}>
+              <button
+                type="button"
+                className={styles.secondaryAction}
+                onClick={() => setPendingAction(null)}
+                disabled={actionInFlight}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className={
+                  pendingAction.kind === "wallet" &&
+                  pendingAction.walletAction === "credit"
+                    ? styles.primaryAction
+                    : styles.dangerAction
+                }
+                onClick={() => void handleConfirmPendingAction()}
+                disabled={actionInFlight}
+              >
+                {actionInFlight
+                  ? processingLabel
+                  : pendingAction.kind === "wallet" &&
+                      pendingAction.walletAction === "credit"
+                    ? "Send gift"
+                    : "Confirm"}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {actionFeedback ? (
+        <div className={styles.modalOverlay} role="dialog" aria-modal="true">
+          <div className={styles.modalCard}>
+            <span className={styles.modalKicker}>Action complete</span>
+            <h2>{actionFeedback.title}</h2>
+            <p>{actionFeedback.message}</p>
+            <div className={styles.modalActions}>
+              <button
+                type="button"
+                className={styles.primaryAction}
+                onClick={() => setActionFeedback(null)}
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
       ) : null}
 
       {loading && !overview ? (
@@ -611,36 +846,55 @@ const AdminPortal = () => {
           <div className={styles.panelHeader}>
             <h2>Support conversations</h2>
           </div>
-          <div className={styles.tableWrap}>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th>Subject</th>
-                  <th>Requester</th>
-                  <th>Topic</th>
-                  <th>Status</th>
-                  <th>Updated</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {support.map((thread) => (
-                  <tr key={thread._id}>
-                    <td>
-                      <strong>{thread.subject}</strong>
-                      <span>{thread.assignedTo?.username || "Unassigned"}</span>
-                    </td>
-                    <td>{thread.requester.fullName || thread.requester.username}</td>
-                    <td>{thread.topic}</td>
-                    <td>{thread.status}</td>
-                    <td>{new Date(thread.lastMessageAt).toLocaleString()}</td>
-                    <td>
+          <div className={styles.supportWorkspace}>
+            <aside className={styles.supportList}>
+              {support.map((thread) => (
+                <button
+                  key={thread._id}
+                  type="button"
+                  className={`${styles.supportThreadCard} ${
+                    thread._id === selectedSupportId ? styles.supportThreadCardActive : ""
+                  }`}
+                  onClick={() => setSelectedSupportId(thread._id)}
+                >
+                  <div className={styles.supportThreadTop}>
+                    <strong>{thread.subject}</strong>
+                    <span>{new Date(thread.lastMessageAt).toLocaleDateString()}</span>
+                  </div>
+                  <span className={styles.supportThreadMeta}>
+                    {thread.requester.fullName || thread.requester.username}
+                  </span>
+                  <span className={styles.supportThreadMeta}>
+                    {thread.topic} · {thread.status.replaceAll("_", " ")}
+                  </span>
+                </button>
+              ))}
+            </aside>
+
+            <section className={styles.supportDetail}>
+              {selectedSupportConversation ? (
+                <>
+                  <div className={styles.supportDetailHeader}>
+                    <div>
+                      <h3>{selectedSupportConversation.subject}</h3>
+                      <p>
+                        {selectedSupportConversation.requester.fullName ||
+                          selectedSupportConversation.requester.username}
+                        {" · "}
+                        {selectedSupportConversation.topic}
+                      </p>
+                    </div>
+
+                    <div className={styles.supportDetailControls}>
+                      <span className={styles.statusPill}>
+                        {selectedSupportConversation.status.replaceAll("_", " ")}
+                      </span>
                       <select
                         className={styles.statusSelect}
-                        value={thread.status}
+                        value={selectedSupportConversation.status}
                         onChange={(event) =>
                           void handleSupportStatus(
-                            thread,
+                            selectedSupportConversation,
                             event.target.value as AdminSupportConversation["status"]
                           )
                         }
@@ -650,11 +904,86 @@ const AdminPortal = () => {
                         <option value="waiting_on_user">Waiting on user</option>
                         <option value="resolved">Resolved</option>
                       </select>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </div>
+                  </div>
+
+                  <div className={styles.supportThreadFacts}>
+                    <div>
+                      <span>Requester</span>
+                      <strong>
+                        {selectedSupportConversation.requester.fullName ||
+                          selectedSupportConversation.requester.username}
+                      </strong>
+                    </div>
+                    <div>
+                      <span>Assigned to</span>
+                      <strong>
+                        {selectedSupportConversation.assignedTo?.fullName ||
+                          selectedSupportConversation.assignedTo?.username ||
+                          "Unassigned"}
+                      </strong>
+                    </div>
+                    <div>
+                      <span>Last update</span>
+                      <strong>
+                        {new Date(
+                          selectedSupportConversation.lastMessageAt
+                        ).toLocaleString()}
+                      </strong>
+                    </div>
+                  </div>
+
+                  <div className={styles.supportMessagesPane}>
+                    {supportMessagesLoading ? (
+                      <div className={styles.supportEmptyState}>
+                        Loading conversation…
+                      </div>
+                    ) : supportMessages.length ? (
+                      supportMessages.map((message) => (
+                        <article key={message._id} className={styles.supportMessageCard}>
+                          <div className={styles.supportMessageHeader}>
+                            <div>
+                              <strong>
+                                {message.sender.fullName || message.sender.username}
+                              </strong>
+                              <span>
+                                {message.senderRole === "support"
+                                  ? "Support executive"
+                                  : "User"}
+                              </span>
+                            </div>
+                            <time dateTime={message.createdAt}>
+                              {new Date(message.createdAt).toLocaleString()}
+                            </time>
+                          </div>
+
+                          <p>{message.text || "Attachment only"}</p>
+
+                          {message.attachment ? (
+                            <a
+                              href={message.attachment.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className={styles.attachmentLink}
+                            >
+                              Open attachment: {message.attachment.name}
+                            </a>
+                          ) : null}
+                        </article>
+                      ))
+                    ) : (
+                      <div className={styles.supportEmptyState}>
+                        No messages in this conversation yet.
+                      </div>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <div className={styles.supportEmptyState}>
+                  Select a support conversation to read the message thread.
+                </div>
+              )}
+            </section>
           </div>
         </div>
       ) : null}

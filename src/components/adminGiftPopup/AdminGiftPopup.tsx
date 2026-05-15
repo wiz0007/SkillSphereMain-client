@@ -21,6 +21,7 @@ const AdminGiftPopup = () => {
   const [claiming, setClaiming] = useState(false);
   const [claimedAmount, setClaimedAmount] = useState<number | null>(null);
   const [giftFetchError, setGiftFetchError] = useState("");
+  const [claimError, setClaimError] = useState("");
 
   const notificationGift = useMemo(() => {
     return notifications.find((notification: any) => {
@@ -68,8 +69,9 @@ const AdminGiftPopup = () => {
 
     void getPendingAdminGift()
       .then(async (response) => {
-        setGiftFetchError("");
-        setPendingGift(response.gift);
+      setGiftFetchError("");
+      setClaimError("");
+      setPendingGift(response.gift);
 
         if (response.gift) {
           const nextGiftId = response.gift._id;
@@ -109,6 +111,7 @@ const AdminGiftPopup = () => {
 
     try {
       setClaiming(true);
+      setClaimError("");
       const result = await claimAdminGift(displayGift._id);
       setClaimedAmount(result.gift.amount);
       await refreshUser();
@@ -126,7 +129,7 @@ const AdminGiftPopup = () => {
       setPendingGift(null);
       setAutoOpenedGiftId(null);
     } catch (error: any) {
-      alert(
+      setClaimError(
         error?.response?.data?.message ||
           error?.message ||
           "The gift could not be claimed right now"
@@ -176,6 +179,13 @@ const AdminGiftPopup = () => {
               <div className={styles.warningBox}>
                 <span>Gift sync notice</span>
                 <strong>{giftFetchError}</strong>
+              </div>
+            ) : null}
+
+            {claimError ? (
+              <div className={styles.warningBox}>
+                <span>Claim issue</span>
+                <strong>{claimError}</strong>
               </div>
             ) : null}
 

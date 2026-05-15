@@ -8,6 +8,7 @@ import {
 } from "../../services/courses.service";
 import TutorCourseCard from "../tutorCourseCard/TutorCourseCard";
 import { useAuth } from "../../context/AuthContext";
+import AppDialog from "../ui/AppDialog";
 
 interface TutorSectionProps {
   summary: {
@@ -24,6 +25,16 @@ const TutorSection = ({ summary }: TutorSectionProps) => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [pendingDelete, setPendingDelete] = useState<{
+    mode: "single" | "bulk";
+    course?: Course;
+  } | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [feedback, setFeedback] = useState<{
+    title: string;
+    message: string;
+    tone?: "default" | "success" | "warning" | "danger";
+  } | null>(null);
 
   const fetchCourses = async () => {
     try {
@@ -64,35 +75,50 @@ const TutorSection = ({ summary }: TutorSectionProps) => {
   };
 
   const handleDelete = async (id: string) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this course?"
-    );
-
-    if (!confirmDelete) return;
-
-    try {
-      await deleteCourse(id);
-      fetchCourses();
-    } catch (err) {
-      console.error("Delete error:", err);
-    }
+    const course = courses.find((entry) => entry._id === id);
+    if (!course) return;
+    setPendingDelete({ mode: "single", course });
   };
 
   const handleBulkDelete = async () => {
     if (!selected.length) return;
+    setPendingDelete({ mode: "bulk" });
+  };
 
-    const confirmDelete = window.confirm(
-      `Delete ${selected.length} selected courses?`
-    );
-
-    if (!confirmDelete) return;
+  const confirmDelete = async () => {
+    if (!pendingDelete) return;
 
     try {
-      await Promise.all(selected.map((id) => deleteCourse(id)));
-      setSelected([]);
-      fetchCourses();
-    } catch (err) {
-      console.error("Bulk delete error:", err);
+      setDeleting(true);
+
+      if (pendingDelete.mode === "single" && pendingDelete.course) {
+        await deleteCourse(pendingDelete.course._id);
+        setFeedback({
+          title: "Course deleted",
+          message: `"${pendingDelete.course.title}" has been removed from your tutor catalogue.`,
+          tone: "success",
+        });
+      } else {
+        await Promise.all(selected.map((id) => deleteCourse(id)));
+        setFeedback({
+          title: "Courses deleted",
+          message: `${selected.length} selected courses have been removed from your tutor catalogue.`,
+          tone: "success",
+        });
+        setSelected([]);
+      }
+
+      await fetchCourses();
+      setPendingDelete(null);
+    } catch (err: any) {
+      console.error("Delete error:", err);
+      setFeedback({
+        title: "Delete unavailable",
+        message: err?.message || "The course could not be deleted right now.",
+        tone: "danger",
+      });
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -154,6 +180,39 @@ const TutorSection = ({ summary }: TutorSectionProps) => {
           </div>
         )}
       </div>
+
+      <AppDialog
+        open={Boolean(pendingDelete)}
+        kicker="Delete confirmation"
+        title={
+          pendingDelete?.mode === "bulk"
+            ? "Delete selected courses"
+            : "Delete this course"
+        }
+        message={
+          pendingDelete?.mode === "bulk"
+            ? `Remove ${selected.length} selected courses from your catalogue? This cannot be undone.`
+            : `Remove "${pendingDelete?.course?.title || "this course"}" from your catalogue? This cannot be undone.`
+        }
+        tone="danger"
+        confirmLabel="Delete"
+        busyLabel={
+          pendingDelete?.mode === "bulk"
+            ? "Deleting courses..."
+            : "Deleting course..."
+        }
+        busy={deleting}
+        onConfirm={() => void confirmDelete()}
+        onClose={() => setPendingDelete(null)}
+      />
+
+      <AppDialog
+        open={Boolean(feedback)}
+        title={feedback?.title || ""}
+        message={feedback?.message || ""}
+        tone={feedback?.tone}
+        onClose={() => setFeedback(null)}
+      />
     </div>
   );
 };

@@ -28,6 +28,11 @@ export interface SupportMessage {
   readAt?: string | null;
   senderRole: "user" | "support";
   sender: SupportParticipant;
+  attachment?: {
+    url: string;
+    name: string;
+    mimeType: string;
+  } | null;
   isMine: boolean;
 }
 
@@ -46,8 +51,21 @@ export const createSupportConversation = async (payload: {
   topic: string;
   subject: string;
   text: string;
+  attachment?: File | null;
 }) => {
-  const { data } = await api.post("/support", payload);
+  const formData = new FormData();
+  formData.append("topic", payload.topic);
+  formData.append("subject", payload.subject);
+  formData.append("text", payload.text);
+  if (payload.attachment) {
+    formData.append("attachment", payload.attachment);
+  }
+
+  const { data } = await api.post("/support", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return data as {
     conversation: SupportConversation;
     message: SupportMessage;
@@ -63,12 +81,22 @@ export const getSupportMessages = async (conversationId: string) => {
 
 export const sendSupportMessage = async (
   conversationId: string,
-  text: string
+  payload: {
+    text: string;
+    attachment?: File | null;
+  }
 ) => {
-  const { data } = await api.post(
-    `/support/${conversationId}/messages`,
-    { text }
-  );
+  const formData = new FormData();
+  formData.append("text", payload.text);
+  if (payload.attachment) {
+    formData.append("attachment", payload.attachment);
+  }
+
+  const { data } = await api.post(`/support/${conversationId}/messages`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return data as {
     conversation: SupportConversation;
     message: SupportMessage;

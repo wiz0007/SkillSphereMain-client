@@ -9,6 +9,7 @@ import {
 } from "../../services/auth.service";
 import { useAuth } from "../../context/AuthContext";
 import WalletPanelContent from "../../components/navbar/WalletPanelContent";
+import AppDialog from "../../components/ui/AppDialog";
 import {
   getRechargeBonus,
   type WalletHistoryItem,
@@ -59,6 +60,11 @@ const WalletPage = () => {
   const [loading, setLoading] = useState(false);
   const [transactions, setTransactions] = useState<WalletHistoryItem[]>([]);
   const [proofLoadingId, setProofLoadingId] = useState("");
+  const [dialog, setDialog] = useState<{
+    title: string;
+    message: string;
+    tone?: "default" | "success" | "warning" | "danger";
+  } | null>(null);
 
   const lockedRatio = useMemo(() => {
     if (!user?.skillCoinBalance) {
@@ -84,7 +90,11 @@ const WalletPage = () => {
     const rechargeAmount = Math.round(requestedAmount || Number(amount || 0));
 
     if (!rechargeAmount || rechargeAmount <= 0) {
-      alert("Enter a valid SkillCoin recharge amount");
+      setDialog({
+        title: "Enter a valid amount",
+        message: "Add a positive recharge amount before starting SkillCoin checkout.",
+        tone: "warning",
+      });
       return;
     }
 
@@ -94,7 +104,11 @@ const WalletPage = () => {
       const scriptReady = await loadRazorpayScript();
 
       if (!scriptReady || !window.Razorpay) {
-        alert("Razorpay checkout could not be loaded");
+        setDialog({
+          title: "Checkout unavailable",
+          message: "Razorpay checkout could not be loaded right now. Please try again in a moment.",
+          tone: "danger",
+        });
         return;
       }
 
@@ -132,11 +146,14 @@ const WalletPage = () => {
 
       razorpay.open();
     } catch (error: any) {
-      alert(
-        error?.response?.data?.message ||
+      setDialog({
+        title: "Recharge could not start",
+        message:
+          error?.response?.data?.message ||
           error?.message ||
-          "SkillCoin recharge could not be started"
-      );
+          "SkillCoin recharge could not be started",
+        tone: "danger",
+      });
     } finally {
       setLoading(false);
     }
@@ -157,12 +174,18 @@ const WalletPage = () => {
         `Proof nodes: ${proof.proof.proofPath.length}`,
       ].join("\n");
 
-      alert(summary);
+      setDialog({
+        title: "Wallet proof summary",
+        message: summary,
+      });
     } catch (error: any) {
-      alert(
-        error?.response?.data?.message ||
-          "Wallet proof could not be loaded"
-      );
+      setDialog({
+        title: "Proof unavailable",
+        message:
+          error?.response?.data?.message ||
+          "Wallet proof could not be loaded",
+        tone: "danger",
+      });
     } finally {
       setProofLoadingId("");
     }
@@ -202,6 +225,14 @@ const WalletPage = () => {
           compact
         />
       </div>
+
+      <AppDialog
+        open={Boolean(dialog)}
+        title={dialog?.title || ""}
+        message={dialog?.message || ""}
+        tone={dialog?.tone}
+        onClose={() => setDialog(null)}
+      />
     </section>
   );
 };

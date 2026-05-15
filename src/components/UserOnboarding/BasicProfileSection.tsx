@@ -82,7 +82,7 @@ function BasicProfileSection({
   };
 
   const handleCountryChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     onFieldChange("country", event.target.value);
     onFieldChange("state", "");
@@ -90,7 +90,7 @@ function BasicProfileSection({
   };
 
   const handleStateChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     onFieldChange("state", event.target.value);
     onFieldChange("city", "");
@@ -306,12 +306,9 @@ function BasicProfileSection({
 
             <div className={styles.field}>
               <label htmlFor="country">Country *</label>
-              <input
+              <select
                 id="country"
                 name="country"
-                list="country-options"
-                autoComplete="country-name"
-                placeholder="Select or type your country"
                 value={form.country}
                 onBlur={() => onFieldBlur("country")}
                 onChange={handleCountryChange}
@@ -319,14 +316,16 @@ function BasicProfileSection({
                 className={
                   countryError ? styles.inputError : undefined
                 }
-              />
-              <datalist id="country-options">
+              >
+                <option value="">Select your country</option>
                 {COUNTRY_OPTIONS.map((country) => (
-                  <option key={country} value={country} />
+                  <option key={country} value={country}>
+                    {country}
+                  </option>
                 ))}
-              </datalist>
+              </select>
               <p className={styles.fieldHint}>
-                Pick from the suggestions for faster state and city help.
+                Select a country to unlock state and city options.
               </p>
               {countryError ? (
                 <span className={styles.fieldError}>
@@ -337,29 +336,31 @@ function BasicProfileSection({
 
             <div className={styles.field}>
               <label htmlFor="state">State / Province *</label>
-              <input
+              <select
                 id="state"
                 name="state"
-                list="state-options"
-                autoComplete="address-level1"
-                placeholder="Select or type your state"
                 value={form.state}
                 onBlur={() => onFieldBlur("state")}
                 onChange={handleStateChange}
+                disabled={!form.country}
                 aria-invalid={Boolean(stateError)}
                 className={
                   stateError ? styles.inputError : undefined
                 }
-              />
-              <datalist id="state-options">
+              >
+                <option value="">
+                  {form.country ? "Select your state" : "Choose country first"}
+                </option>
                 {stateSuggestions.map((state) => (
-                  <option key={state} value={state} />
+                  <option key={state} value={state}>
+                    {state}
+                  </option>
                 ))}
-              </datalist>
+              </select>
               <p className={styles.fieldHint}>
                 {stateSuggestions.length > 0
-                  ? "Suggestions are based on the selected country."
-                  : "Type your state if suggestions are unavailable for your country."}
+                  ? "State choices update automatically from the selected country."
+                  : "Select a country first to load state choices."}
               </p>
               {stateError ? (
                 <span className={styles.fieldError}>
@@ -370,31 +371,33 @@ function BasicProfileSection({
 
             <div className={styles.field}>
               <label htmlFor="city">City *</label>
-              <input
+              <select
                 id="city"
                 name="city"
-                list="city-options"
-                autoComplete="address-level2"
-                placeholder="Select or type your city"
                 value={form.city}
                 onBlur={() => onFieldBlur("city")}
                 onChange={(event) =>
                   onFieldChange("city", event.target.value)
                 }
+                disabled={!form.state}
                 aria-invalid={Boolean(cityError)}
                 className={
                   cityError ? styles.inputError : undefined
                 }
-              />
-              <datalist id="city-options">
+              >
+                <option value="">
+                  {form.state ? "Select your city" : "Choose state first"}
+                </option>
                 {citySuggestions.map((city) => (
-                  <option key={city} value={city} />
+                  <option key={city} value={city}>
+                    {city}
+                  </option>
                 ))}
-              </datalist>
+              </select>
               <p className={styles.fieldHint}>
                 {citySuggestions.length > 0
-                  ? "City suggestions narrow down after you choose a state."
-                  : "Type your city if suggestions are unavailable for your region."}
+                  ? "City choices narrow down after you choose a state."
+                  : "Select a state first to load city choices."}
               </p>
               {cityError ? (
                 <span className={styles.fieldError}>
@@ -407,11 +410,9 @@ function BasicProfileSection({
               <label htmlFor="preferred-language">
                 Preferred Language *
               </label>
-              <input
+              <select
                 id="preferred-language"
                 name="preferredLanguage"
-                list="language-options"
-                placeholder="Select your preferred language"
                 value={form.preferredLanguage}
                 onBlur={() => onFieldBlur("preferredLanguage")}
                 onChange={(event) =>
@@ -428,12 +429,14 @@ function BasicProfileSection({
                     ? styles.inputError
                     : undefined
                 }
-              />
-              <datalist id="language-options">
+              >
+                <option value="">Select your preferred language</option>
                 {LANGUAGE_OPTIONS.map((language) => (
-                  <option key={language} value={language} />
+                  <option key={language} value={language}>
+                    {language}
+                  </option>
                 ))}
-              </datalist>
+              </select>
               {getFieldError("preferredLanguage") ? (
                 <span className={styles.fieldError}>
                   {getFieldError("preferredLanguage")}

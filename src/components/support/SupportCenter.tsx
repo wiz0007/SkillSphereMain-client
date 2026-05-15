@@ -51,6 +51,7 @@ const SupportCenter = () => {
   const [creating, setCreating] = useState(false);
   const [search, setSearch] = useState("");
   const [draft, setDraft] = useState("");
+  const [draftAttachment, setDraftAttachment] = useState<File | null>(null);
   const [topic, setTopic] = useState(
     searchParams.get("topic") || "Other"
   );
@@ -58,6 +59,7 @@ const SupportCenter = () => {
     searchParams.get("subject") || ""
   );
   const [openingMessage, setOpeningMessage] = useState("");
+  const [openingAttachment, setOpeningAttachment] = useState<File | null>(null);
   const [createError, setCreateError] = useState("");
   const [createAttempted, setCreateAttempted] = useState(false);
 
@@ -210,8 +212,8 @@ const SupportCenter = () => {
   const handleCreateConversation = async () => {
     setCreateAttempted(true);
 
-    if (!topic || !subject.trim() || !openingMessage.trim()) {
-      setCreateError("Topic, subject, and opening message are required.");
+    if (!topic || !subject.trim() || (!openingMessage.trim() && !openingAttachment)) {
+      setCreateError("Topic, subject, and either an opening message or attachment are required.");
       return;
     }
 
@@ -222,10 +224,12 @@ const SupportCenter = () => {
         topic,
         subject: subject.trim(),
         text: openingMessage.trim(),
+        attachment: openingAttachment,
       });
       await refreshBootstrap();
       setSearchParams({ conversationId: created.conversation._id });
       setOpeningMessage("");
+      setOpeningAttachment(null);
       setDraft("");
     } catch (error) {
       console.error("Failed to create support conversation:", error);
@@ -236,7 +240,7 @@ const SupportCenter = () => {
   };
 
   const handleSend = async () => {
-    if (!selectedConversation || !draft.trim()) {
+    if (!selectedConversation || (!draft.trim() && !draftAttachment)) {
       return;
     }
 
@@ -244,10 +248,14 @@ const SupportCenter = () => {
       setSending(true);
       const sent = await sendSupportMessage(
         selectedConversation._id,
-        draft.trim()
+        {
+          text: draft.trim(),
+          attachment: draftAttachment,
+        }
       );
       setMessages((previous) => [...previous, sent.message]);
       setDraft("");
+      setDraftAttachment(null);
       setBootstrap((previous) =>
         previous
           ? {
@@ -407,6 +415,22 @@ const SupportCenter = () => {
                     : ""
                 }
               />
+
+              <label className={styles.fileField}>
+                <span>Optional attachment</span>
+                <input
+                  type="file"
+                  accept=".png,.jpg,.jpeg,.webp,.pdf,.doc,.docx,.txt"
+                  onChange={(event) =>
+                    setOpeningAttachment(event.target.files?.[0] || null)
+                  }
+                />
+                <small>
+                  {openingAttachment
+                    ? `Attached: ${openingAttachment.name}`
+                    : "Attach screenshots, PDFs, or docs if they help explain the issue."}
+                </small>
+              </label>
 
               {createError ? (
                 <p className={styles.error}>{createError}</p>
@@ -573,7 +597,17 @@ const SupportCenter = () => {
                             : message.sender.fullName ||
                               message.sender.username}
                         </span>
-                        <p>{message.text}</p>
+                        {message.text ? <p>{message.text}</p> : null}
+                        {message.attachment ? (
+                          <a
+                            href={message.attachment.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className={styles.attachmentLink}
+                          >
+                            {message.attachment.name}
+                          </a>
+                        ) : null}
                         <span>{formatTime(message.createdAt)}</span>
                       </div>
                     </div>
@@ -594,11 +628,27 @@ const SupportCenter = () => {
                   placeholder="Write your reply"
                 />
 
+                <label className={styles.fileField}>
+                  <span>Attachment</span>
+                  <input
+                    type="file"
+                    accept=".png,.jpg,.jpeg,.webp,.pdf,.doc,.docx,.txt"
+                    onChange={(event) =>
+                      setDraftAttachment(event.target.files?.[0] || null)
+                    }
+                  />
+                  <small>
+                    {draftAttachment
+                      ? `Attached: ${draftAttachment.name}`
+                      : "Optional file for screenshots or supporting documents."}
+                  </small>
+                </label>
+
                 <button
                   type="button"
                   className={styles.sendButton}
                   onClick={() => void handleSend()}
-                  disabled={sending || !draft.trim()}
+                  disabled={sending || (!draft.trim() && !draftAttachment)}
                 >
                   <Send size={16} />
                   {sending ? "Sending..." : "Send"}

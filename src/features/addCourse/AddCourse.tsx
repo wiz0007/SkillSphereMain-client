@@ -8,6 +8,7 @@ import {
   Save,
 } from "lucide-react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import AppDialog from "../../components/ui/AppDialog";
 
 import styles from "./AddCourse.module.scss";
 
@@ -106,6 +107,7 @@ const AddCourse = () => {
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [serverError, setServerError] = useState("");
+  const [showLeaveDialog, setShowLeaveDialog] = useState(false);
 
   const fieldRefs = useRef<
     Partial<
@@ -304,13 +306,8 @@ const AddCourse = () => {
 
   const handleBack = () => {
     if (isDirty && !saving) {
-      const shouldLeave = window.confirm(
-        "You have unsaved course changes. Leave this form anyway?"
-      );
-
-      if (!shouldLeave) {
-        return;
-      }
+      setShowLeaveDialog(true);
+      return;
     }
 
     navigate("/dashboard");
@@ -809,6 +806,17 @@ const AddCourse = () => {
           </div>
         </aside>
       </div>
+
+      <AppDialog
+        open={showLeaveDialog}
+        kicker="Unsaved changes"
+        title="Leave without saving?"
+        message="You have unsaved course edits. If you leave now, those changes will be lost."
+        tone="warning"
+        confirmLabel="Leave page"
+        onConfirm={() => navigate("/dashboard")}
+        onClose={() => setShowLeaveDialog(false)}
+      />
     </section>
   );
 };

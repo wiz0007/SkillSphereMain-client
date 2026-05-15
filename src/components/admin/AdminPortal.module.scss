@@ -44,6 +44,16 @@
   white-space: nowrap;
 }
 
+.primaryAction {
+  @include button-cta;
+  min-height: 42px;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
 .tabRow {
   display: flex;
   flex-wrap: wrap;
@@ -304,4 +314,306 @@
 
 .timestamp {
   white-space: nowrap;
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(15, 23, 42, 0.38);
+  backdrop-filter: blur(10px);
+}
+
+.modalCard {
+  width: min(100%, 540px);
+  @include panel(28px, 1.4rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  h2 {
+    margin: 0;
+    color: $color-text-primary;
+    font-size: clamp(1.45rem, 2.8vw, 2rem);
+    line-height: 1.08;
+  }
+
+  p {
+    margin: 0;
+    color: $color-text-secondary;
+    line-height: 1.7;
+  }
+}
+
+.modalKicker {
+  @include section-kicker;
+}
+
+.modalNote {
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(203, 213, 225, 0.95);
+  border-radius: 20px;
+  background: #f8fafc;
+
+  span,
+  strong {
+    display: block;
+  }
+
+  span {
+    color: $color-text-secondary;
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  strong {
+    margin-top: 0.35rem;
+    color: $color-text-primary;
+    line-height: 1.6;
+  }
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+
+  @include respond(sm) {
+    > * {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+.supportWorkspace {
+  display: grid;
+  grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+  gap: 1rem;
+
+  @include respond(md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.supportList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 760px;
+  overflow-y: auto;
+  padding-right: 0.2rem;
+}
+
+.supportThreadCard {
+  padding: 1rem 1.05rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  background: #fbfdff;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    border-color: rgba(46, 196, 182, 0.35);
+  }
+}
+
+.supportThreadCardActive {
+  border-color: rgba(46, 196, 182, 0.48);
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+  background: linear-gradient(135deg, rgba(236, 254, 255, 0.95), #ffffff);
+}
+
+.supportThreadTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+
+  strong,
+  span {
+    display: block;
+  }
+
+  strong {
+    color: $color-text-primary;
+    font-size: 0.95rem;
+  }
+
+  span {
+    color: $color-text-secondary;
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+}
+
+.supportThreadMeta {
+  display: block;
+  margin-top: 0.28rem;
+  color: $color-text-secondary;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.supportDetail {
+  @include panel(22px, 1.1rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 420px;
+}
+
+.supportDetailHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+
+  @include respond(sm) {
+    flex-direction: column;
+  }
+
+  h3 {
+    margin: 0;
+    color: $color-text-primary;
+    font-size: 1.1rem;
+  }
+
+  p {
+    margin: 0.3rem 0 0;
+    color: $color-text-secondary;
+    font-size: 0.9rem;
+  }
+}
+
+.supportDetailControls {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
+.supportThreadFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+
+  @include respond(sm) {
+    grid-template-columns: 1fr;
+  }
+
+  > div {
+    padding: 0.9rem 1rem;
+    border: 1px solid #edf2f7;
+    border-radius: 18px;
+    background: #fbfdff;
+  }
+
+  span,
+  strong {
+    display: block;
+  }
+
+  span {
+    color: $color-text-secondary;
+    font-size: 0.76rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  strong {
+    margin-top: 0.35rem;
+    color: $color-text-primary;
+    line-height: 1.5;
+  }
+}
+
+.supportMessagesPane {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  max-height: 620px;
+  overflow-y: auto;
+  padding-right: 0.2rem;
+}
+
+.supportMessageCard {
+  padding: 1rem 1.05rem;
+  border: 1px solid #edf2f7;
+  border-radius: 18px;
+  background: #ffffff;
+
+  p {
+    margin: 0.75rem 0 0;
+    color: $color-text-primary;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+}
+
+.supportMessageHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.8rem;
+
+  @include respond(sm) {
+    flex-direction: column;
+  }
+
+  strong,
+  span,
+  time {
+    display: block;
+  }
+
+  strong {
+    color: $color-text-primary;
+    font-size: 0.92rem;
+  }
+
+  span,
+  time {
+    color: $color-text-secondary;
+    font-size: 0.8rem;
+  }
+}
+
+.attachmentLink {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0.85rem;
+  color: #0f766e;
+  font-size: 0.84rem;
+  font-weight: 800;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.supportEmptyState {
+  display: grid;
+  place-items: center;
+  min-height: 260px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 22px;
+  color: $color-text-secondary;
+  text-align: center;
+  padding: 1.5rem;
 }

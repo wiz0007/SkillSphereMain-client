@@ -59,6 +59,20 @@ export interface AdminSupportConversation {
   assignedTo: AdminUser | null;
 }
 
+export interface AdminSupportMessage {
+  _id: string;
+  text: string;
+  createdAt: string;
+  readAt: string | null;
+  senderRole: "user" | "support";
+  sender: AdminUser;
+  attachment: null | {
+    url: string;
+    name: string;
+    mimeType: string;
+  };
+}
+
 export interface AdminReview {
   _id: string;
   rating: number;
@@ -239,6 +253,18 @@ export const updateAdminSupportStatus = async (
     return res.data;
   } catch (error: any) {
     return handleError(error, "updateAdminSupportStatus");
+  }
+};
+
+export const getAdminSupportMessages = async (conversationId: string) => {
+  try {
+    const res = await api.get(`/admin/support/${conversationId}/messages`);
+    return res.data as {
+      conversation: AdminSupportConversation;
+      messages: AdminSupportMessage[];
+    };
+  } catch (error: any) {
+    return handleError(error, "getAdminSupportMessages");
   }
 };
 
