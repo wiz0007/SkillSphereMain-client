@@ -13,6 +13,7 @@ import {
   getAdminUsers,
   getAdminWalletTransactions,
   setAdminCoursePublishStatus,
+  sendAdminSupportMessage,
   updateAdminSupportStatus,
   type AdminCourse,
   type AdminOverview,
@@ -84,6 +85,9 @@ const AdminPortal = () => {
   const [selectedSupportId, setSelectedSupportId] = useState("");
   const [supportMessages, setSupportMessages] = useState<AdminSupportMessage[]>([]);
   const [supportMessagesLoading, setSupportMessagesLoading] = useState(false);
+  const [supportReplyText, setSupportReplyText] = useState("");
+  const [supportReplyAttachment, setSupportReplyAttachment] = useState<File | null>(null);
+  const [supportReplySending, setSupportReplySending] = useState(false);
 
   const [overview, setOverview] = useState<AdminOverview | null>(null);
   const [users, setUsers] = useState<AdminUser[]>([]);
@@ -179,6 +183,11 @@ const AdminPortal = () => {
 
     void loadSupportMessages();
   }, [activeTab, selectedSupportId]);
+
+  useEffect(() => {
+    setSupportReplyText("");
+    setSupportReplyAttachment(null);
+  }, [selectedSupportId]);
 
   const filteredUsers = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -283,6 +292,43 @@ const AdminPortal = () => {
     () => support.find((thread) => thread._id === selectedSupportId) || null,
     [selectedSupportId, support]
   );
+
+  const handleSendSupportReply = async () => {
+    if (!selectedSupportConversation) {
+      return;
+    }
+
+    if (!supportReplyText.trim() && !supportReplyAttachment) {
+      setError("Write a reply or attach a file before sending");
+      return;
+    }
+
+    try {
+      setSupportReplySending(true);
+      setError("");
+
+      const payload = await sendAdminSupportMessage(selectedSupportConversation._id, {
+        text: supportReplyText,
+        attachment: supportReplyAttachment,
+      });
+
+      setSupportMessages((previous) => [...previous, payload.message]);
+      setSupport((previous) =>
+        previous.map((thread) =>
+          thread._id === payload.conversation._id
+            ? { ...thread, ...payload.conversation }
+            : thread
+        )
+      );
+      setSupportReplyText("");
+      setSupportReplyAttachment(null);
+      setSuccessMessage("Support reply sent");
+    } catch (nextError: any) {
+      setError(nextError?.message || "Failed to send support reply");
+    } finally {
+      setSupportReplySending(false);
+    }
+  };
 
   const handleDeleteReview = async (review: AdminReview) => {
     setPendingAction({
@@ -976,6 +1022,48 @@ const AdminPortal = () => {
                         No messages in this conversation yet.
                       </div>
                     )}
+                  </div>
+
+                  <div className={styles.supportReplyBox}>
+                    <div className={styles.supportReplyHeader}>
+                      <h4>Reply as admin</h4>
+                      {supportReplyAttachment ? (
+                        <span>{supportReplyAttachment.name}</span>
+                      ) : (
+                        <span>Attach a file if needed</span>
+                      )}
+                    </div>
+
+                    <textarea
+                      className={styles.supportReplyInput}
+                      placeholder="Write the next response for this support conversation..."
+                      value={supportReplyText}
+                      onChange={(event) => setSupportReplyText(event.target.value)}
+                      rows={4}
+                    />
+
+                    <div className={styles.supportReplyActions}>
+                      <label className={styles.supportAttachmentButton}>
+                        <input
+                          type="file"
+                          onChange={(event) =>
+                            setSupportReplyAttachment(
+                              event.target.files?.[0] || null
+                            )
+                          }
+                        />
+                        {supportReplyAttachment ? "Replace attachment" : "Attach file"}
+                      </label>
+
+                      <button
+                        type="button"
+                        className={styles.primaryAction}
+                        onClick={() => void handleSendSupportReply()}
+                        disabled={supportReplySending}
+                      >
+                        {supportReplySending ? "Sending reply..." : "Send reply"}
+                      </button>
+                    </div>
                   </div>
                 </>
               ) : (

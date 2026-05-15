@@ -268,6 +268,39 @@ export const getAdminSupportMessages = async (conversationId: string) => {
   }
 };
 
+export const sendAdminSupportMessage = async (
+  conversationId: string,
+  payload: {
+    text?: string;
+    attachment?: File | null;
+  }
+) => {
+  try {
+    const formData = new FormData();
+
+    if (payload.text?.trim()) {
+      formData.append("text", payload.text.trim());
+    }
+
+    if (payload.attachment) {
+      formData.append("attachment", payload.attachment);
+    }
+
+    const res = await api.post(`/admin/support/${conversationId}/messages`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return res.data as {
+      conversation: AdminSupportConversation;
+      message: AdminSupportMessage;
+    };
+  } catch (error: any) {
+    return handleError(error, "sendAdminSupportMessage");
+  }
+};
+
 export const getAdminReviews = async (): Promise<AdminReview[]> => {
   try {
     const res = await api.get("/admin/reviews");
