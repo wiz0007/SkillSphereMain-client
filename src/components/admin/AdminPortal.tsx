@@ -649,6 +649,7 @@ const AdminPortal = () => {
               ["Tutors", overview.metrics.totalTutors],
               ["Courses", overview.metrics.totalCourses],
               ["Recorded", overview.metrics.recordedCourses],
+              ["Tuition", overview.metrics.tuitionCourses],
               ["Sessions", overview.metrics.totalSessions],
               ["Pending sessions", overview.metrics.pendingSessions],
               ["Support threads", overview.metrics.totalSupportThreads],
@@ -991,10 +992,20 @@ const AdminPortal = () => {
                       <span>{course.category} | {course.level}</span>
                     </td>
                     <td>{course.tutor.fullName || course.tutor.username}</td>
-                    <td>{course.type}</td>
+                    <td>
+                      {course.type === "recorded"
+                        ? "Recorded"
+                        : course.type === "tuition"
+                          ? "Tuition"
+                          : "Live"}
+                    </td>
                     <td>
                       {course.price}
-                      {course.type === "recorded" ? " SC" : "/hr"}
+                      {course.type === "recorded"
+                        ? " SC"
+                        : course.type === "tuition"
+                          ? "/month"
+                          : "/hr"}
                     </td>
                     <td>
                       {course.averageRating.toFixed(1)} ({course.totalRatings})

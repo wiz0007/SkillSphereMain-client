@@ -19,6 +19,18 @@ const CourseHero = ({
   isOwnCourse = false,
 }: any) => {
   const navigate = useNavigate();
+  const isTuition = course.type === "tuition";
+  const tuitionScheduleLabel = isTuition
+    ? `${
+        course.tuitionSchedule?.days?.length
+          ? course.tuitionSchedule.days.join(", ")
+          : "Weekly timetable"
+      }${
+        course.tuitionSchedule?.startTime
+          ? ` at ${course.tuitionSchedule.startTime}`
+          : ""
+      }`
+    : "";
 
   const avg = course.averageRating || 0;
   const total = course.totalRatings || 0;
@@ -71,10 +83,18 @@ const CourseHero = ({
       </button>
 
       <div className={styles.badges}>
-        <span>{course.type === "recorded" ? "Recorded" : "Live"}</span>
+        <span>
+          {course.type === "recorded"
+            ? "Recorded"
+            : course.type === "tuition"
+              ? "Recurring tuition"
+              : "Live"}
+        </span>
         <span>{course.category || "General"}</span>
         <span>{course.level || "All levels"}</span>
-        <span>{course.duration || "Flexible pace"}</span>
+        <span>
+          {isTuition ? tuitionScheduleLabel || "Monthly schedule" : course.duration || "Flexible pace"}
+        </span>
       </div>
 
       <div className={styles.metricRow}>

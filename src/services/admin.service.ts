@@ -18,11 +18,16 @@ export interface AdminUser {
 export interface AdminCourse {
   _id: string;
   title: string;
-  type: "live" | "recorded";
+  type: "live" | "recorded" | "tuition";
   category: string;
   level: string;
   price: number;
   duration: string;
+  tuitionSchedule?: {
+    days: string[];
+    weeks: number[];
+    startTime: string;
+  };
   isPublished: boolean;
   averageRating: number;
   totalRatings: number;
@@ -44,7 +49,7 @@ export interface AdminSession {
   course: null | {
     _id: string;
     title: string;
-    type: "live" | "recorded";
+    type: "live" | "recorded" | "tuition";
   };
 }
 
@@ -83,7 +88,7 @@ export interface AdminReview {
   course: null | {
     _id: string;
     title: string;
-    type: "live" | "recorded";
+    type: "live" | "recorded" | "tuition";
   };
 }
 
@@ -130,6 +135,7 @@ export interface AdminOverview {
     totalCourses: number;
     liveCourses: number;
     recordedCourses: number;
+    tuitionCourses: number;
     totalSessions: number;
     pendingSessions: number;
     totalSupportThreads: number;

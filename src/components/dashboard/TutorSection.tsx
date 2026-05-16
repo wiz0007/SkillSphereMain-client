@@ -2,9 +2,14 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../dashboard/Dashboard.module.scss";
 import {
+  cancelTuitionEnrollment,
   getMyCourses,
+  getMyTuitionEnrollments,
+  pauseTuitionEnrollment,
+  resumeTuitionEnrollment,
   deleteCourse,
   type Course,
+  type TuitionEnrollmentListItem,
 } from "../../services/courses.service";
 import TutorCourseCard from "../tutorCourseCard/TutorCourseCard";
 import { useAuth } from "../../context/AuthContext";
@@ -25,6 +30,10 @@ const TutorSection = ({ summary }: TutorSectionProps) => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [tuitionEnrollments, setTuitionEnrollments] = useState<
+    TuitionEnrollmentListItem[]
+  >([]);
+  const [tuitionActionLoading, setTuitionActionLoading] = useState("");
   const [pendingDelete, setPendingDelete] = useState<{
     mode: "single" | "bulk";
     course?: Course;
@@ -39,11 +48,20 @@ const TutorSection = ({ summary }: TutorSectionProps) => {
   const fetchCourses = async () => {
     try {
       setLoading(true);
-      const data = await getMyCourses();
+      const [data, tuitionData] = await Promise.all([
+        getMyCourses(),
+        getMyTuitionEnrollments(),
+      ]);
       setCourses(Array.isArray(data) ? data : []);
+      setTuitionEnrollments(
+        Array.isArray(tuitionData)
+          ? tuitionData.filter((entry) => entry.role === "tutor")
+          : []
+      );
     } catch (err) {
       console.error("Fetch error:", err);
       setCourses([]);
+      setTuitionEnrollments([]);
     } finally {
       setLoading(false);
     }
@@ -122,6 +140,73 @@ const TutorSection = ({ summary }: TutorSectionProps) => {
     }
   };
 
+  const updateTuitionEnrollmentState = (
+    enrollmentId: string,
+    nextStatus: TuitionEnrollmentListItem["status"]
+  ) => {
+    setTuitionEnrollments((previous) =>
+      previous.map((entry) =>
+        entry._id === enrollmentId
+          ? { ...entry, status: nextStatus }
+          : entry
+      )
+    );
+  };
+
+  const handlePauseTuition = async (enrollmentId: string) => {
+    try {
+      setTuitionActionLoading(`pause:${enrollmentId}`);
+      await pauseTuitionEnrollment(enrollmentId);
+      updateTuitionEnrollmentState(enrollmentId, "paused");
+      await fetchCourses();
+    } catch (err: any) {
+      setFeedback({
+        title: "Pause unavailable",
+        message:
+          err?.message || "The tuition plan could not be paused right now.",
+        tone: "danger",
+      });
+    } finally {
+      setTuitionActionLoading("");
+    }
+  };
+
+  const handleResumeTuition = async (enrollmentId: string) => {
+    try {
+      setTuitionActionLoading(`resume:${enrollmentId}`);
+      await resumeTuitionEnrollment(enrollmentId);
+      updateTuitionEnrollmentState(enrollmentId, "approved");
+      await fetchCourses();
+    } catch (err: any) {
+      setFeedback({
+        title: "Resume unavailable",
+        message:
+          err?.message || "The tuition plan could not be resumed right now.",
+        tone: "danger",
+      });
+    } finally {
+      setTuitionActionLoading("");
+    }
+  };
+
+  const handleCancelTuition = async (enrollmentId: string) => {
+    try {
+      setTuitionActionLoading(`cancel:${enrollmentId}`);
+      await cancelTuitionEnrollment(enrollmentId);
+      updateTuitionEnrollmentState(enrollmentId, "cancelled");
+      await fetchCourses();
+    } catch (err: any) {
+      setFeedback({
+        title: "Cancellation unavailable",
+        message:
+          err?.message || "The tuition plan could not be cancelled right now.",
+        tone: "danger",
+      });
+    } finally {
+      setTuitionActionLoading("");
+    }
+  };
+
   return (
     <div className={styles.tutorSection}>
       <div className={styles.sectionTitleRow}>
@@ -177,6 +262,121 @@ const TutorSection = ({ summary }: TutorSectionProps) => {
                 onView={handleView}
               />
             ))}
+          </div>
+        )}
+      </div>
+
+      <div className={styles.panel}>
+        <div className={styles.sectionTitleRow}>
+          <div>
+            <h2>Recurring tuition enrollments</h2>
+            <p className={styles.sectionSubtitle}>
+              Monitor active recurring learners, their next class, and pause or cancel plans when needed.
+            </p>
+          </div>
+        </div>
+
+        {loading ? (
+          <p>Loading enrollments...</p>
+        ) : tuitionEnrollments.length === 0 ? (
+          <div className={styles.emptyState}>
+            <strong>No tuition enrollments yet</strong>
+            <span>
+              Approved recurring learners will appear here with next-class visibility and control actions.
+            </span>
+          </div>
+        ) : (
+          <div className={styles.tuitionList}>
+            {tuitionEnrollments.map((entry) => {
+              const isPausing =
+                tuitionActionLoading === `pause:${entry._id}`;
+              const isResuming =
+                tuitionActionLoading === `resume:${entry._id}`;
+              const isCancelling =
+                tuitionActionLoading === `cancel:${entry._id}`;
+
+              return (
+                <div key={entry._id} className={styles.tuitionCard}>
+                  <div className={styles.tuitionHeader}>
+                    <div>
+                      <strong>{entry.course.title}</strong>
+                      <span>
+                        {entry.student.fullName || entry.student.username
+                          ? `Learner: ${entry.student.fullName || entry.student.username}`
+                          : "Learner enrolled"}
+                      </span>
+                    </div>
+                    <span className={styles.tuitionStatus}>{entry.status}</span>
+                  </div>
+
+                  <div className={styles.tuitionMeta}>
+                    <span>
+                      {entry.scheduleSnapshot.days.join(", ")}
+                      {entry.scheduleSnapshot.startTime
+                        ? ` at ${entry.scheduleSnapshot.startTime}`
+                        : ""}
+                    </span>
+                    <span>
+                      Weeks {entry.scheduleSnapshot.weeks.join(", ")} | ₹
+                      {entry.price}/month
+                    </span>
+                    <span>
+                      {entry.nextSessionDate
+                        ? `Next class: ${new Date(
+                            entry.nextSessionDate
+                          ).toLocaleString()}`
+                        : entry.status === "paused"
+                          ? "No classes generated while paused"
+                          : "Next class will appear after schedule sync"}
+                    </span>
+                  </div>
+
+                  <div className={styles.tuitionActions}>
+                    {entry.status === "approved" ? (
+                      <>
+                        <button
+                          type="button"
+                          className={styles.tuitionSecondary}
+                          onClick={() => void handlePauseTuition(entry._id)}
+                          disabled={isPausing || isCancelling}
+                        >
+                          {isPausing ? "Pausing..." : "Pause"}
+                        </button>
+                        <button
+                          type="button"
+                          className={styles.tuitionDanger}
+                          onClick={() => void handleCancelTuition(entry._id)}
+                          disabled={isPausing || isCancelling}
+                        >
+                          {isCancelling ? "Cancelling..." : "Cancel plan"}
+                        </button>
+                      </>
+                    ) : null}
+
+                    {entry.status === "paused" ? (
+                      <>
+                        <button
+                          type="button"
+                          className={styles.tuitionPrimary}
+                          onClick={() => void handleResumeTuition(entry._id)}
+                          disabled={isResuming || isCancelling}
+                        >
+                          {isResuming ? "Resuming..." : "Resume"}
+                        </button>
+                        <button
+                          type="button"
+                          className={styles.tuitionDanger}
+                          onClick={() => void handleCancelTuition(entry._id)}
+                          disabled={isResuming || isCancelling}
+                        >
+                          {isCancelling ? "Cancelling..." : "Cancel plan"}
+                        </button>
+                      </>
+                    ) : null}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

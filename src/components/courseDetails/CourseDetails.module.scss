@@ -423,6 +423,7 @@
 }
 
 .approveAction,
+.secondaryAction,
 .rejectAction {
   min-height: 40px;
   padding: 0.72rem 0.95rem;
@@ -433,6 +434,10 @@
 }
 
 .approveAction {
+  @include button-secondary;
+}
+
+.secondaryAction {
   @include button-secondary;
 }
 

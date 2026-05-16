@@ -44,7 +44,7 @@ const INDIA_LOCATION_SUGGESTIONS = {
   Telangana: ["Hyderabad", "Warangal", "Nizamabad", "Karimnagar", "Khammam", "Nalgonda"],
   Tripura: ["Agartala", "Dharmanagar", "Udaipur", "Kailashahar"],
   "Uttar Pradesh": ["Lucknow", "Noida", "Varanasi", "Kanpur", "Prayagraj", "Agra", "Ghaziabad"],
-  Uttarakhand: ["Dehradun", "Haridwar", "Haldwani", "Rishikesh", "Roorkee", "Nainital"],
+  Uttarakhand: ["Dehradun", "Haridwar", "Haldwani", "Rishikesh", "Roorkee", "Nainital", "Pithoragarh",  "Almora", "Kashipur", "Ramnagar"],
   "West Bengal": ["Kolkata", "Durgapur", "Siliguri", "Asansol", "Howrah", "Kharagpur"],
   "Andaman and Nicobar Islands": ["Port Blair", "Swaraj Dweep", "Diglipur", "Mayabunder"],
   "Dadra and Nagar Haveli and Daman and Diu": ["Silvassa", "Daman", "Diu"],

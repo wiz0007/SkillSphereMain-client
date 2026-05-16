@@ -46,17 +46,81 @@ export interface RecordedAccessRequest {
   rejectedAt?: string | null;
 }
 
+export interface TuitionEnrollmentSummary {
+  hasEnrollment: boolean;
+  hasPendingRequest: boolean;
+  status: "none" | "pending" | "approved" | "paused" | "rejected" | "cancelled";
+  requestId: string | null;
+  canRequest: boolean;
+  nextSessionDate: string | null;
+  canPause: boolean;
+  canResume: boolean;
+  canCancel: boolean;
+}
+
+export interface TuitionEnrollmentRequest {
+  _id: string;
+  student: Tutor;
+  status: "pending" | "approved" | "paused" | "rejected" | "cancelled";
+  coinStatus: "locked" | "settled" | "released";
+  skillCoinAmount: number;
+  price: number;
+  createdAt: string;
+  approvedAt?: string | null;
+  pausedAt?: string | null;
+  rejectedAt?: string | null;
+  cancelledAt?: string | null;
+  generatedUntil?: string | null;
+  scheduleSnapshot: TuitionSchedule & {
+    duration: string;
+    durationMinutes: number;
+  };
+}
+
+export interface TuitionEnrollmentListItem {
+  _id: string;
+  role: "student" | "tutor";
+  status: "pending" | "approved" | "paused" | "rejected" | "cancelled";
+  coinStatus: "locked" | "settled" | "released";
+  skillCoinAmount: number;
+  price: number;
+  createdAt?: string | null;
+  approvedAt?: string | null;
+  pausedAt?: string | null;
+  rejectedAt?: string | null;
+  cancelledAt?: string | null;
+  generatedUntil?: string | null;
+  nextSessionDate?: string | null;
+  student: Tutor;
+  tutor: Tutor;
+  course: {
+    _id: string;
+    title: string;
+    category?: string;
+    duration?: string;
+    price?: number;
+  };
+  scheduleSnapshot: TuitionEnrollmentRequest["scheduleSnapshot"];
+}
+
+export interface TuitionSchedule {
+  days: string[];
+  weeks: number[];
+  startTime: string;
+}
+
 export interface Course {
   _id: string;
   title: string;
   description?: string;
-  type: "live" | "recorded";
+  type: "live" | "recorded" | "tuition";
   category?: string;
   level?: string;
   skills?: string[];
   price?: number;
   duration?: string;
   contentDriveLink?: string;
+  tuitionSchedule?: TuitionSchedule;
   isPublished?: boolean;
   tutor: Tutor;
   averageRating?: number;
@@ -69,18 +133,21 @@ export interface Course {
   };
   recordedAccess?: RecordedAccessSummary | null;
   recordedRequests?: RecordedAccessRequest[];
+  tuitionEnrollment?: TuitionEnrollmentSummary | null;
+  tuitionRequests?: TuitionEnrollmentRequest[];
 }
 
 export interface CoursePayload {
   title: string;
   description?: string;
-  type: "live" | "recorded";
+  type: "live" | "recorded" | "tuition";
   category?: string;
   level?: string;
   skills?: string[];
   price?: number;
   duration?: string;
   contentDriveLink?: string;
+  tuitionSchedule?: TuitionSchedule;
   isPublished?: boolean;
 }
 
@@ -184,6 +251,81 @@ export const approveRecordedCourseAccess = async (accessId: string) => {
     return res.data;
   } catch (error: any) {
     return handleError(error, "approveRecordedCourseAccess");
+  }
+};
+
+export const requestTuitionEnrollment = async (courseId: string) => {
+  try {
+    const res = await api.post(`/courses/${courseId}/tuition-enrollments`);
+    return res.data;
+  } catch (error: any) {
+    return handleError(error, "requestTuitionEnrollment");
+  }
+};
+
+export const approveTuitionEnrollment = async (enrollmentId: string) => {
+  try {
+    const res = await api.patch(
+      `/courses/tuition-enrollments/${enrollmentId}/approve`
+    );
+    return res.data;
+  } catch (error: any) {
+    return handleError(error, "approveTuitionEnrollment");
+  }
+};
+
+export const rejectTuitionEnrollment = async (enrollmentId: string) => {
+  try {
+    const res = await api.patch(
+      `/courses/tuition-enrollments/${enrollmentId}/reject`
+    );
+    return res.data;
+  } catch (error: any) {
+    return handleError(error, "rejectTuitionEnrollment");
+  }
+};
+
+export const pauseTuitionEnrollment = async (enrollmentId: string) => {
+  try {
+    const res = await api.patch(
+      `/courses/tuition-enrollments/${enrollmentId}/pause`
+    );
+    return res.data;
+  } catch (error: any) {
+    return handleError(error, "pauseTuitionEnrollment");
+  }
+};
+
+export const resumeTuitionEnrollment = async (enrollmentId: string) => {
+  try {
+    const res = await api.patch(
+      `/courses/tuition-enrollments/${enrollmentId}/resume`
+    );
+    return res.data;
+  } catch (error: any) {
+    return handleError(error, "resumeTuitionEnrollment");
+  }
+};
+
+export const cancelTuitionEnrollment = async (enrollmentId: string) => {
+  try {
+    const res = await api.patch(
+      `/courses/tuition-enrollments/${enrollmentId}/cancel`
+    );
+    return res.data;
+  } catch (error: any) {
+    return handleError(error, "cancelTuitionEnrollment");
+  }
+};
+
+export const getMyTuitionEnrollments = async (): Promise<
+  TuitionEnrollmentListItem[]
+> => {
+  try {
+    const res = await api.get("/courses/tuition-enrollments/mine");
+    return res.data;
+  } catch (error: any) {
+    return handleError(error, "getMyTuitionEnrollments");
   }
 };
 

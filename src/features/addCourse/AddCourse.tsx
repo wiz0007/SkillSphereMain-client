@@ -5,6 +5,7 @@ import {
   Clock3,
   IndianRupee,
   Layers3,
+  CalendarRange,
   Save,
 } from "lucide-react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -20,13 +21,16 @@ import {
 type FormState = {
   title: string;
   description: string;
-  type: "live" | "recorded";
+  type: "live" | "recorded" | "tuition";
   category: string;
   level: string;
   skills: string;
   price: string;
   duration: string;
   contentDriveLink: string;
+  tuitionStartTime: string;
+  tuitionDays: string;
+  tuitionWeeks: string;
 };
 
 type FormField = keyof FormState;
@@ -41,6 +45,9 @@ const fieldOrder: FormField[] = [
   "skills",
   "price",
   "contentDriveLink",
+  "tuitionStartTime",
+  "tuitionDays",
+  "tuitionWeeks",
 ];
 
 const fieldLabels: Record<FormField, string> = {
@@ -53,7 +60,28 @@ const fieldLabels: Record<FormField, string> = {
   price: "Price",
   duration: "Duration",
   contentDriveLink: "Google Drive link",
+  tuitionStartTime: "Tuition start time",
+  tuitionDays: "Tuition days",
+  tuitionWeeks: "Weeks of month",
 };
+
+const tuitionDayOptions = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+] as const;
+
+const tuitionWeekOptions = [
+  { value: "1", label: "Week 1" },
+  { value: "2", label: "Week 2" },
+  { value: "3", label: "Week 3" },
+  { value: "4", label: "Week 4" },
+  { value: "5", label: "Week 5" },
+] as const;
 
 const sectionDefinitions = [
   {
@@ -67,8 +95,15 @@ const sectionDefinitions = [
     id: "teaching",
     label: "Teaching",
     title: "Teaching details",
-    description: "Clarify level, duration, and the skills each session actually covers.",
-    fields: ["level", "duration", "skills"] as FormField[],
+    description: "Clarify level, duration, schedule, and the skills each class actually covers.",
+    fields: [
+      "level",
+      "duration",
+      "tuitionStartTime",
+      "tuitionDays",
+      "tuitionWeeks",
+      "skills",
+    ] as FormField[],
   },
   {
     id: "pricing",
@@ -89,13 +124,22 @@ const AddCourse = () => {
     () => ({
       title: state?.title || "",
       description: state?.description || "",
-      type: state?.type === "recorded" ? "recorded" : "live",
+      type:
+        state?.type === "recorded"
+          ? "recorded"
+          : state?.type === "tuition"
+            ? "tuition"
+            : "live",
       category: state?.category || "",
       level: state?.level || "Beginner",
       skills: state?.skills?.join(", ") || "",
       price: state?.price ? String(state.price) : "",
       duration: state?.duration || "",
       contentDriveLink: state?.contentDriveLink || "",
+      tuitionStartTime: state?.tuitionSchedule?.startTime || "",
+      tuitionDays: state?.tuitionSchedule?.days?.join(", ") || "",
+      tuitionWeeks:
+        state?.tuitionSchedule?.weeks?.map(String)?.join(", ") || "",
     }),
     [state]
   );
@@ -145,6 +189,29 @@ const AddCourse = () => {
       .map((item: string) => item.trim())
       .filter(Boolean);
 
+  const parseSelectionList = (value: string) =>
+    value
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+
+  const toggleSelection = (field: "tuitionDays" | "tuitionWeeks", value: string) => {
+    setForm((current) => {
+      const currentValues = parseSelectionList(current[field]);
+      const nextValues = currentValues.includes(value)
+        ? currentValues.filter((item) => item !== value)
+        : [...currentValues, value];
+
+      return {
+        ...current,
+        [field]: nextValues.join(", "),
+      };
+    });
+
+    setTouched((current) => ({ ...current, [field]: true }));
+    setServerError("");
+  };
+
   const validateField = (field: FormField, value: string) => {
     switch (field) {
       case "title":
@@ -160,7 +227,7 @@ const AddCourse = () => {
         }
         return "";
       case "type":
-        return value === "live" || value === "recorded"
+        return value === "live" || value === "recorded" || value === "tuition"
           ? ""
           : "Choose how learners access this course.";
       case "category":
@@ -174,7 +241,11 @@ const AddCourse = () => {
           ? ""
           : "Add at least one skill, separated by commas if needed.";
       case "price": {
-        if (!value.trim()) return "Set a price per hour.";
+        if (!value.trim()) {
+          return form.type === "tuition"
+            ? "Set a monthly tuition fee."
+            : "Set a price per hour.";
+        }
         const numericPrice = Number(value);
         if (Number.isNaN(numericPrice)) {
           return "Price must be a valid number.";
@@ -185,7 +256,11 @@ const AddCourse = () => {
         return "";
       }
       case "duration":
-        return value.trim() ? "" : "Add a session duration.";
+        return value.trim()
+          ? ""
+          : form.type === "tuition"
+            ? "Add the duration of each tuition class."
+            : "Add a session duration.";
       case "contentDriveLink":
         if (form.type !== "recorded") {
           return "";
@@ -202,6 +277,27 @@ const AddCourse = () => {
         } catch {
           return "Use a valid Google Drive link for recorded content.";
         }
+      case "tuitionStartTime":
+        if (form.type !== "tuition") {
+          return "";
+        }
+        return value.trim()
+          ? ""
+          : "Choose when the recurring tuition starts each day.";
+      case "tuitionDays":
+        if (form.type !== "tuition") {
+          return "";
+        }
+        return parseSelectionList(value).length
+          ? ""
+          : "Select at least one teaching day.";
+      case "tuitionWeeks":
+        if (form.type !== "tuition") {
+          return "";
+        }
+        return parseSelectionList(value).length
+          ? ""
+          : "Select the weeks of the month this tuition repeats.";
       default:
         return "";
     }
@@ -244,6 +340,18 @@ const AddCourse = () => {
   const previewSkills = normalizeSkills(form.skills).slice(0, 4);
   const isDirty = JSON.stringify(form) !== JSON.stringify(initialForm);
   const isRecordedCourse = form.type === "recorded";
+  const isTuitionCourse = form.type === "tuition";
+  const selectedTuitionDays = parseSelectionList(form.tuitionDays);
+  const selectedTuitionWeeks = parseSelectionList(form.tuitionWeeks);
+  const tuitionSchedulePreview = isTuitionCourse
+    ? `${
+        selectedTuitionDays.length
+          ? selectedTuitionDays.join(", ")
+          : "Choose tuition days"
+      }${
+        form.tuitionStartTime ? ` at ${form.tuitionStartTime}` : ""
+      }`
+    : "";
 
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
@@ -341,6 +449,13 @@ const AddCourse = () => {
       price: Number(form.price),
       skills: normalizeSkills(form.skills),
       contentDriveLink: isRecordedCourse ? form.contentDriveLink.trim() : "",
+      tuitionSchedule: isTuitionCourse
+        ? {
+            days: selectedTuitionDays,
+            weeks: selectedTuitionWeeks.map(Number),
+            startTime: form.tuitionStartTime.trim(),
+          }
+        : undefined,
     };
 
     try {
@@ -374,18 +489,23 @@ const AddCourse = () => {
               ? "Refresh the details and keep your course current."
               : "Create a course that feels ready to publish."}
           </h1>
-          <p>
+           <p>
             Use the same dashboard language across title, price,
             duration, and scope so students know exactly what they
-            are booking.
-          </p>
+            are booking or unlocking.
+           </p>
         </div>
 
         <div className={styles.snapshot}>
           <span className={styles.snapshotLabel}>Preview state</span>
           <strong>{form.title || "Untitled course"}</strong>
           <span className={styles.snapshotHint}>
-            {isRecordedCourse ? "Recorded course" : "Live session"} |{" "}
+            {isRecordedCourse
+              ? "Recorded course"
+              : isTuitionCourse
+                ? "Recurring tuition"
+                : "Live session"}{" "}
+            |{" "}
             {form.category || "Category pending"} | {form.level || "Level pending"}
           </span>
         </div>
@@ -501,15 +621,16 @@ const AddCourse = () => {
                     >
                       <option value="live">Live 1-on-1 sessions</option>
                       <option value="recorded">Recorded video course</option>
+                      <option value="tuition">Recurring tuition schedule</option>
                     </select>
                     {visibleErrors.type ? (
                       <small className={styles.errorText}>
                         {visibleErrors.type}
                       </small>
                     ) : (
-                      <small className={styles.helperText}>
-                        Live courses are booked by time. Recorded courses unlock after payment and your approval.
-                      </small>
+                        <small className={styles.helperText}>
+                        Live courses are booked by time. Recorded courses unlock after payment and your approval. Tuition courses publish a repeating weekly timetable for the month.
+                        </small>
                     )}
                   </label>
 
@@ -605,7 +726,7 @@ const AddCourse = () => {
                       visibleErrors.duration ? styles.fieldInvalid : ""
                     }`}
                   >
-                    <span>Session duration</span>
+                    <span>{isTuitionCourse ? "Class duration" : "Session duration"}</span>
                     <input
                       ref={setFieldRef("duration")}
                       name="duration"
@@ -622,10 +743,133 @@ const AddCourse = () => {
                       <small className={styles.helperText}>
                         {isRecordedCourse
                           ? "Use the total watch time, like 2 hr or 6 hr 30 min."
+                          : isTuitionCourse
+                            ? "Use a clear format like 60 min, 90 min, or 2 hr per class."
                           : "Use a simple format like 60 min, 90 min, or 2 hr."}
                       </small>
                     )}
                   </label>
+
+                  {isTuitionCourse ? (
+                    <>
+                      <label
+                        className={`${styles.field} ${
+                          visibleErrors.tuitionStartTime ? styles.fieldInvalid : ""
+                        }`}
+                      >
+                        <span>Recurring start time</span>
+                        <input
+                          ref={setFieldRef("tuitionStartTime")}
+                          name="tuitionStartTime"
+                          type="time"
+                          value={form.tuitionStartTime}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                        />
+                        {visibleErrors.tuitionStartTime ? (
+                          <small className={styles.errorText}>
+                            {visibleErrors.tuitionStartTime}
+                          </small>
+                        ) : (
+                          <small className={styles.helperText}>
+                            Choose the daily start time learners should expect for each tuition class.
+                          </small>
+                        )}
+                      </label>
+
+                      <div
+                        className={`${styles.field} ${styles.fieldWide} ${
+                          visibleErrors.tuitionDays ? styles.fieldInvalid : ""
+                        }`}
+                      >
+                        <span>Teaching days</span>
+                        <input
+                          ref={setFieldRef("tuitionDays")}
+                          name="tuitionDays"
+                          value={form.tuitionDays}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          className={styles.hiddenField}
+                          tabIndex={-1}
+                          aria-hidden="true"
+                        />
+                        <div className={styles.optionChips}>
+                          {tuitionDayOptions.map((day) => {
+                            const active = selectedTuitionDays.includes(day);
+
+                            return (
+                              <button
+                                key={day}
+                                type="button"
+                                className={`${styles.optionChip} ${
+                                  active ? styles.optionChipActive : ""
+                                }`}
+                                onClick={() => toggleSelection("tuitionDays", day)}
+                              >
+                                {day}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        {visibleErrors.tuitionDays ? (
+                          <small className={styles.errorText}>
+                            {visibleErrors.tuitionDays}
+                          </small>
+                        ) : (
+                          <small className={styles.helperText}>
+                            Pick every day this tuition repeats during a selected week.
+                          </small>
+                        )}
+                      </div>
+
+                      <div
+                        className={`${styles.field} ${styles.fieldWide} ${
+                          visibleErrors.tuitionWeeks ? styles.fieldInvalid : ""
+                        }`}
+                      >
+                        <span>Weeks of the month</span>
+                        <input
+                          ref={setFieldRef("tuitionWeeks")}
+                          name="tuitionWeeks"
+                          value={form.tuitionWeeks}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          className={styles.hiddenField}
+                          tabIndex={-1}
+                          aria-hidden="true"
+                        />
+                        <div className={styles.optionChips}>
+                          {tuitionWeekOptions.map((week) => {
+                            const active = selectedTuitionWeeks.includes(week.value);
+
+                            return (
+                              <button
+                                key={week.value}
+                                type="button"
+                                className={`${styles.optionChip} ${
+                                  active ? styles.optionChipActive : ""
+                                }`}
+                                onClick={() =>
+                                  toggleSelection("tuitionWeeks", week.value)
+                                }
+                              >
+                                {week.label}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        {visibleErrors.tuitionWeeks ? (
+                          <small className={styles.errorText}>
+                            {visibleErrors.tuitionWeeks}
+                          </small>
+                        ) : (
+                          <small className={styles.helperText}>
+                            Choose the weeks when the tuition runs in a typical month.
+                          </small>
+                        )}
+                      </div>
+                    </>
+                  ) : null}
 
                   <label
                     className={`${styles.field} ${styles.fieldWide} ${
@@ -661,7 +905,13 @@ const AddCourse = () => {
                       visibleErrors.price ? styles.fieldInvalid : ""
                     }`}
                   >
-                    <span>{isRecordedCourse ? "Unlock price" : "Price per hour"}</span>
+                    <span>
+                      {isRecordedCourse
+                        ? "Unlock price"
+                        : isTuitionCourse
+                          ? "Monthly tuition fee"
+                          : "Price per hour"}
+                    </span>
                     <input
                       ref={setFieldRef("price")}
                       name="price"
@@ -680,6 +930,8 @@ const AddCourse = () => {
                       <small className={styles.helperText}>
                         {isRecordedCourse
                           ? "Set the one-time SkillCoin price required before the tutor can unlock the content."
+                          : isTuitionCourse
+                            ? "Set the monthly tuition fee learners should expect for this recurring plan."
                           : "Set a positive hourly price so learners see a real booking amount."}
                       </small>
                     )}
@@ -719,7 +971,9 @@ const AddCourse = () => {
                   )}
                   {!isRecordedCourse ? (
                     <small className={styles.helperText}>
-                      Learners will be charged in SkillCoin based on the live session duration they choose.
+                      {isTuitionCourse
+                        ? "Show the recurring monthly amount clearly so learners can compare it against the published timetable."
+                        : "Learners will be charged in SkillCoin based on the live session duration they choose."}
                     </small>
                   ) : null}
                 </div>
@@ -768,7 +1022,11 @@ const AddCourse = () => {
                 {form.category || "Category"}
               </span>
               <span className={styles.levelPill}>
-                {isRecordedCourse ? "Recorded" : form.level || "Level"}
+                {isRecordedCourse
+                  ? "Recorded"
+                  : isTuitionCourse
+                    ? "Tuition"
+                    : form.level || "Level"}
               </span>
             </div>
 
@@ -787,21 +1045,35 @@ const AddCourse = () => {
             </div>
 
             <div className={styles.metrics}>
-              <div className={styles.metric}>
-                <IndianRupee size={15} />
-                <span>
-                  {form.price || 0}
-                  {isRecordedCourse ? " SC unlock" : "/hr"}
-                </span>
-              </div>
-              <div className={styles.metric}>
-                <Clock3 size={15} />
-                <span>{form.duration || "Flexible"}</span>
-              </div>
-              <div className={styles.metric}>
-                <Layers3 size={15} />
-                <span>{form.level || "All levels"}</span>
-              </div>
+                <div className={styles.metric}>
+                  <IndianRupee size={15} />
+                  <span>
+                    {form.price || 0}
+                    {isRecordedCourse
+                      ? " SC unlock"
+                      : isTuitionCourse
+                        ? "/month"
+                        : "/hr"}
+                  </span>
+                </div>
+                <div className={styles.metric}>
+                  <Clock3 size={15} />
+                  <span>
+                    {isTuitionCourse
+                      ? tuitionSchedulePreview || "Recurring timetable"
+                      : form.duration || "Flexible"}
+                  </span>
+                </div>
+                <div className={styles.metric}>
+                  {isTuitionCourse ? <CalendarRange size={15} /> : <Layers3 size={15} />}
+                  <span>
+                    {isTuitionCourse
+                      ? selectedTuitionWeeks.length
+                        ? `Weeks ${selectedTuitionWeeks.join(", ")}`
+                        : "Month schedule"
+                      : form.level || "All levels"}
+                  </span>
+                </div>
             </div>
           </div>
         </aside>

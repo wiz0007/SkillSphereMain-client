@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
 import {
   addReview,
+  approveTuitionEnrollment,
   approveRecordedCourseAccess,
+  cancelTuitionEnrollment,
   getCourseById,
+  pauseTuitionEnrollment,
+  rejectTuitionEnrollment,
   rateCourse,
   rejectRecordedCourseAccess,
+  resumeTuitionEnrollment,
   requestRecordedCourseAccess,
+  requestTuitionEnrollment,
 } from "../../services/courses.service";
 
 export const useCourseDetails = (id?: string) => {
@@ -21,6 +27,8 @@ export const useCourseDetails = (id?: string) => {
   const [submitLoading, setSubmitLoading] = useState(false);
   const [recordedActionLoading, setRecordedActionLoading] = useState("");
   const [recordedError, setRecordedError] = useState("");
+  const [tuitionActionLoading, setTuitionActionLoading] = useState("");
+  const [tuitionError, setTuitionError] = useState("");
 
   const loadCourse = async () => {
     if (!id) {
@@ -142,6 +150,88 @@ export const useCourseDetails = (id?: string) => {
     }
   };
 
+  const handleTuitionEnrollmentRequest = async () => {
+    if (!id) {
+      return;
+    }
+
+    try {
+      setTuitionError("");
+      setTuitionActionLoading("request");
+      await requestTuitionEnrollment(id);
+      await loadCourse();
+    } catch (nextError: any) {
+      setTuitionError(nextError?.message || "Failed to request tuition enrollment");
+    } finally {
+      setTuitionActionLoading("");
+    }
+  };
+
+  const handleApproveTuitionRequest = async (enrollmentId: string) => {
+    try {
+      setTuitionError("");
+      setTuitionActionLoading(`approve:${enrollmentId}`);
+      await approveTuitionEnrollment(enrollmentId);
+      await loadCourse();
+    } catch (nextError: any) {
+      setTuitionError(nextError?.message || "Failed to approve tuition enrollment");
+    } finally {
+      setTuitionActionLoading("");
+    }
+  };
+
+  const handleRejectTuitionRequest = async (enrollmentId: string) => {
+    try {
+      setTuitionError("");
+      setTuitionActionLoading(`reject:${enrollmentId}`);
+      await rejectTuitionEnrollment(enrollmentId);
+      await loadCourse();
+    } catch (nextError: any) {
+      setTuitionError(nextError?.message || "Failed to reject tuition enrollment");
+    } finally {
+      setTuitionActionLoading("");
+    }
+  };
+
+  const handlePauseTuitionEnrollment = async (enrollmentId: string) => {
+    try {
+      setTuitionError("");
+      setTuitionActionLoading(`pause:${enrollmentId}`);
+      await pauseTuitionEnrollment(enrollmentId);
+      await loadCourse();
+    } catch (nextError: any) {
+      setTuitionError(nextError?.message || "Failed to pause tuition enrollment");
+    } finally {
+      setTuitionActionLoading("");
+    }
+  };
+
+  const handleResumeTuitionEnrollment = async (enrollmentId: string) => {
+    try {
+      setTuitionError("");
+      setTuitionActionLoading(`resume:${enrollmentId}`);
+      await resumeTuitionEnrollment(enrollmentId);
+      await loadCourse();
+    } catch (nextError: any) {
+      setTuitionError(nextError?.message || "Failed to resume tuition enrollment");
+    } finally {
+      setTuitionActionLoading("");
+    }
+  };
+
+  const handleCancelTuitionEnrollment = async (enrollmentId: string) => {
+    try {
+      setTuitionError("");
+      setTuitionActionLoading(`cancel:${enrollmentId}`);
+      await cancelTuitionEnrollment(enrollmentId);
+      await loadCourse();
+    } catch (nextError: any) {
+      setTuitionError(nextError?.message || "Failed to cancel tuition enrollment");
+    } finally {
+      setTuitionActionLoading("");
+    }
+  };
+
   return {
     course,
     loading,
@@ -165,5 +255,13 @@ export const useCourseDetails = (id?: string) => {
     handleRecordedPurchaseRequest,
     handleApproveRecordedRequest,
     handleRejectRecordedRequest,
+    tuitionActionLoading,
+    tuitionError,
+    handleTuitionEnrollmentRequest,
+    handleApproveTuitionRequest,
+    handleRejectTuitionRequest,
+    handlePauseTuitionEnrollment,
+    handleResumeTuitionEnrollment,
+    handleCancelTuitionEnrollment,
   };
 };

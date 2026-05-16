@@ -35,6 +35,14 @@ const CourseDetails = () => {
     handleRecordedPurchaseRequest,
     handleApproveRecordedRequest,
     handleRejectRecordedRequest,
+    tuitionActionLoading,
+    tuitionError,
+    handleTuitionEnrollmentRequest,
+    handleApproveTuitionRequest,
+    handleRejectTuitionRequest,
+    handlePauseTuitionEnrollment,
+    handleResumeTuitionEnrollment,
+    handleCancelTuitionEnrollment,
   } = useCourseDetails(id);
 
   const { isSaved, handleSave } = useSaveCourse();
@@ -104,6 +112,14 @@ const CourseDetails = () => {
             onRejectRecordedRequest={handleRejectRecordedRequest}
             recordedActionLoading={recordedActionLoading}
             recordedError={recordedError}
+            onTuitionEnrollmentRequest={handleTuitionEnrollmentRequest}
+            onApproveTuitionRequest={handleApproveTuitionRequest}
+            onRejectTuitionRequest={handleRejectTuitionRequest}
+            onPauseTuitionEnrollment={handlePauseTuitionEnrollment}
+            onResumeTuitionEnrollment={handleResumeTuitionEnrollment}
+            onCancelTuitionEnrollment={handleCancelTuitionEnrollment}
+            tuitionActionLoading={tuitionActionLoading}
+            tuitionError={tuitionError}
           />
         </div>
 

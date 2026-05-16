@@ -274,6 +274,48 @@
   grid-column: 1 / -1;
 }
 
+.hiddenField {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+}
+
+.optionChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.optionChip {
+  min-height: 42px;
+  padding: 0.72rem 0.95rem;
+  border: 1px solid rgba(203, 213, 225, 0.95);
+  border-radius: 999px;
+  background: #fff;
+  color: #0f172a;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    border-color: rgba(46, 196, 182, 0.6);
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.06);
+    transform: translateY(-1px);
+  }
+}
+
+.optionChipActive {
+  border-color: rgba(15, 23, 42, 0.95);
+  background: #0f172a;
+  color: #fff;
+}
+
 .helperText {
   color: #64748b;
   font-size: 0.82rem;

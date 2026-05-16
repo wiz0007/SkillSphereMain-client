@@ -44,6 +44,18 @@ const CourseCard: React.FC<Props> = ({ course }) => {
     hover || userRating || Math.round(rating || 0);
   const visibleSkills =
     course.skills?.filter(Boolean).slice(0, 3) || [];
+  const isTuition = course.type === "tuition";
+  const scheduleLabel = isTuition
+    ? `${
+        course.tuitionSchedule?.days?.length
+          ? course.tuitionSchedule.days.join(", ")
+          : "Weekly tuition"
+      }${
+        course.tuitionSchedule?.startTime
+          ? ` at ${course.tuitionSchedule.startTime}`
+          : ""
+      }`
+    : "";
 
   return (
     <article className={styles.card}>
@@ -104,15 +116,30 @@ const CourseCard: React.FC<Props> = ({ course }) => {
         <div className={styles.metrics}>
           <div className={styles.metric}>
             <IndianRupee size={15} />
-            <span>{course.price ?? 0}/hr</span>
+            <span>
+              {course.price ?? 0}
+              {course.type === "recorded"
+                ? " SC unlock"
+                : isTuition
+                  ? "/month"
+                  : "/hr"}
+            </span>
           </div>
           <div className={styles.metric}>
             <Clock3 size={15} />
-            <span>{course.duration || "Flexible"}</span>
+            <span>
+              {isTuition
+                ? scheduleLabel || "Recurring timetable"
+                : course.duration || "Flexible"}
+            </span>
           </div>
           <div className={styles.metric}>
             <Layers3 size={15} />
-            <span>{course.level || "All levels"}</span>
+            <span>
+              {isTuition
+                ? course.duration || "Per class"
+                : course.level || "All levels"}
+            </span>
           </div>
         </div>
 

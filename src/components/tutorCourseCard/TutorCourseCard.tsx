@@ -34,6 +34,18 @@ const TutorCourseCard: React.FC<Props> = ({
 
   const visibleSkills =
     course.skills?.filter(Boolean).slice(0, 3) || [];
+  const isTuition = course.type === "tuition";
+  const scheduleLabel = isTuition
+    ? `${
+        course.tuitionSchedule?.days?.length
+          ? course.tuitionSchedule.days.join(", ")
+          : "Weekly tuition"
+      }${
+        course.tuitionSchedule?.startTime
+          ? ` at ${course.tuitionSchedule.startTime}`
+          : ""
+      }`
+    : "";
 
   const rating = course.totalRatings
     ? `${(course.averageRating || 0).toFixed(1)} / 5`
@@ -51,7 +63,11 @@ const TutorCourseCard: React.FC<Props> = ({
             {course.category || "General"}
           </span>
           <span className={styles.category}>
-            {course.type === "recorded" ? "Recorded" : "Live"}
+            {course.type === "recorded"
+              ? "Recorded"
+              : course.type === "tuition"
+                ? "Tuition"
+                : "Live"}
           </span>
 
           {selectable ? (
@@ -99,7 +115,11 @@ const TutorCourseCard: React.FC<Props> = ({
             <span>Rate</span>
             <strong>
               {course.price ?? 0}
-              {course.type === "recorded" ? " SC" : "/hr"}
+              {course.type === "recorded"
+                ? " SC"
+                : course.type === "tuition"
+                  ? "/month"
+                  : "/hr"}
             </strong>
           </div>
         </div>
@@ -108,7 +128,11 @@ const TutorCourseCard: React.FC<Props> = ({
           <Clock3 size={16} className={styles.metricIcon} />
           <div>
             <span>Duration</span>
-            <strong>{course.duration || "Flexible"}</strong>
+            <strong>
+              {isTuition
+                ? scheduleLabel || "Recurring timetable"
+                : course.duration || "Flexible"}
+            </strong>
           </div>
         </div>
 

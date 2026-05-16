@@ -40,8 +40,11 @@ const SessionCard = ({ session, onUpdate, onHide }: any) => {
   const statusLabel = session.isExpired
     ? "expired"
     : session.status;
+  const isTuitionSession = session.sessionKind === "tuition";
   const skillCoinLabel =
-    session.coinStatus === "settled"
+    session.billingType === "included_in_tuition"
+      ? "included in tuition plan"
+      : session.coinStatus === "settled"
       ? "settled"
       : session.coinStatus === "released"
         ? "released"
@@ -80,6 +83,9 @@ const SessionCard = ({ session, onUpdate, onHide }: any) => {
     <article className={styles.card}>
       <div className={styles.cardTop}>
         <div>
+          {isTuitionSession ? (
+            <span className={styles.kindBadge}>Recurring tuition</span>
+          ) : null}
           <h3>{session.title}</h3>
           <p className={styles.personLine}>
             {session.isTutor ? "Student" : "Tutor"}:{" "}
@@ -108,12 +114,15 @@ const SessionCard = ({ session, onUpdate, onHide }: any) => {
               hour: "2-digit",
               minute: "2-digit",
             })}
+            {isTuitionSession ? ` • ${session.duration} min class` : ""}
           </span>
         </div>
         <div className={styles.infoRow}>
           <CircleDollarSign size={16} />
           <span>
-            {session.skillCoinAmount} SC {skillCoinLabel}
+            {session.billingType === "included_in_tuition"
+              ? skillCoinLabel
+              : `${session.skillCoinAmount} SC ${skillCoinLabel}`}
           </span>
         </div>
       </div>
@@ -173,13 +182,17 @@ const SessionCard = ({ session, onUpdate, onHide }: any) => {
               >
                 Mark completed
               </button>
-            ) : (
+            ) : !isTuitionSession ? (
               <button
                 type="button"
                 className={styles.danger}
                 onClick={() => updateStatus("cancelled")}
               >
                 Cancel
+              </button>
+            ) : (
+              <button disabled className={styles.waiting}>
+                Included in tuition plan
               </button>
             )}
           </>
@@ -210,10 +223,14 @@ const SessionCard = ({ session, onUpdate, onHide }: any) => {
                 : "Waiting for tutor to mark this session completed"
               : session.status === "completed"
               ? session.studentConfirmedCompletionAt
-                ? "Session completed and SkillCoin settled"
+                ? isTuitionSession
+                  ? "Tuition class completed"
+                  : "Session completed and SkillCoin settled"
                 : session.isTutor
                   ? "Waiting for student confirmation"
-                  : "Confirm completion to release SkillCoin"
+                  : isTuitionSession
+                    ? "Confirm completion to mark this tuition class done"
+                    : "Confirm completion to release SkillCoin"
               : "Session cancelled"}
           </span>
         ) : null}
