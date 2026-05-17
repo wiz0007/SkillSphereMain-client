@@ -250,6 +250,36 @@
   gap: 0.55rem;
 }
 
+.identityInline {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.38rem;
+}
+
+.verifiedTick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #1d4ed8;
+}
+
+.adminTick {
+  color: #d97706;
+}
+
+.inlineTutorBadge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 0.18rem 0.52rem;
+  border-radius: 999px;
+  background: rgba(255, 183, 3, 0.14);
+  color: #9a6700;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
 .secondaryAction,
 .dangerAction {
   min-height: 36px;

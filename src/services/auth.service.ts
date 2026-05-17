@@ -32,6 +32,19 @@ export const resendOTP = async (data: {
   return res.data;
 };
 
+export const forgotPassword = async (data: { email: string }) => {
+  const res = await api.post("/auth/forgot-password", data);
+  return res.data as { message: string };
+};
+
+export const resetPassword = async (data: {
+  token: string;
+  newPassword: string;
+}) => {
+  const res = await api.post("/auth/reset-password", data);
+  return res.data as { message: string };
+};
+
 export const checkUsername = async (username: string) => {
   const res = await api.get(`/auth/check-username/${username}`);
   return res.data as { available: boolean };

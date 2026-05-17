@@ -8,6 +8,19 @@ export interface AdminUser {
   profilePhoto?: string;
   isTutor: boolean;
   isAdmin: boolean;
+  identityVerificationStatus:
+    | "not_started"
+    | "pending"
+    | "approved"
+    | "rejected"
+    | "resubmission_required";
+  tutorVerificationStatus:
+    | "not_started"
+    | "pending"
+    | "approved"
+    | "rejected"
+    | "resubmission_required";
+  verifiedBadgeLevel: "none" | "basic" | "identity" | "tutor";
   profileCompleted: boolean;
   isVerified: boolean;
   skillCoinBalance: number;

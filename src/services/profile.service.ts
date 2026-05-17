@@ -78,6 +78,7 @@ export const getVerificationSummary = async () => {
   return res.data as {
     summary: {
       emailVerified: boolean;
+      isAdmin?: boolean;
       identityVerificationStatus: VerificationStatus;
       tutorVerificationStatus: VerificationStatus;
       verifiedBadgeLevel: "none" | "basic" | "identity" | "tutor";

@@ -224,6 +224,10 @@ export function Login() {
           </form>
 
           <p className={styles.footer}>
+            <Link to="/forgot-password">Forgot your password?</Link>
+          </p>
+
+          <p className={styles.footer}>
             Do not have an account?{" "}
             <Link to="/register">Create one</Link>
           </p>

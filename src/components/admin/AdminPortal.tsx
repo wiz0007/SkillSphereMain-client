@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { BadgeCheck } from "lucide-react";
 import {
   adjustAdminUserWallet,
   deleteAdminUser,
@@ -76,6 +77,32 @@ const tabs: Array<{ id: AdminTab; label: string }> = [
   { id: "reviews", label: "Reviews" },
   { id: "wallet", label: "Wallet" },
 ];
+
+const hasTrustMark = (user?: AdminUser | null) =>
+  !!user &&
+  (user.isAdmin || ["identity", "tutor"].includes(user.verifiedBadgeLevel || "none"));
+
+const renderIdentityLabel = (user?: AdminUser | null) => {
+  const displayName = user?.fullName || user?.username || "Unknown user";
+
+  return (
+    <span className={styles.identityInline}>
+      <span>{displayName}</span>
+      {hasTrustMark(user) ? (
+        <span
+          className={`${styles.verifiedTick} ${user?.isAdmin ? styles.adminTick : ""}`}
+          aria-label={user?.isAdmin ? "Admin" : "Verified user"}
+          title={user?.isAdmin ? "Admin" : "Verified user"}
+        >
+          <BadgeCheck size={14} />
+        </span>
+      ) : null}
+      {user?.tutorVerificationStatus === "approved" ? (
+        <span className={styles.inlineTutorBadge}>Tutor</span>
+      ) : null}
+    </span>
+  );
+};
 
 const AdminPortal = () => {
   const [activeTab, setActiveTab] = useState<AdminTab>("overview");
@@ -698,7 +725,7 @@ const AdminPortal = () => {
                 {overview.recentUsers.map((user) => (
                   <div key={user._id} className={styles.listRow}>
                     <div>
-                      <strong>{user.fullName || user.username}</strong>
+                      <strong>{renderIdentityLabel(user)}</strong>
                       <span>
                         @{user.username} | {user.email}
                       </span>
@@ -767,7 +794,7 @@ const AdminPortal = () => {
                 {filteredUsers.map((user) => (
                   <tr key={user._id}>
                     <td>
-                      <strong>{user.fullName || user.username}</strong>
+                      <strong>{renderIdentityLabel(user)}</strong>
                       <span>@{user.username} | {user.email}</span>
                     </td>
                     <td>
@@ -777,7 +804,17 @@ const AdminPortal = () => {
                           ? "Tutor"
                           : "User"}
                     </td>
-                    <td>{user.isVerified ? "Verified" : "Pending"}</td>
+                    <td>
+                      {user.isAdmin
+                        ? "Admin exempt"
+                        : user.tutorVerificationStatus === "approved"
+                          ? "Tutor verified"
+                          : user.identityVerificationStatus === "approved"
+                            ? "Identity verified"
+                            : user.isVerified
+                              ? "Email verified"
+                              : "Pending"}
+                    </td>
                     <td>
                       {user.profileCompleted ? "Completed" : "Incomplete"}
                     </td>
@@ -860,9 +897,7 @@ const AdminPortal = () => {
               <article key={request._id} className={styles.verificationCard}>
                 <div className={styles.verificationCardHeader}>
                   <div>
-                    <strong>
-                      {request.user?.fullName || request.user?.username || "Unknown user"}
-                    </strong>
+                    <strong>{renderIdentityLabel(request.user)}</strong>
                     <span>
                       {request.type} verification · {request.status.replaceAll("_", " ")}
                     </span>
@@ -979,19 +1014,6 @@ const AdminPortal = () => {
                   </div>
                 ) : request.status === "approved" ? (
                   <>
-                    <textarea
-                      className={styles.supportReplyInput}
-                      rows={3}
-                      placeholder="Optional note for revoking this verification..."
-                      value={verificationNotes[request._id] || ""}
-                      onChange={(event) =>
-                        setVerificationNotes((previous) => ({
-                          ...previous,
-                          [request._id]: event.target.value,
-                        }))
-                      }
-                    />
-
                     <div className={styles.verificationActions}>
                       <button
                         type="button"
@@ -1090,7 +1112,7 @@ const AdminPortal = () => {
                       <strong>{course.title}</strong>
                       <span>{course.category} | {course.level}</span>
                     </td>
-                    <td>{course.tutor.fullName || course.tutor.username}</td>
+                    <td>{renderIdentityLabel(course.tutor)}</td>
                     <td>
                       {course.type === "recorded"
                         ? "Recorded"
@@ -1160,8 +1182,8 @@ const AdminPortal = () => {
                       <strong>{session.title}</strong>
                       <span>{session.course?.type || "live"} course</span>
                     </td>
-                    <td>{session.student.fullName || session.student.username}</td>
-                    <td>{session.tutor.fullName || session.tutor.username}</td>
+                    <td>{renderIdentityLabel(session.student)}</td>
+                    <td>{renderIdentityLabel(session.tutor)}</td>
                     <td>{session.status}</td>
                     <td>
                       {session.skillCoinAmount} SC / {session.coinStatus}
@@ -1196,7 +1218,7 @@ const AdminPortal = () => {
                     <span>{new Date(thread.lastMessageAt).toLocaleDateString()}</span>
                   </div>
                   <span className={styles.supportThreadMeta}>
-                    {thread.requester.fullName || thread.requester.username}
+                    {renderIdentityLabel(thread.requester)}
                   </span>
                   <span className={styles.supportThreadMeta}>
                     {thread.topic} · {thread.status.replaceAll("_", " ")}
@@ -1244,17 +1266,14 @@ const AdminPortal = () => {
                   <div className={styles.supportThreadFacts}>
                     <div>
                       <span>Requester</span>
-                      <strong>
-                        {selectedSupportConversation.requester.fullName ||
-                          selectedSupportConversation.requester.username}
-                      </strong>
+                      <strong>{renderIdentityLabel(selectedSupportConversation.requester)}</strong>
                     </div>
                     <div>
                       <span>Assigned to</span>
                       <strong>
-                        {selectedSupportConversation.assignedTo?.fullName ||
-                          selectedSupportConversation.assignedTo?.username ||
-                          "Unassigned"}
+                        {selectedSupportConversation.assignedTo
+                          ? renderIdentityLabel(selectedSupportConversation.assignedTo)
+                          : "Unassigned"}
                       </strong>
                     </div>
                     <div>
@@ -1277,9 +1296,7 @@ const AdminPortal = () => {
                         <article key={message._id} className={styles.supportMessageCard}>
                           <div className={styles.supportMessageHeader}>
                             <div>
-                              <strong>
-                                {message.sender.fullName || message.sender.username}
-                              </strong>
+                              <strong>{renderIdentityLabel(message.sender)}</strong>
                               <span>
                                 {message.senderRole === "support"
                                   ? "Support executive"
