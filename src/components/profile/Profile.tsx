@@ -6,6 +6,7 @@ import {
   BriefcaseBusiness,
   Camera,
   Clock3,
+  BadgeCheck,
   Globe2,
   GraduationCap,
   Languages,
@@ -14,7 +15,6 @@ import {
   PencilLine,
   Phone,
   Save,
-  ShieldCheck,
   Sparkles,
   X,
 } from "lucide-react";
@@ -49,6 +49,7 @@ interface TutorProfile {
 interface ProfileData {
   username?: string;
   isVerified?: boolean;
+  isAdmin?: boolean;
   fullName?: string;
   bio?: string;
   profilePhoto?: string;
@@ -492,6 +493,11 @@ const Profile: React.FC = () => {
     activeProfile.identityVerificationStatus || "not_started";
   const tutorVerificationStatus =
     activeProfile.tutorVerificationStatus || "not_started";
+  const showVerifiedUserBadge =
+    !!activeProfile.isAdmin ||
+    (activeProfile.verifiedBadgeLevel
+      ? ["identity", "tutor"].includes(activeProfile.verifiedBadgeLevel)
+      : false);
 
   const updateVerificationSummary = (
     summary: Pick<
@@ -616,29 +622,19 @@ const Profile: React.FC = () => {
 
             <div className={styles.headerCopy}>
               <div className={styles.badgeRow}>
-                {activeProfile.isTutor ? (
+                {activeProfile.tutorVerificationStatus === "approved" ? (
                   <span className={styles.badge}>Tutor</span>
                 ) : null}
-                {activeProfile.verifiedBadgeLevel &&
-                activeProfile.verifiedBadgeLevel !== "none" ? (
+                {showVerifiedUserBadge ? (
                   <span
-                    className={`${styles.badge} ${styles.ghostBadge}`}
+                    className={`${styles.badge} ${
+                      activeProfile.isAdmin
+                        ? styles.adminBadge
+                        : styles.ghostBadge
+                    }`}
                   >
-                    <ShieldCheck size={14} />
-                    {activeProfile.verifiedBadgeLevel === "tutor"
-                      ? "Verified Tutor"
-                      : activeProfile.verifiedBadgeLevel === "identity"
-                        ? "Identity Verified"
-                        : "Verified Email"}
-                  </span>
-                ) : null}
-                {activeProfile.isTutor &&
-                tutorProfile.isVerified ? (
-                  <span
-                    className={`${styles.badge} ${styles.ghostBadge}`}
-                  >
-                    <ShieldCheck size={14} />
-                    Verified
+                    <BadgeCheck size={14} />
+                    {activeProfile.isAdmin ? "Admin" : "Verified user"}
                   </span>
                 ) : null}
               </div>

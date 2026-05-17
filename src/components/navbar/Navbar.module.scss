@@ -651,6 +651,18 @@
   font-weight: 700;
 }
 
+.verifiedTick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #2563eb;
+}
+
+.adminTick {
+  color: #d97706;
+  filter: drop-shadow(0 4px 10px rgba(245, 158, 11, 0.22));
+}
+
 .tutorBadge {
   display: inline-flex;
   align-items: center;
@@ -816,6 +828,10 @@
   }
 
   .tutorBadge {
+    display: none;
+  }
+
+  .verifiedTick {
     display: none;
   }
 

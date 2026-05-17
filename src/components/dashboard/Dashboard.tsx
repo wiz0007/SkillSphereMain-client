@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import styles from "../dashboard/Dashboard.module.scss";
 import { motion } from "framer-motion";
+import { BadgeCheck } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { getMySessions } from "../../services/session.service";
 import { getNotifications } from "../../services/activity.service";
@@ -230,6 +231,10 @@ const Dashboard: React.FC = () => {
     return <div className={styles.loader}>Loading dashboard...</div>;
   }
 
+  const showVerifiedTick =
+    user.isAdmin ||
+    ["identity", "tutor"].includes(user.verifiedBadgeLevel);
+
   return (
     <div className={styles.dashboard}>
       <motion.div
@@ -241,8 +246,19 @@ const Dashboard: React.FC = () => {
           <span className={styles.kicker}>Dashboard</span>
           <h1>
             Welcome back, {displayName || user.username}
-            {user.isTutor && (
+            {user.tutorVerificationStatus === "approved" && (
               <span className={styles.tutorBadge}>Tutor</span>
+            )}
+            {showVerifiedTick && (
+              <span
+                className={`${styles.verifiedTick} ${
+                  user.isAdmin ? styles.adminTick : ""
+                }`}
+                aria-label={user.isAdmin ? "Admin" : "Verified user"}
+                title={user.isAdmin ? "Admin" : "Verified user"}
+              >
+                <BadgeCheck size={18} />
+              </span>
             )}
           </h1>
           <p>

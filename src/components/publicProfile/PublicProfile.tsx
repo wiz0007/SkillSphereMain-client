@@ -11,7 +11,7 @@ import {
   Languages,
   Link2,
   MapPin,
-  ShieldCheck,
+  BadgeCheck,
   Sparkles,
   Star,
 } from "lucide-react";
@@ -45,6 +45,19 @@ interface PublicProfileData {
   preferredLanguage?: string;
   timezone?: string;
   isTutor?: boolean;
+  identityVerificationStatus?:
+    | "not_started"
+    | "pending"
+    | "approved"
+    | "rejected"
+    | "resubmission_required";
+  tutorVerificationStatus?:
+    | "not_started"
+    | "pending"
+    | "approved"
+    | "rejected"
+    | "resubmission_required";
+  verifiedBadgeLevel?: "none" | "basic" | "identity" | "tutor";
   tutorProfile?: TutorProfile;
 }
 
@@ -205,16 +218,17 @@ const PublicProfile = () => {
 
             <div className={styles.headerCopy}>
               <div className={styles.badgeRow}>
-                {profile.isTutor ? (
+                {profile.tutorVerificationStatus === "approved" ? (
                   <span className={styles.badge}>Tutor</span>
                 ) : null}
-                {profile.isTutor &&
-                tutorProfile.isVerified ? (
+                {["identity", "tutor"].includes(
+                  profile.verifiedBadgeLevel || "none"
+                ) ? (
                   <span
                     className={`${styles.badge} ${styles.ghostBadge}`}
                   >
-                    <ShieldCheck size={14} />
-                    Verified
+                    <BadgeCheck size={14} />
+                    Verified user
                   </span>
                 ) : null}
               </div>

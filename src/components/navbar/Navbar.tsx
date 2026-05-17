@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { BadgeCheck } from "lucide-react";
 import { FiChevronDown, FiMessageSquare } from "react-icons/fi";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
@@ -23,6 +24,10 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
   const location = useLocation();
   const isExploreActive =
     location.pathname === "/" || location.pathname === "/explore";
+  const showVerifiedTick =
+    !!user &&
+    (user.isAdmin ||
+      ["identity", "tutor"].includes(user.verifiedBadgeLevel));
 
   useEffect(() => {
     const handleScroll = () => {
@@ -89,12 +94,12 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
           <NavLink to="/dashboard">Dashboard</NavLink>
           <NavLink to="/help-center">Help</NavLink>
 
-          {user && !user.isTutor ? (
+          {user && (!user.isTutor || user.tutorVerificationStatus !== "approved") ? (
             <NavLink
               to="/become-tutor"
               className={styles.becomeTutor}
             >
-              Become a Tutor
+              {user.isTutor ? "Tutor Verification" : "Become a Tutor"}
             </NavLink>
           ) : null}
         </div>
@@ -148,7 +153,19 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
 
               <span className={styles.username}>{user.username}</span>
 
-              {user.isTutor ? (
+              {showVerifiedTick ? (
+                <span
+                  className={`${styles.verifiedTick} ${
+                    user.isAdmin ? styles.adminTick : ""
+                  }`}
+                  aria-label={user.isAdmin ? "Admin" : "Verified user"}
+                  title={user.isAdmin ? "Admin" : "Verified user"}
+                >
+                  <BadgeCheck size={16} />
+                </span>
+              ) : null}
+
+              {user.tutorVerificationStatus === "approved" ? (
                 <span className={styles.tutorBadge}>Tutor</span>
               ) : null}
 
@@ -173,9 +190,9 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
                   </NavLink>
                   <NavLink to="/settings">Settings</NavLink>
 
-                  {!user.isTutor ? (
+                  {!user.isTutor || user.tutorVerificationStatus !== "approved" ? (
                     <NavLink to="/become-tutor">
-                      Become Tutor
+                      {user.isTutor ? "Tutor Verification" : "Become Tutor"}
                     </NavLink>
                   ) : null}
 
@@ -200,8 +217,10 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
         <NavLink to="/sessions">Sessions</NavLink>
         <NavLink to="/dashboard">Dashboard</NavLink>
 
-        {user && !user.isTutor ? (
-          <NavLink to="/become-tutor">Tutor</NavLink>
+        {user && (!user.isTutor || user.tutorVerificationStatus !== "approved") ? (
+          <NavLink to="/become-tutor">
+            {user.isTutor ? "Verify" : "Tutor"}
+          </NavLink>
         ) : null}
       </div>
     </>

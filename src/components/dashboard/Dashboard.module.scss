@@ -337,6 +337,19 @@
   vertical-align: middle;
 }
 
+.verifiedTick {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.45rem;
+  color: #2563eb;
+  vertical-align: middle;
+}
+
+.adminTick {
+  color: #d97706;
+  filter: drop-shadow(0 4px 10px rgba(245, 158, 11, 0.22));
+}
+
 .tutorSection {
   margin-top: 1.9rem;
 }
