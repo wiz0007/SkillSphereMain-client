@@ -193,6 +193,23 @@
   }
 }
 
+.identityRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.verifiedTick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #2563eb;
+}
+
+.adminTick {
+  color: #d97706;
+}
+
 .contactMeta {
   color: #64748b;
   font-size: 0.78rem;

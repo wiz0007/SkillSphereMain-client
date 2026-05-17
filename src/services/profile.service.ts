@@ -61,6 +61,7 @@ export const getPublicProfile = async (userId: string) => {
   const res = await api.get(`/profile/public/${userId}`);
   return res.data as {
     username?: string;
+    isAdmin?: boolean;
     identityVerificationStatus?: VerificationStatus;
     tutorVerificationStatus?: VerificationStatus;
     verifiedBadgeLevel?: "none" | "basic" | "identity" | "tutor";

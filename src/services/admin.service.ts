@@ -103,8 +103,11 @@ export interface AdminVerificationRequest {
   createdAt: string;
   updatedAt: string;
   reviewedAt: string | null;
+  revokedAt: string | null;
+  revocationNote: string;
   user: AdminUser | null;
   reviewedBy: AdminUser | null;
+  revokedBy?: AdminUser | null;
   assets: {
     documentFrontUrl: string | null;
     documentBackUrl: string | null;
@@ -329,6 +332,29 @@ export const reviewAdminVerificationRequest = async (
     };
   } catch (error: any) {
     return handleError(error, "reviewAdminVerificationRequest");
+  }
+};
+
+export const deverifyAdminVerificationRequest = async (
+  requestId: string,
+  payload: {
+    reviewNote?: string;
+  }
+) => {
+  try {
+    const res = await api.patch(`/admin/verifications/${requestId}/deverify`, payload);
+    return res.data as {
+      message: string;
+      request: AdminVerificationRequest;
+      summary: {
+        emailVerified: boolean;
+        identityVerificationStatus: string;
+        tutorVerificationStatus: string;
+        verifiedBadgeLevel: string;
+      };
+    };
+  } catch (error: any) {
+    return handleError(error, "deverifyAdminVerificationRequest");
   }
 };
 

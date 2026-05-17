@@ -36,6 +36,7 @@ interface TutorProfile {
 
 interface PublicProfileData {
   username?: string;
+  isAdmin?: boolean;
   fullName?: string;
   bio?: string;
   profilePhoto?: string;
@@ -221,14 +222,17 @@ const PublicProfile = () => {
                 {profile.tutorVerificationStatus === "approved" ? (
                   <span className={styles.badge}>Tutor</span>
                 ) : null}
-                {["identity", "tutor"].includes(
+                {profile.isAdmin ||
+                ["identity", "tutor"].includes(
                   profile.verifiedBadgeLevel || "none"
                 ) ? (
                   <span
-                    className={`${styles.badge} ${styles.ghostBadge}`}
+                    className={`${styles.badge} ${
+                      profile.isAdmin ? styles.adminBadge : styles.ghostBadge
+                    }`}
                   >
                     <BadgeCheck size={14} />
-                    Verified user
+                    {profile.isAdmin ? "Admin" : "Verified user"}
                   </span>
                 ) : null}
               </div>

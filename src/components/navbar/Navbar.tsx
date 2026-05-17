@@ -24,6 +24,10 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
   const location = useLocation();
   const isExploreActive =
     location.pathname === "/" || location.pathname === "/explore";
+  const shouldShowTutorVerificationCta =
+    !!user &&
+    !user.isAdmin &&
+    (!user.isTutor || user.tutorVerificationStatus !== "approved");
   const showVerifiedTick =
     !!user &&
     (user.isAdmin ||
@@ -94,7 +98,7 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
           <NavLink to="/dashboard">Dashboard</NavLink>
           <NavLink to="/help-center">Help</NavLink>
 
-          {user && (!user.isTutor || user.tutorVerificationStatus !== "approved") ? (
+          {shouldShowTutorVerificationCta ? (
             <NavLink
               to="/become-tutor"
               className={styles.becomeTutor}
@@ -190,7 +194,7 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
                   </NavLink>
                   <NavLink to="/settings">Settings</NavLink>
 
-                  {!user.isTutor || user.tutorVerificationStatus !== "approved" ? (
+                  {shouldShowTutorVerificationCta ? (
                     <NavLink to="/become-tutor">
                       {user.isTutor ? "Tutor Verification" : "Become Tutor"}
                     </NavLink>
@@ -217,7 +221,7 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
         <NavLink to="/sessions">Sessions</NavLink>
         <NavLink to="/dashboard">Dashboard</NavLink>
 
-        {user && (!user.isTutor || user.tutorVerificationStatus !== "approved") ? (
+        {shouldShowTutorVerificationCta ? (
           <NavLink to="/become-tutor">
             {user.isTutor ? "Verify" : "Tutor"}
           </NavLink>

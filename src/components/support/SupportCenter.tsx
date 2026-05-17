@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
+  BadgeCheck,
   LifeBuoy,
   MailPlus,
   Search,
@@ -36,6 +37,10 @@ const getParticipantName = (conversation: SupportConversation) =>
   conversation.requester.fullName ||
   conversation.requester.username ||
   "User";
+
+const isVerifiedParticipant = (participant: SupportConversation["requester"]) =>
+  !!participant.isAdmin ||
+  ["identity", "tutor"].includes(participant.verifiedBadgeLevel || "none");
 
 const SupportCenter = () => {
   const { user, loading: authLoading } = useAuth();
@@ -484,15 +489,31 @@ const SupportCenter = () => {
                       {formatDate(conversation.lastMessageAt)}
                     </span>
                   </div>
-                  <strong>{conversation.subject}</strong>
-                  <p>
-                    {isExecutive
-                      ? `${getParticipantName(conversation)} (@${conversation.requester.username})`
+                    <strong>{conversation.subject}</strong>
+                    <p>
+                      {isExecutive
+                      ? ""
                       : conversation.assignedTo
                         ? `Assigned to ${conversation.assignedTo.fullName || conversation.assignedTo.username}`
                         : "Awaiting assignment"}
-                  </p>
-                  <div className={styles.threadBottom}>
+                    </p>
+                    {isExecutive ? (
+                      <div className={styles.identityRow}>
+                        <span>{getParticipantName(conversation)} (@{conversation.requester.username})</span>
+                        {isVerifiedParticipant(conversation.requester) ? (
+                          <span
+                            className={`${styles.verifiedTick} ${
+                              conversation.requester.isAdmin ? styles.adminTick : ""
+                            }`}
+                            aria-label={conversation.requester.isAdmin ? "Admin" : "Verified user"}
+                            title={conversation.requester.isAdmin ? "Admin" : "Verified user"}
+                          >
+                            <BadgeCheck size={15} />
+                          </span>
+                        ) : null}
+                      </div>
+                    ) : null}
+                    <div className={styles.threadBottom}>
                     <span className={styles[conversation.status]}>
                       {conversation.status.replaceAll("_", " ")}
                     </span>
@@ -538,13 +559,29 @@ const SupportCenter = () => {
                   <h2>{selectedConversation.subject}</h2>
                   <p>
                     {isExecutive
-                      ? `Requested by ${getParticipantName(
-                          selectedConversation
-                        )} (@${selectedConversation.requester.username})`
+                      ? ""
                       : selectedConversation.assignedTo
                         ? `Handled by ${selectedConversation.assignedTo.fullName || selectedConversation.assignedTo.username}`
                         : "Awaiting assignment from the support team"}
                   </p>
+                  {isExecutive ? (
+                    <div className={styles.identityRow}>
+                      <span>
+                        Requested by {getParticipantName(selectedConversation)} (@{selectedConversation.requester.username})
+                      </span>
+                      {isVerifiedParticipant(selectedConversation.requester) ? (
+                        <span
+                          className={`${styles.verifiedTick} ${
+                            selectedConversation.requester.isAdmin ? styles.adminTick : ""
+                          }`}
+                          aria-label={selectedConversation.requester.isAdmin ? "Admin" : "Verified user"}
+                          title={selectedConversation.requester.isAdmin ? "Admin" : "Verified user"}
+                        >
+                          <BadgeCheck size={15} />
+                        </span>
+                      ) : null}
+                    </div>
+                  ) : null}
                 </div>
 
                 <div className={styles.statusActions}>

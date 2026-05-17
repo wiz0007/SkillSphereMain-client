@@ -1364,6 +1364,42 @@ const Profile: React.FC = () => {
           </div>
         </div>
 
+        {activeProfile.isAdmin ? (
+          <>
+            <div className={styles.verificationSuccess}>
+              Admin accounts automatically receive the golden trust mark and do not need identity or tutor verification submissions.
+            </div>
+
+            <div className={styles.verificationTimeline}>
+              <h3>Verification history</h3>
+              {verificationLoading ? (
+                <p className={styles.emptyText}>Loading verification history...</p>
+              ) : verificationRequests.length ? (
+                verificationRequests.map((request) => (
+                  <article key={request._id} className={styles.verificationHistoryCard}>
+                    <div className={styles.verificationHistoryHeader}>
+                      <strong>
+                        {request.type === "identity"
+                          ? "Identity verification"
+                          : "Tutor verification"}
+                      </strong>
+                      <span>{request.status.replaceAll("_", " ")}</span>
+                    </div>
+                    <p>
+                      Submitted on {new Date(request.createdAt).toLocaleString()}
+                    </p>
+                    {request.reviewNote ? (
+                      <p className={styles.reviewNote}>Admin note: {request.reviewNote}</p>
+                    ) : null}
+                  </article>
+                ))
+              ) : (
+                <p className={styles.emptyText}>No verification requests submitted yet.</p>
+              )}
+            </div>
+          </>
+        ) : (
+        <>
         <div className={styles.verificationGrid}>
           <div className={styles.verificationCard}>
             <h3>Identity verification</h3>
@@ -1539,6 +1575,8 @@ const Profile: React.FC = () => {
             <p className={styles.emptyText}>No verification requests submitted yet.</p>
           )}
         </div>
+        </>
+        )}
       </section>
 
       <div className={styles.footerGrid}>

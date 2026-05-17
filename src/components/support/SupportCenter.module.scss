@@ -69,6 +69,26 @@
   line-height: 1.6;
 }
 
+.identityRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #64748b;
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.verifiedTick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #2563eb;
+}
+
+.adminTick {
+  color: #d97706;
+}
+
 .layout {
   display: grid;
   grid-template-columns: minmax(320px, 400px) minmax(0, 1fr);

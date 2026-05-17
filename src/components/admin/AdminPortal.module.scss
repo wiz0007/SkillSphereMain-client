@@ -794,6 +794,40 @@
   }
 }
 
+.verificationHistoryBlock {
+  margin-top: 0.95rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid rgba(226, 232, 240, 0.92);
+  border-radius: 18px;
+  background: rgba(248, 250, 252, 0.95);
+
+  span,
+  strong,
+  small {
+    display: block;
+  }
+
+  span {
+    color: $color-text-secondary;
+    font-size: 0.76rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  strong {
+    margin-top: 0.35rem;
+    color: $color-text-primary;
+    line-height: 1.6;
+  }
+
+  small {
+    margin-top: 0.45rem;
+    color: $color-text-secondary;
+    line-height: 1.55;
+  }
+}
+
 .verificationAssets {
   display: flex;
   flex-wrap: wrap;

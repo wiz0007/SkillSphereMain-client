@@ -4,6 +4,7 @@ import {
   deleteAdminUser,
   deleteAdminCourse,
   deleteAdminReview,
+  deverifyAdminVerificationRequest,
   getAdminCourses,
   getAdminOverview,
   getAdminReviews,
@@ -369,6 +370,30 @@ const AdminPortal = () => {
       setSuccessMessage(response.message);
     } catch (nextError: any) {
       setError(nextError?.message || "Failed to review verification request");
+    } finally {
+      setVerificationActionId("");
+    }
+  };
+
+  const handleVerificationDeverify = async (
+    request: AdminVerificationRequest
+  ) => {
+    try {
+      setVerificationActionId(request._id);
+      setError("");
+
+      const response = await deverifyAdminVerificationRequest(request._id, {
+        reviewNote: verificationNotes[request._id] || "",
+      });
+
+      setVerifications((previous) =>
+        previous.map((entry) =>
+          entry._id === request._id ? response.request : entry
+        )
+      );
+      setSuccessMessage(response.message);
+    } catch (nextError: any) {
+      setError(nextError?.message || "Failed to revoke verification");
     } finally {
       setVerificationActionId("");
     }
@@ -912,54 +937,128 @@ const AdminPortal = () => {
                   ) : null}
                 </div>
 
-                <textarea
-                  className={styles.supportReplyInput}
-                  rows={3}
-                  placeholder="Reviewer note for approval, rejection, or resubmission..."
-                  value={verificationNotes[request._id] || request.reviewNote || ""}
-                  onChange={(event) =>
-                    setVerificationNotes((previous) => ({
-                      ...previous,
-                      [request._id]: event.target.value,
-                    }))
-                  }
-                />
+                {request.reviewedAt || ["approved", "rejected", "resubmission_required"].includes(request.status) ? (
+                  <div className={styles.verificationHistoryBlock}>
+                    <span>
+                      {request.status === "approved"
+                        ? "Approved"
+                        : request.status === "rejected"
+                          ? "Rejected"
+                          : "Resubmission requested"}
+                    </span>
+                    <strong>
+                      {request.reviewedAt
+                        ? new Date(request.reviewedAt).toLocaleString()
+                        : "Review history recorded"}
+                      {request.reviewedBy
+                        ? ` by ${request.reviewedBy.fullName || request.reviewedBy.username}`
+                        : ""}
+                    </strong>
+                  </div>
+                ) : null}
 
-                <div className={styles.verificationActions}>
-                  <button
-                    type="button"
-                    className={styles.secondaryAction}
-                    disabled={verificationActionId === request._id}
-                    onClick={() =>
-                      void handleVerificationReview(request, "approved")
-                    }
-                  >
-                    {verificationActionId === request._id ? "Updating..." : "Approve"}
-                  </button>
-                  <button
-                    type="button"
-                    className={styles.secondaryAction}
-                    disabled={verificationActionId === request._id}
-                    onClick={() =>
-                      void handleVerificationReview(
-                        request,
-                        "resubmission_required"
-                      )
-                    }
-                  >
-                    Request resubmission
-                  </button>
-                  <button
-                    type="button"
-                    className={styles.dangerAction}
-                    disabled={verificationActionId === request._id}
-                    onClick={() =>
-                      void handleVerificationReview(request, "rejected")
-                    }
-                  >
-                    Reject
-                  </button>
-                </div>
+                {request.reviewNote ? (
+                  <div className={styles.verificationNoteBlock}>
+                    <span>Reviewer note</span>
+                    <strong>{request.reviewNote}</strong>
+                  </div>
+                ) : null}
+
+                {request.revokedAt ? (
+                  <div className={styles.verificationHistoryBlock}>
+                    <span>Verification revoked</span>
+                    <strong>
+                      {new Date(request.revokedAt).toLocaleString()}
+                      {request.revokedBy
+                        ? ` by ${request.revokedBy.fullName || request.revokedBy.username}`
+                        : ""}
+                    </strong>
+                    {request.revocationNote ? (
+                      <small>{request.revocationNote}</small>
+                    ) : null}
+                  </div>
+                ) : request.status === "approved" ? (
+                  <>
+                    <textarea
+                      className={styles.supportReplyInput}
+                      rows={3}
+                      placeholder="Optional note for revoking this verification..."
+                      value={verificationNotes[request._id] || ""}
+                      onChange={(event) =>
+                        setVerificationNotes((previous) => ({
+                          ...previous,
+                          [request._id]: event.target.value,
+                        }))
+                      }
+                    />
+
+                    <div className={styles.verificationActions}>
+                      <button
+                        type="button"
+                        className={styles.dangerAction}
+                        disabled={verificationActionId === request._id}
+                        onClick={() =>
+                          void handleVerificationDeverify(request)
+                        }
+                      >
+                        {verificationActionId === request._id
+                          ? "Revoking..."
+                          : "Deverify"}
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <textarea
+                      className={styles.supportReplyInput}
+                      rows={3}
+                      placeholder="Reviewer note for approval, rejection, or resubmission..."
+                      value={verificationNotes[request._id] || request.reviewNote || ""}
+                      onChange={(event) =>
+                        setVerificationNotes((previous) => ({
+                          ...previous,
+                          [request._id]: event.target.value,
+                        }))
+                      }
+                    />
+
+                    <div className={styles.verificationActions}>
+                      <button
+                        type="button"
+                        className={styles.secondaryAction}
+                        disabled={verificationActionId === request._id}
+                        onClick={() =>
+                          void handleVerificationReview(request, "approved")
+                        }
+                      >
+                        {verificationActionId === request._id ? "Updating..." : "Approve"}
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.secondaryAction}
+                        disabled={verificationActionId === request._id}
+                        onClick={() =>
+                          void handleVerificationReview(
+                            request,
+                            "resubmission_required"
+                          )
+                        }
+                      >
+                        Request resubmission
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.dangerAction}
+                        disabled={verificationActionId === request._id}
+                        onClick={() =>
+                          void handleVerificationReview(request, "rejected")
+                        }
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  </>
+                )}
               </article>
             ))}
           </div>

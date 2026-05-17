@@ -5,7 +5,21 @@ export interface ChatParticipant {
   username: string;
   fullName?: string;
   profilePhoto?: string;
+  isAdmin?: boolean;
   isTutor?: boolean;
+  identityVerificationStatus?:
+    | "not_started"
+    | "pending"
+    | "approved"
+    | "rejected"
+    | "resubmission_required";
+  tutorVerificationStatus?:
+    | "not_started"
+    | "pending"
+    | "approved"
+    | "rejected"
+    | "resubmission_required";
+  verifiedBadgeLevel?: "none" | "basic" | "identity" | "tutor";
 }
 
 export interface ChatMessage {

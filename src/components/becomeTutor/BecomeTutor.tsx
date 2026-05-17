@@ -14,8 +14,9 @@ import SkillsInput from "./SkillsInput";
 import CategorySelect from "./CategorySelect";
 
 const BecomeTutor: React.FC = () => {
-  const { setUser } = useAuth();
+  const { user, setUser } = useAuth();
   const navigate = useNavigate();
+  const isAdmin = !!user?.isAdmin;
 
   const [form, setForm] = useState({
     headline: "",
@@ -80,6 +81,7 @@ const BecomeTutor: React.FC = () => {
           ? "Please choose your availability."
           : "",
       supportingDocument:
+        !isAdmin &&
         verificationSummary?.identityVerificationStatus === "approved" &&
         !["approved", "pending"].includes(
           verificationSummary?.tutorVerificationStatus || "not_started"
@@ -94,6 +96,7 @@ const BecomeTutor: React.FC = () => {
       form.categories.length,
       form.headline,
       form.skills.length,
+      isAdmin,
       supportingDocument,
       verificationSummary?.tutorVerificationStatus,
     ]
@@ -234,11 +237,13 @@ const BecomeTutor: React.FC = () => {
       );
 
       const identityApproved =
+        isAdmin ||
         verificationSummary?.identityVerificationStatus === "approved";
       const tutorAlreadyApproved =
+        isAdmin ||
         verificationSummary?.tutorVerificationStatus === "approved";
 
-      if (identityApproved && !tutorAlreadyApproved && supportingDocument) {
+      if (!isAdmin && identityApproved && !tutorAlreadyApproved && supportingDocument) {
         const verificationResponse = await submitTutorVerification({
           note: verificationNote,
           supportingDocument,
@@ -301,10 +306,14 @@ const BecomeTutor: React.FC = () => {
             : previous
         );
         setSuccessCopy({
-          title: tutorAlreadyApproved
+          title: isAdmin
+            ? "Admin tutor profile updated"
+            : tutorAlreadyApproved
             ? "Tutor profile updated"
             : "Tutor profile saved",
-          message: tutorAlreadyApproved
+          message: isAdmin
+            ? "Admin accounts can manage tutor details without needing verification approval."
+            : tutorAlreadyApproved
             ? "Your verified tutor profile changes have been saved."
             : "Your tutor profile has been updated.",
         });
@@ -340,14 +349,18 @@ const BecomeTutor: React.FC = () => {
         <div className={styles.snapshot}>
           <span className={styles.snapshotLabel}>Progress</span>
           <strong>
-            {verificationSummary?.tutorVerificationStatus === "approved"
+            {isAdmin
+              ? "Admin account active"
+              : verificationSummary?.tutorVerificationStatus === "approved"
               ? "Verified tutor badge active"
               : verificationSummary?.tutorVerificationStatus === "pending"
                 ? "Tutor verification pending"
                 : `${form.skills.length} skills | ${form.categories.length} categories`}
           </strong>
           <span className={styles.snapshotHint}>
-            {verificationSummary?.identityVerificationStatus === "approved"
+            {isAdmin
+              ? "Admin accounts are exempt from user and tutor verification review."
+              : verificationSummary?.identityVerificationStatus === "approved"
               ? "Identity verified. Submit or maintain tutor docs for the badge."
               : "Identity approval is required before the tutor badge can be granted."}
           </span>
@@ -387,7 +400,9 @@ const BecomeTutor: React.FC = () => {
           <div className={styles.statusCard}>
             <span>Visible trust mark</span>
             <strong>
-              {verificationSummary?.tutorVerificationStatus === "approved"
+              {isAdmin
+                ? "Admin badge"
+                : verificationSummary?.tutorVerificationStatus === "approved"
                 ? "Tutor badge"
                 : ["identity", "tutor"].includes(
                     verificationSummary?.verifiedBadgeLevel || "none"
@@ -398,7 +413,14 @@ const BecomeTutor: React.FC = () => {
           </div>
         </div>
 
-        {verificationSummary?.tutorVerificationStatus !== "approved" ? (
+        {isAdmin ? (
+          <div className={styles.infoBanner}>
+            <ShieldCheck size={18} />
+            <span>
+              Admin accounts can edit tutor-facing profile details without submitting identity or tutor verification proof.
+            </span>
+          </div>
+        ) : verificationSummary?.tutorVerificationStatus !== "approved" ? (
           <div className={styles.infoBanner}>
             {verificationSummary?.identityVerificationStatus === "approved" ? (
               <>
@@ -606,6 +628,7 @@ const BecomeTutor: React.FC = () => {
             ) : null}
           </div>
 
+          {!isAdmin ? (
           <div className={`${styles.field} ${styles.fieldWide}`}>
             <span>Supporting tutor document</span>
             <label
@@ -642,7 +665,9 @@ const BecomeTutor: React.FC = () => {
               </small>
             ) : null}
           </div>
+          ) : null}
 
+          {!isAdmin ? (
           <label className={`${styles.field} ${styles.fieldWide}`}>
             <span>Note for reviewer</span>
             <textarea
@@ -652,6 +677,7 @@ const BecomeTutor: React.FC = () => {
               onChange={(event) => setVerificationNote(event.target.value)}
             />
           </label>
+          ) : null}
         </div>
 
         <button
@@ -662,7 +688,9 @@ const BecomeTutor: React.FC = () => {
           <Sparkles size={16} />
           {loading
             ? "Submitting..."
-            : verificationSummary?.tutorVerificationStatus === "approved"
+            : isAdmin
+              ? "Save admin tutor profile"
+              : verificationSummary?.tutorVerificationStatus === "approved"
               ? "Save tutor profile"
               : "Save profile and request tutor verification"}
         </button>

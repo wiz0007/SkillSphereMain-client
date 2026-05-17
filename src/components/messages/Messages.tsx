@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { MessageCircleMore, Search, Send } from "lucide-react";
+import { BadgeCheck, MessageCircleMore, Search, Send } from "lucide-react";
 import styles from "./Messages.module.scss";
 import { useAuth } from "../../context/AuthContext";
 import { socket } from "../../utils/socket";
@@ -28,6 +28,10 @@ const formatDate = (value: string) =>
 
 const getDisplayName = (participant: ChatParticipant) =>
   participant.fullName || participant.username || "Participant";
+
+const isVerifiedParticipant = (participant: ChatParticipant) =>
+  !!participant.isAdmin ||
+  ["identity", "tutor"].includes(participant.verifiedBadgeLevel || "none");
 
 const Messages = () => {
   const { user, loading: authLoading } = useAuth();
@@ -334,7 +338,20 @@ const Messages = () => {
 
                     <div className={styles.contactContent}>
                       <div className={styles.contactTop}>
-                        <strong>{getDisplayName(participant)}</strong>
+                        <strong className={styles.identityRow}>
+                          <span>{getDisplayName(participant)}</span>
+                          {isVerifiedParticipant(participant) ? (
+                            <span
+                              className={`${styles.verifiedTick} ${
+                                participant.isAdmin ? styles.adminTick : ""
+                              }`}
+                              aria-label={participant.isAdmin ? "Admin" : "Verified user"}
+                              title={participant.isAdmin ? "Admin" : "Verified user"}
+                            >
+                              <BadgeCheck size={15} />
+                            </span>
+                          ) : null}
+                        </strong>
                         {conversation?.lastMessage?.createdAt ? (
                           <span>
                             {formatDate(
@@ -397,7 +414,20 @@ const Messages = () => {
                   </div>
 
                   <div>
-                    <strong>{getDisplayName(selectedParticipant)}</strong>
+                    <strong className={styles.identityRow}>
+                      <span>{getDisplayName(selectedParticipant)}</span>
+                      {isVerifiedParticipant(selectedParticipant) ? (
+                        <span
+                          className={`${styles.verifiedTick} ${
+                            selectedParticipant.isAdmin ? styles.adminTick : ""
+                          }`}
+                          aria-label={selectedParticipant.isAdmin ? "Admin" : "Verified user"}
+                          title={selectedParticipant.isAdmin ? "Admin" : "Verified user"}
+                        >
+                          <BadgeCheck size={15} />
+                        </span>
+                      ) : null}
+                    </strong>
                     <span>@{selectedParticipant.username}</span>
                   </div>
                 </div>
