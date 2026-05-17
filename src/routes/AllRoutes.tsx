@@ -34,7 +34,7 @@ const AllRoutes = () => {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-      <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/userDetails" element={<UserDetailFormPage />} />
 
       <Route element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
@@ -54,10 +54,10 @@ const AllRoutes = () => {
 
       <Route element={<ProtectedRoute />}>
         <Route element={<MainLayout />}>
-          <Route path="/userDetails" element={<UserDetailFormPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/your-courses" element={<YourCoursesPage />} />
           <Route path="/sessions" element={<SessionPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/become-tutor" element={<TutorPage />} />
           <Route path="/add-course" element={<AddCoursePage />} />
