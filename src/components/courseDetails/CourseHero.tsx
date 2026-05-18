@@ -1,4 +1,5 @@
 import {
+  BadgeCheck,
   Bookmark,
   BookmarkCheck,
   MessageSquareText,
@@ -19,6 +20,9 @@ const CourseHero = ({
   isOwnCourse = false,
 }: any) => {
   const navigate = useNavigate();
+  const isVerifiedTutor =
+    !!course.tutor?.isAdmin ||
+    ["identity", "tutor"].includes(course.tutor?.verifiedBadgeLevel || "none");
   const isTuition = course.type === "tuition";
   const tuitionScheduleLabel = isTuition
     ? `${
@@ -77,7 +81,20 @@ const CourseHero = ({
       >
         <img src={tutorAvatar} alt={tutorName} />
         <div className={styles.tutorText}>
-          <strong>@{tutorName}</strong>
+          <strong className={styles.identityRow}>
+            <span>@{tutorName}</span>
+            {isVerifiedTutor ? (
+              <span
+                className={`${styles.verifiedTick} ${
+                  course.tutor?.isAdmin ? styles.adminTick : ""
+                }`}
+                aria-label={course.tutor?.isAdmin ? "Admin" : "Verified tutor"}
+                title={course.tutor?.isAdmin ? "Admin" : "Verified tutor"}
+              >
+                <BadgeCheck size={16} />
+              </span>
+            ) : null}
+          </strong>
           <span>View tutor profile</span>
         </div>
       </button>

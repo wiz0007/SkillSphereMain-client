@@ -6,6 +6,9 @@ export interface Tutor {
   fullName?: string;
   profilePhoto?: string | null;
   isTutor?: boolean;
+  isAdmin?: boolean;
+  verifiedBadgeLevel?: "none" | "basic" | "identity" | "tutor";
+  tutorVerificationStatus?: "not_started" | "pending" | "approved" | "rejected" | "resubmission_required";
 }
 
 export interface ReviewUser {

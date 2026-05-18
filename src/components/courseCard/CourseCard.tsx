@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  BadgeCheck,
   Bookmark,
   BookmarkCheck,
   Clock3,
@@ -18,6 +19,10 @@ import { useSaveCourse } from "../courseDetails/useSaveCourse";
 interface Props {
   course: Course;
 }
+
+const isVerifiedTutor = (tutor?: Course["tutor"]) =>
+  !!tutor?.isAdmin ||
+  ["identity", "tutor"].includes(tutor?.verifiedBadgeLevel || "none");
 
 const CourseCard: React.FC<Props> = ({ course }) => {
   const navigate = useNavigate();
@@ -110,7 +115,20 @@ const CourseCard: React.FC<Props> = ({ course }) => {
             }
             alt={course.tutor?.username}
           />
-          <span>@{course.tutor?.username || "tutor"}</span>
+          <span className={styles.identityRow}>
+            <span>@{course.tutor?.username || "tutor"}</span>
+            {isVerifiedTutor(course.tutor) ? (
+              <span
+                className={`${styles.verifiedTick} ${
+                  course.tutor?.isAdmin ? styles.adminTick : ""
+                }`}
+                aria-label={course.tutor?.isAdmin ? "Admin" : "Verified tutor"}
+                title={course.tutor?.isAdmin ? "Admin" : "Verified tutor"}
+              >
+                <BadgeCheck size={15} />
+              </span>
+            ) : null}
+          </span>
         </button>
 
         <div className={styles.metrics}>

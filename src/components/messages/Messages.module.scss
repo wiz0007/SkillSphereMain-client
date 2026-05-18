@@ -64,6 +64,7 @@
   grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
   gap: 1.2rem;
   min-height: 68vh;
+  align-items: start;
 
   @include respond(md) {
     grid-template-columns: 1fr;
@@ -75,7 +76,27 @@
   @include panel(24px, 1rem);
   display: flex;
   flex-direction: column;
-  min-height: 100%;
+  min-height: 0;
+}
+
+.sidebar {
+  max-height: clamp(560px, 72vh, 860px);
+
+  @include respond(md) {
+    max-height: none;
+  }
+}
+
+.chatPanel {
+  height: clamp(560px, 72vh, 860px);
+
+  @include respond(md) {
+    height: 72vh;
+  }
+
+  @include respond(sm) {
+    height: 76vh;
+  }
 }
 
 .searchBox {
@@ -111,6 +132,8 @@
   flex-direction: column;
   gap: 0.75rem;
   min-height: 0;
+  overflow-y: auto;
+  padding-right: 0.15rem;
 }
 
 .contactCard {
@@ -261,8 +284,10 @@
   flex-direction: column;
   gap: 0.8rem;
   flex: 1;
-  min-height: 340px;
+  min-height: 0;
   padding: 1rem 0;
+  overflow-y: auto;
+  padding-right: 0.2rem;
 }
 
 .messageRow {

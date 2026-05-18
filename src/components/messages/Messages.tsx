@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { BadgeCheck, MessageCircleMore, Search, Send } from "lucide-react";
 import styles from "./Messages.module.scss";
@@ -47,6 +47,7 @@ const Messages = () => {
   const [loading, setLoading] = useState(true);
   const [threadLoading, setThreadLoading] = useState(false);
   const [sending, setSending] = useState(false);
+  const messagesAreaRef = useRef<HTMLDivElement | null>(null);
 
   const selectedId = searchParams.get("userId") || "";
 
@@ -157,6 +158,19 @@ const Messages = () => {
       socket.off("chat:message", handler);
     };
   }, [selectedId]);
+
+  useEffect(() => {
+    if (!selectedId || threadLoading) {
+      return;
+    }
+
+    const container = messagesAreaRef.current;
+    if (!container) {
+      return;
+    }
+
+    container.scrollTop = container.scrollHeight;
+  }, [messages, selectedId, threadLoading]);
 
   const mergedContacts = useMemo(() => {
     const map = new Map<string, ChatParticipant>();
@@ -433,7 +447,7 @@ const Messages = () => {
                 </div>
               </div>
 
-              <div className={styles.messagesArea}>
+              <div ref={messagesAreaRef} className={styles.messagesArea}>
                 {threadLoading ? (
                   <div className={styles.placeholder}>
                     <strong>Loading conversation</strong>
