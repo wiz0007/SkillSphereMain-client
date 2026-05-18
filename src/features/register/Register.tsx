@@ -1,4 +1,4 @@
-import React, {
+import {
   useState,
   useEffect,
   useMemo,
@@ -24,7 +24,7 @@ interface RegisterForm {
   confirmPassword: string;
 }
 
-const Register: React.FC = () => {
+const Register = () => {
   const navigate = useNavigate();
 
   const [form, setForm] = useState<RegisterForm>({

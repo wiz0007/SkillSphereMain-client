@@ -22,7 +22,7 @@ const SUGGESTIONS = [
   "TypeScript",
 ];
 
-const SkillsInput: React.FC<Props> = ({ value, onChange }) => {
+const SkillsInput = ({ value, onChange }: Props) => {
   const [input, setInput] = useState("");
   const [filtered, setFiltered] = useState<string[]>([]);
   const trimmedInput = input.trim();

@@ -21,7 +21,7 @@ interface Props {
   onClose: () => void;
 }
 
-const RequestModal: React.FC<Props> = ({ course, onClose }) => {
+const RequestModal = ({ course, onClose }: Props) => {
   const { user, loading: authLoading, refreshUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();

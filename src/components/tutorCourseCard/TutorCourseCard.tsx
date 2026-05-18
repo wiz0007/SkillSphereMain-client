@@ -19,7 +19,7 @@ interface Props {
   onView: (id: string) => void;
 }
 
-const TutorCourseCard: React.FC<Props> = ({
+const TutorCourseCard = ({
   course,
   selectable = false,
   selected = false,
@@ -27,7 +27,7 @@ const TutorCourseCard: React.FC<Props> = ({
   onDelete,
   onEdit,
   onView,
-}) => {
+}: Props) => {
   const description =
     course.description?.trim() ||
     "Add a short outcome-focused description so learners can quickly understand the value of this course.";

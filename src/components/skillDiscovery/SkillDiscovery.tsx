@@ -1,11 +1,11 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import styles from "./SkillDiscovery.module.scss";
 import CourseCard from "../courseCard/CourseCard";
 import { getAllCourses, type Course } from "../../services/courses.service";
 import { useAuth } from "../../context/AuthContext";
 
-const SkillDiscovery: React.FC = () => {
+const SkillDiscovery = () => {
   const { user, loading: authLoading } = useAuth();
 
   const [courses, setCourses] = useState<Course[]>([]);

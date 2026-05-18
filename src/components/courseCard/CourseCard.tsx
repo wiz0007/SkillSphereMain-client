@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   BadgeCheck,
   Bookmark,
@@ -24,7 +24,7 @@ const isVerifiedTutor = (tutor?: Course["tutor"]) =>
   !!tutor?.isAdmin ||
   ["identity", "tutor"].includes(tutor?.verifiedBadgeLevel || "none");
 
-const CourseCard: React.FC<Props> = ({ course }) => {
+const CourseCard = ({ course }: Props) => {
   const navigate = useNavigate();
   const { isSaved, handleSave } = useSaveCourse();
 

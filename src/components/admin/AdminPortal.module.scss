@@ -250,6 +250,33 @@
   gap: 0.55rem;
 }
 
+.actionStack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  min-width: 260px;
+}
+
+.historyStack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  strong {
+    color: $color-text-primary;
+  }
+
+  span,
+  small {
+    color: $color-text-secondary;
+  }
+}
+
+.mutedCopy {
+  color: $color-text-secondary;
+  font-size: 0.82rem;
+}
+
 .identityInline {
   display: inline-flex;
   align-items: center;

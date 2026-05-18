@@ -1,4 +1,3 @@
-import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { sidebarItems } from "../sidebar/sidebarData";
@@ -9,7 +8,7 @@ interface SidebarProps {
   onToggle: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
+const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout, user } = useAuth();

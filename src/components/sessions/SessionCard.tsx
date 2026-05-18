@@ -44,6 +44,8 @@ const SessionCard = ({ session, onUpdate, onHide }: any) => {
   const skillCoinLabel =
     session.billingType === "included_in_tuition"
       ? "included in tuition plan"
+      : session.coinStatus === "awaiting_admin_release"
+      ? "awaiting admin release"
       : session.coinStatus === "settled"
       ? "settled"
       : session.coinStatus === "released"
@@ -68,7 +70,8 @@ const SessionCard = ({ session, onUpdate, onHide }: any) => {
       await refreshUser();
       onUpdate(session._id, "completed", {
         studentConfirmedCompletionAt: new Date().toISOString(),
-        coinStatus: "settled",
+        coinStatus:
+          session.sessionKind === "tuition" ? "settled" : "awaiting_admin_release",
       });
     } catch (error: any) {
       setDialogMessage(
@@ -225,12 +228,14 @@ const SessionCard = ({ session, onUpdate, onHide }: any) => {
               ? session.studentConfirmedCompletionAt
                 ? isTuitionSession
                   ? "Tuition class completed"
-                  : "Session completed and SkillCoin settled"
+                  : session.coinStatus === "awaiting_admin_release"
+                    ? "Student confirmed. Admin release is pending."
+                    : "Session completed and SkillCoin settled"
                 : session.isTutor
                   ? "Waiting for student confirmation"
                   : isTuitionSession
                     ? "Confirm completion to mark this tuition class done"
-                    : "Confirm completion to release SkillCoin"
+                    : "Confirm completion to send SkillCoin for admin release"
               : "Session cancelled"}
           </span>
         ) : null}

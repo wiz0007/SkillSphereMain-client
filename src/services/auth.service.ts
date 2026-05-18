@@ -125,6 +125,45 @@ export const getWalletTransactions = async () => {
   }>;
 };
 
+export const getWithdrawalRequests = async () => {
+  const res = await api.get("/auth/wallet/withdrawals");
+  return res.data as Array<{
+    _id: string;
+    amount: number;
+    upiId: string;
+    note: string;
+    status: "pending" | "processing" | "paid" | "rejected";
+    adminNote: string;
+    reviewedAt: string | null;
+    paidAt: string | null;
+    createdAt: string;
+  }>;
+};
+
+export const requestWithdrawal = async (payload: {
+  amount: number;
+  upiId: string;
+  note?: string;
+}) => {
+  const res = await api.post("/auth/wallet/withdrawals", payload);
+  return res.data as {
+    message: string;
+    wallet: {
+      skillCoinBalance: number;
+      lockedSkillCoins: number;
+      availableSkillCoins: number;
+    };
+    request: {
+      _id: string;
+      amount: number;
+      upiId: string;
+      note: string;
+      status: "pending" | "processing" | "paid" | "rejected";
+      createdAt: string;
+    };
+  };
+};
+
 export const getWalletProof = async (transactionId: string) => {
   const res = await api.get(`/auth/wallet/proof/${transactionId}`);
   return res.data as {

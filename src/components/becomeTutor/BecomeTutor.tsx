@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import SkillsInput from "./SkillsInput";
 import CategorySelect from "./CategorySelect";
 
-const BecomeTutor: React.FC = () => {
+const BecomeTutor = () => {
   const { user, setUser } = useAuth();
   const navigate = useNavigate();
   const isAdmin = !!user?.isAdmin;

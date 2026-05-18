@@ -54,7 +54,9 @@ export interface AdminSession {
   status: string;
   price: number;
   skillCoinAmount: number;
-  coinStatus: string;
+  coinStatus: "locked" | "awaiting_admin_release" | "released" | "settled";
+  adminSettlementAt: string | null;
+  adminSettlementNote: string;
   date: string;
   duration: number;
   student: AdminUser;
@@ -64,6 +66,20 @@ export interface AdminSession {
     title: string;
     type: "live" | "recorded" | "tuition";
   };
+}
+
+export interface AdminWithdrawalRequest {
+  _id: string;
+  amount: number;
+  upiId: string;
+  note: string;
+  status: "pending" | "processing" | "paid" | "rejected";
+  adminNote: string;
+  reviewedAt: string | null;
+  paidAt: string | null;
+  createdAt: string;
+  user: AdminUser | null;
+  reviewedBy: AdminUser | null;
 }
 
 export interface AdminSupportConversation {
@@ -154,6 +170,8 @@ export interface AdminOverview {
     tuitionCourses: number;
     totalSessions: number;
     pendingSessions: number;
+    pendingWithdrawalRequests: number;
+    pendingAdminSettlementSessions: number;
     totalSupportThreads: number;
     pendingSupportThreads: number;
     totalReviews: number;
@@ -273,6 +291,29 @@ export const getAdminSessions = async (): Promise<AdminSession[]> => {
     return res.data;
   } catch (error: any) {
     return handleError(error, "getAdminSessions");
+  }
+};
+
+export const settleAdminSession = async (
+  sessionId: string,
+  payload: {
+    action: "release" | "refund";
+    note?: string;
+  }
+) => {
+  try {
+    const res = await api.patch(`/admin/sessions/${sessionId}/settle`, payload);
+    return res.data as {
+      message: string;
+      session: {
+        _id: string;
+        coinStatus: AdminSession["coinStatus"];
+        adminSettlementAt: string | null;
+        adminSettlementNote: string;
+      };
+    };
+  } catch (error: any) {
+    return handleError(error, "settleAdminSession");
   }
 };
 
@@ -430,5 +471,39 @@ export const getAdminWalletTransactions = async (): Promise<
     return res.data;
   } catch (error: any) {
     return handleError(error, "getAdminWalletTransactions");
+  }
+};
+
+export const getAdminWithdrawalRequests = async (): Promise<
+  AdminWithdrawalRequest[]
+> => {
+  try {
+    const res = await api.get("/admin/withdrawals");
+    return res.data;
+  } catch (error: any) {
+    return handleError(error, "getAdminWithdrawalRequests");
+  }
+};
+
+export const updateAdminWithdrawalRequest = async (
+  requestId: string,
+  payload: {
+    status: "processing" | "paid" | "rejected";
+    adminNote?: string;
+  }
+) => {
+  try {
+    const res = await api.patch(`/admin/withdrawals/${requestId}`, payload);
+    return res.data as {
+      message: string;
+      request: AdminWithdrawalRequest;
+      wallet: null | {
+        skillCoinBalance: number;
+        lockedSkillCoins: number;
+        availableSkillCoins: number;
+      };
+    };
+  } catch (error: any) {
+    return handleError(error, "updateAdminWithdrawalRequest");
   }
 };

@@ -164,7 +164,7 @@ const getProfileCompletion = (profile: ProfileData) => {
   return Math.round((complete / checks.length) * 100);
 };
 
-const Profile: React.FC = () => {
+const Profile = () => {
   const { setUser } = useAuth();
 
   const [profile, setProfile] = useState<ProfileData | null>(null);

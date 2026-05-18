@@ -14,11 +14,14 @@ import {
   getAdminSupportMessages,
   getAdminUsers,
   getAdminVerificationRequests,
+  getAdminWithdrawalRequests,
   getAdminWalletTransactions,
   reviewAdminVerificationRequest,
   setAdminCoursePublishStatus,
   sendAdminSupportMessage,
+  settleAdminSession,
   updateAdminSupportStatus,
+  updateAdminWithdrawalRequest,
   type AdminCourse,
   type AdminOverview,
   type AdminReview,
@@ -27,6 +30,7 @@ import {
   type AdminSupportMessage,
   type AdminUser,
   type AdminVerificationRequest,
+  type AdminWithdrawalRequest,
   type AdminWalletTransaction,
 } from "../../services/admin.service";
 import styles from "./AdminPortal.module.scss";
@@ -117,12 +121,16 @@ const AdminPortal = () => {
   const [actionFeedback, setActionFeedback] = useState<ActionFeedback | null>(null);
   const [verificationNotes, setVerificationNotes] = useState<Record<string, string>>({});
   const [verificationActionId, setVerificationActionId] = useState("");
+  const [settlementActionId, setSettlementActionId] = useState("");
+  const [settlementNotes, setSettlementNotes] = useState<Record<string, string>>({});
   const [selectedSupportId, setSelectedSupportId] = useState("");
   const [supportMessages, setSupportMessages] = useState<AdminSupportMessage[]>([]);
   const [supportMessagesLoading, setSupportMessagesLoading] = useState(false);
   const [supportReplyText, setSupportReplyText] = useState("");
   const [supportReplyAttachment, setSupportReplyAttachment] = useState<File | null>(null);
   const [supportReplySending, setSupportReplySending] = useState(false);
+  const [withdrawalNotes, setWithdrawalNotes] = useState<Record<string, string>>({});
+  const [withdrawalActionId, setWithdrawalActionId] = useState("");
 
   const [overview, setOverview] = useState<AdminOverview | null>(null);
   const [users, setUsers] = useState<AdminUser[]>([]);
@@ -132,6 +140,7 @@ const AdminPortal = () => {
   const [support, setSupport] = useState<AdminSupportConversation[]>([]);
   const [reviews, setReviews] = useState<AdminReview[]>([]);
   const [wallet, setWallet] = useState<AdminWalletTransaction[]>([]);
+  const [withdrawals, setWithdrawals] = useState<AdminWithdrawalRequest[]>([]);
 
   const loadAll = async (userSearch = "") => {
     try {
@@ -148,6 +157,7 @@ const AdminPortal = () => {
         nextSupport,
         nextReviews,
         nextWallet,
+        nextWithdrawals,
       ] = await Promise.all([
         getAdminOverview(),
         getAdminUsers(userSearch),
@@ -157,6 +167,7 @@ const AdminPortal = () => {
         getAdminSupportConversations(),
         getAdminReviews(),
         getAdminWalletTransactions(),
+        getAdminWithdrawalRequests(),
       ]);
 
       setOverview(nextOverview);
@@ -174,6 +185,7 @@ const AdminPortal = () => {
       });
       setReviews(nextReviews);
       setWallet(nextWallet);
+      setWithdrawals(nextWithdrawals);
     } catch (nextError: any) {
       setError(nextError?.message || "Failed to load admin portal");
     } finally {
@@ -324,6 +336,65 @@ const AdminPortal = () => {
       setSuccessMessage(`Support status updated to ${status.replaceAll("_", " ")}`);
     } catch (nextError: any) {
       setError(nextError?.message || "Failed to update support status");
+    }
+  };
+
+  const handleSessionSettlement = async (
+    session: AdminSession,
+    action: "release" | "refund"
+  ) => {
+    try {
+      setSettlementActionId(session._id);
+      setError("");
+
+      const response = await settleAdminSession(session._id, {
+        action,
+        note: settlementNotes[session._id] || "",
+      });
+
+      setSessions((previous) =>
+        previous.map((entry) =>
+          entry._id === session._id
+            ? {
+                ...entry,
+                coinStatus: response.session.coinStatus,
+                adminSettlementAt: response.session.adminSettlementAt,
+                adminSettlementNote: response.session.adminSettlementNote,
+              }
+            : entry
+        )
+      );
+      setSuccessMessage(response.message);
+    } catch (nextError: any) {
+      setError(nextError?.message || "Failed to settle session");
+    } finally {
+      setSettlementActionId("");
+    }
+  };
+
+  const handleWithdrawalAction = async (
+    request: AdminWithdrawalRequest,
+    status: "processing" | "paid" | "rejected"
+  ) => {
+    try {
+      setWithdrawalActionId(request._id);
+      setError("");
+
+      const response = await updateAdminWithdrawalRequest(request._id, {
+        status,
+        adminNote: withdrawalNotes[request._id] || "",
+      });
+
+      setWithdrawals((previous) =>
+        previous.map((entry) =>
+          entry._id === request._id ? response.request : entry
+        )
+      );
+      setSuccessMessage(response.message);
+    } catch (nextError: any) {
+      setError(nextError?.message || "Failed to update withdrawal");
+    } finally {
+      setWithdrawalActionId("");
     }
   };
 
@@ -704,8 +775,10 @@ const AdminPortal = () => {
               ["Tuition", overview.metrics.tuitionCourses],
               ["Sessions", overview.metrics.totalSessions],
               ["Pending sessions", overview.metrics.pendingSessions],
+              ["Admin release queue", overview.metrics.pendingAdminSettlementSessions],
               ["Support threads", overview.metrics.totalSupportThreads],
               ["Pending support", overview.metrics.pendingSupportThreads],
+              ["Withdrawals", overview.metrics.pendingWithdrawalRequests],
               ["Reviews", overview.metrics.totalReviews],
               ["Wallet events", overview.metrics.totalWalletTransactions],
             ].map(([label, value]) => (
@@ -1173,6 +1246,7 @@ const AdminPortal = () => {
                   <th>Status</th>
                   <th>Coins</th>
                   <th>Scheduled</th>
+                  <th>Settlement</th>
                 </tr>
               </thead>
               <tbody>
@@ -1183,16 +1257,74 @@ const AdminPortal = () => {
                       <span>{session.course?.type || "live"} course</span>
                     </td>
                     <td>{renderIdentityLabel(session.student)}</td>
-                    <td>{renderIdentityLabel(session.tutor)}</td>
-                    <td>{session.status}</td>
-                    <td>
-                      {session.skillCoinAmount} SC / {session.coinStatus}
-                    </td>
-                    <td>{new Date(session.date).toLocaleString()}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                      <td>{renderIdentityLabel(session.tutor)}</td>
+                      <td>{session.status}</td>
+                      <td>
+                        {session.skillCoinAmount} SC / {session.coinStatus}
+                      </td>
+                      <td>{new Date(session.date).toLocaleString()}</td>
+                      <td>
+                        {session.coinStatus === "awaiting_admin_release" ? (
+                          <div className={styles.actionStack}>
+                            <textarea
+                              className={styles.supportReplyInput}
+                              rows={2}
+                              placeholder="Optional admin note for payout or dispute refund..."
+                              value={settlementNotes[session._id] || ""}
+                              onChange={(event) =>
+                                setSettlementNotes((previous) => ({
+                                  ...previous,
+                                  [session._id]: event.target.value,
+                                }))
+                              }
+                            />
+                            <div className={styles.inlineActions}>
+                              <button
+                                type="button"
+                                className={styles.secondaryAction}
+                                disabled={settlementActionId === session._id}
+                                onClick={() =>
+                                  void handleSessionSettlement(session, "release")
+                                }
+                              >
+                                {settlementActionId === session._id
+                                  ? "Updating..."
+                                  : "Release 90% payout"}
+                              </button>
+                              <button
+                                type="button"
+                                className={styles.dangerAction}
+                                disabled={settlementActionId === session._id}
+                                onClick={() =>
+                                  void handleSessionSettlement(session, "refund")
+                                }
+                              >
+                                Refund on dispute
+                              </button>
+                            </div>
+                          </div>
+                        ) : session.adminSettlementAt ? (
+                          <div className={styles.historyStack}>
+                            <strong>
+                              {session.coinStatus === "settled"
+                                ? "Payout released"
+                                : "Refund completed"}
+                            </strong>
+                            <span>
+                              {new Date(session.adminSettlementAt).toLocaleString()}
+                            </span>
+                            {session.adminSettlementNote ? (
+                              <small>{session.adminSettlementNote}</small>
+                            ) : null}
+                          </div>
+                        ) : (
+                          <span className={styles.mutedCopy}>No admin action required</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
           </div>
         </div>
       ) : null}
@@ -1422,35 +1554,143 @@ const AdminPortal = () => {
       ) : null}
 
       {activeTab === "wallet" ? (
-        <div className={styles.panel}>
-          <div className={styles.panelHeader}>
-            <h2>Wallet activity</h2>
-          </div>
-          <div className={styles.tableWrap}>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th>User</th>
-                  <th>Type</th>
-                  <th>Amount</th>
-                  <th>Audit</th>
-                  <th>Description</th>
-                  <th>Created</th>
-                </tr>
-              </thead>
-              <tbody>
-                {wallet.map((entry) => (
-                  <tr key={entry._id}>
-                    <td>{entry.user.fullName || entry.user.username}</td>
-                    <td>{entry.type}</td>
-                    <td>{entry.amount} SC</td>
-                    <td>{entry.auditStatus}</td>
-                    <td>{entry.description}</td>
-                    <td>{new Date(entry.createdAt).toLocaleString()}</td>
+        <div className={styles.stack}>
+          <div className={styles.panel}>
+            <div className={styles.panelHeader}>
+              <h2>Withdrawal requests</h2>
+            </div>
+            <div className={styles.tableWrap}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>Amount</th>
+                    <th>UPI ID</th>
+                    <th>Status</th>
+                    <th>Requested</th>
+                    <th>Admin action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {withdrawals.map((request) => (
+                    <tr key={request._id}>
+                      <td>
+                        <strong>
+                          {request.user ? renderIdentityLabel(request.user) : "Deleted user"}
+                        </strong>
+                        <span>{request.note || "No user note"}</span>
+                      </td>
+                      <td>{request.amount} SC</td>
+                      <td>{request.upiId}</td>
+                      <td>{request.status}</td>
+                      <td>{new Date(request.createdAt).toLocaleString()}</td>
+                      <td>
+                        {["paid", "rejected"].includes(request.status) ? (
+                          <div className={styles.historyStack}>
+                            <strong>
+                              {request.status === "paid"
+                                ? "Marked paid"
+                                : "Rejected"}
+                            </strong>
+                            <span>
+                              {request.reviewedAt
+                                ? new Date(request.reviewedAt).toLocaleString()
+                                : "Review completed"}
+                            </span>
+                            {request.adminNote ? (
+                              <small>{request.adminNote}</small>
+                            ) : null}
+                          </div>
+                        ) : (
+                          <div className={styles.actionStack}>
+                            <textarea
+                              className={styles.supportReplyInput}
+                              rows={2}
+                              placeholder="Optional note for the withdrawal update..."
+                              value={withdrawalNotes[request._id] || ""}
+                              onChange={(event) =>
+                                setWithdrawalNotes((previous) => ({
+                                  ...previous,
+                                  [request._id]: event.target.value,
+                                }))
+                              }
+                            />
+                            <div className={styles.inlineActions}>
+                              {request.status === "pending" ? (
+                                <button
+                                  type="button"
+                                  className={styles.secondaryAction}
+                                  disabled={withdrawalActionId === request._id}
+                                  onClick={() =>
+                                    void handleWithdrawalAction(request, "processing")
+                                  }
+                                >
+                                  {withdrawalActionId === request._id
+                                    ? "Updating..."
+                                    : "Mark processing"}
+                                </button>
+                              ) : null}
+                              <button
+                                type="button"
+                                className={styles.secondaryAction}
+                                disabled={withdrawalActionId === request._id}
+                                onClick={() =>
+                                  void handleWithdrawalAction(request, "paid")
+                                }
+                              >
+                                Mark paid
+                              </button>
+                              <button
+                                type="button"
+                                className={styles.dangerAction}
+                                disabled={withdrawalActionId === request._id}
+                                onClick={() =>
+                                  void handleWithdrawalAction(request, "rejected")
+                                }
+                              >
+                                Reject
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className={styles.panel}>
+            <div className={styles.panelHeader}>
+              <h2>Wallet activity</h2>
+            </div>
+            <div className={styles.tableWrap}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Audit</th>
+                    <th>Description</th>
+                    <th>Created</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {wallet.map((entry) => (
+                    <tr key={entry._id}>
+                      <td>{entry.user.fullName || entry.user.username}</td>
+                      <td>{entry.type}</td>
+                      <td>{entry.amount} SC</td>
+                      <td>{entry.auditStatus}</td>
+                      <td>{entry.description}</td>
+                      <td>{new Date(entry.createdAt).toLocaleString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       ) : null}

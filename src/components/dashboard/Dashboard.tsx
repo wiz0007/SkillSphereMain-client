@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styles from "../dashboard/Dashboard.module.scss";
 import { motion } from "framer-motion";
 import { BadgeCheck } from "lucide-react";
@@ -42,7 +42,7 @@ interface DashboardActivity {
   createdAt: string;
 }
 
-const Dashboard: React.FC = () => {
+const Dashboard = () => {
   const { user, loading: authLoading } = useAuth();
 
   const [sessions, setSessions] = useState<DashboardSession[]>([]);

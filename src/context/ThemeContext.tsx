@@ -10,7 +10,11 @@ export const ThemeContext = createContext<ThemeContextType>({
   toggleTheme: () => {},
 });
 
-export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ThemeProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [dark, setDark] = useState<boolean>(() => {
     // ✅ persist theme
     const stored = localStorage.getItem("theme");

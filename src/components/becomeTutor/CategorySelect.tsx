@@ -24,7 +24,7 @@ const CATEGORY_OPTIONS = [
   "Others"
 ];
 
-const CategorySelect: React.FC<Props> = ({ value, onChange }) => {
+const CategorySelect = ({ value, onChange }: Props) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [highlightIndex, setHighlightIndex] = useState(0);

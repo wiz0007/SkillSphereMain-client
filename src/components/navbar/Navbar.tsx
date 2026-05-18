@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BadgeCheck } from "lucide-react";
 import { FiChevronDown, FiMessageSquare } from "react-icons/fi";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
@@ -11,7 +11,7 @@ interface NavbarProps {
   onToggleSidebar: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
+const Navbar = ({ onToggleSidebar }: NavbarProps) => {
   const { user, logout, loading } = useAuth();
   const navigate = useNavigate();
 
