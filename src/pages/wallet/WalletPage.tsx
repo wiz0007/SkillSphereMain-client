@@ -294,6 +294,7 @@ const WalletPage = () => {
           amount={amount}
           setAmount={setAmount}
           transactions={transactions}
+          withdrawals={withdrawals}
           proofLoadingId={proofLoadingId}
           lockedRatio={lockedRatio}
           selectedBonus={getRechargeBonus(
@@ -301,108 +302,16 @@ const WalletPage = () => {
           )}
           onRecharge={startRecharge}
           onViewProof={handleViewProof}
+          withdrawAmount={withdrawAmount}
+          setWithdrawAmount={setWithdrawAmount}
+          withdrawUpiId={withdrawUpiId}
+          setWithdrawUpiId={setWithdrawUpiId}
+          withdrawNote={withdrawNote}
+          setWithdrawNote={setWithdrawNote}
+          onWithdraw={handleWithdrawalRequest}
+          withdrawLoading={withdrawLoading}
           compact
         />
-      </div>
-
-      <div className={styles.walletPageCard}>
-        <div className={styles.walletSectionHeader}>
-          <div>
-            <span className={styles.walletKicker}>Withdrawals</span>
-            <h3>Request a manual payout</h3>
-          </div>
-        </div>
-
-        <div className={styles.walletWithdrawGrid}>
-          <label className={styles.walletInputGroup}>
-            <span>SkillCoin amount</span>
-            <input
-              type="number"
-              min="1"
-              step="1"
-              value={withdrawAmount}
-              onChange={(event) => setWithdrawAmount(event.target.value)}
-              placeholder="Enter SkillCoin amount"
-            />
-          </label>
-
-          <label className={styles.walletInputGroup}>
-            <span>UPI ID</span>
-            <input
-              type="text"
-              value={withdrawUpiId}
-              onChange={(event) => setWithdrawUpiId(event.target.value)}
-              placeholder="example@upi"
-            />
-          </label>
-        </div>
-
-        <label className={styles.walletInputGroup}>
-          <span>Note for admin</span>
-          <textarea
-            className={styles.walletTextarea}
-            rows={3}
-            value={withdrawNote}
-            onChange={(event) => setWithdrawNote(event.target.value)}
-            placeholder="Optional payout note or context..."
-          />
-        </label>
-
-        <div className={styles.walletWithdrawActions}>
-          <small className={styles.walletOfferHint}>
-            Requested withdrawals stay locked until admin marks them paid or rejected.
-          </small>
-          <button
-            type="button"
-            className={styles.walletChargeButton}
-            onClick={() => void handleWithdrawalRequest()}
-            disabled={withdrawLoading}
-          >
-            {withdrawLoading ? "Submitting..." : "Request withdrawal"}
-          </button>
-        </div>
-
-        <div className={styles.walletHistory}>
-          <div className={styles.walletHistoryHeader}>
-            <strong>Withdrawal history</strong>
-          </div>
-
-          {withdrawals.length ? (
-            withdrawals.map((request) => (
-              <div key={request._id} className={styles.walletTxn}>
-                <div>
-                  <strong>
-                    {request.amount} SC to {request.upiId}
-                  </strong>
-                  <span>{new Date(request.createdAt).toLocaleString()}</span>
-                  <div className={styles.walletAuditRow}>
-                    <span
-                      className={`${styles.walletAuditBadge} ${
-                        request.status === "paid"
-                          ? styles.walletAuditAnchored
-                          : request.status === "rejected"
-                            ? styles.walletAuditFailed
-                            : styles.walletAuditPending
-                      }`}
-                    >
-                      {request.status}
-                    </span>
-                    {request.adminNote ? (
-                      <span className={styles.walletAdminNote}>
-                        Admin note: {request.adminNote}
-                      </span>
-                    ) : null}
-                  </div>
-                </div>
-                <span className={styles.walletTxnNegative}>
-                  -{request.amount} SC
-                </span>
-              </div>
-            ))
-          ) : (
-            <div className={styles.walletEmpty}>No withdrawal requests yet.</div>
-          )}
-        </div>
       </div>
 
       <AppDialog

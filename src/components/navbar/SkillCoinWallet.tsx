@@ -6,14 +6,17 @@ import { useAuth } from "../../context/AuthContext";
 import AppDialog from "../ui/AppDialog";
 import {
   createWalletRechargeOrder,
+  getWithdrawalRequests,
   getWalletProof,
   getWalletTransactions,
+  requestWithdrawal,
   verifyWalletRecharge,
 } from "../../services/auth.service";
 import WalletPanelContent from "./WalletPanelContent";
 import {
   getRechargeBonus,
   type WalletHistoryItem,
+  type WithdrawalHistoryItem,
 } from "./walletHelpers";
 
 declare global {
@@ -60,6 +63,11 @@ const SkillCoinWallet = () => {
   const [amount, setAmount] = useState("250");
   const [loading, setLoading] = useState(false);
   const [transactions, setTransactions] = useState<WalletHistoryItem[]>([]);
+  const [withdrawals, setWithdrawals] = useState<WithdrawalHistoryItem[]>([]);
+  const [withdrawAmount, setWithdrawAmount] = useState("");
+  const [withdrawUpiId, setWithdrawUpiId] = useState("");
+  const [withdrawNote, setWithdrawNote] = useState("");
+  const [withdrawLoading, setWithdrawLoading] = useState(false);
   const [proofLoadingId, setProofLoadingId] = useState("");
   const [dialog, setDialog] = useState<{
     title: string;
@@ -81,10 +89,13 @@ const SkillCoinWallet = () => {
       return;
     }
 
-    void getWalletTransactions()
-      .then(setTransactions)
+    void Promise.all([getWalletTransactions(), getWithdrawalRequests()])
+      .then(([walletHistory, withdrawalHistory]) => {
+        setTransactions(walletHistory);
+        setWithdrawals(withdrawalHistory);
+      })
       .catch((error) => {
-        console.error("Failed to load wallet history:", error);
+        console.error("Failed to load wallet data:", error);
       });
   }, [open]);
 
@@ -216,6 +227,63 @@ const SkillCoinWallet = () => {
     }
   };
 
+  const handleWithdrawalRequest = async () => {
+    const numericAmount = Math.round(Number(withdrawAmount || 0));
+
+    if (!numericAmount || numericAmount <= 0) {
+      setDialog({
+        title: "Enter a valid withdrawal amount",
+        message: "Add a positive SkillCoin amount before requesting a withdrawal.",
+        tone: "warning",
+      });
+      return;
+    }
+
+    if (!withdrawUpiId.trim()) {
+      setDialog({
+        title: "UPI ID required",
+        message: "Enter the UPI ID where the admin should send your payout.",
+        tone: "warning",
+      });
+      return;
+    }
+
+    try {
+      setWithdrawLoading(true);
+      const response = await requestWithdrawal({
+        amount: numericAmount,
+        upiId: withdrawUpiId.trim(),
+        note: withdrawNote.trim(),
+      });
+
+      await refreshUser();
+      const [walletHistory, withdrawalHistory] = await Promise.all([
+        getWalletTransactions(),
+        getWithdrawalRequests(),
+      ]);
+      setTransactions(walletHistory);
+      setWithdrawals(withdrawalHistory);
+      setWithdrawAmount("");
+      setWithdrawNote("");
+      setDialog({
+        title: "Withdrawal requested",
+        message: `${response.request.amount} SC has been locked for withdrawal to ${response.request.upiId}. Admin will update the status after review.`,
+        tone: "success",
+      });
+    } catch (error: any) {
+      setDialog({
+        title: "Withdrawal unavailable",
+        message:
+          error?.response?.data?.message ||
+          error?.message ||
+          "Withdrawal request could not be submitted",
+        tone: "danger",
+      });
+    } finally {
+      setWithdrawLoading(false);
+    }
+  };
+
   return (
     <div className={styles.walletWrap} ref={rootRef}>
       <button
@@ -254,6 +322,7 @@ const SkillCoinWallet = () => {
             amount={amount}
             setAmount={setAmount}
             transactions={transactions}
+            withdrawals={withdrawals}
             proofLoadingId={proofLoadingId}
             lockedRatio={lockedRatio}
             selectedBonus={getRechargeBonus(
@@ -261,6 +330,14 @@ const SkillCoinWallet = () => {
             )}
             onRecharge={startRecharge}
             onViewProof={handleViewProof}
+            withdrawAmount={withdrawAmount}
+            setWithdrawAmount={setWithdrawAmount}
+            withdrawUpiId={withdrawUpiId}
+            setWithdrawUpiId={setWithdrawUpiId}
+            withdrawNote={withdrawNote}
+            setWithdrawNote={setWithdrawNote}
+            onWithdraw={handleWithdrawalRequest}
+            withdrawLoading={withdrawLoading}
           />
         </div>
       ) : null}

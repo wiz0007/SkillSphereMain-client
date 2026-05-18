@@ -48,3 +48,15 @@ export type WalletHistoryItem = {
   chainName: string | null;
   network: string | null;
 };
+
+export type WithdrawalHistoryItem = {
+  _id: string;
+  amount: number;
+  upiId: string;
+  note: string;
+  status: "pending" | "processing" | "paid" | "rejected";
+  adminNote: string;
+  reviewedAt: string | null;
+  paidAt: string | null;
+  createdAt: string;
+};

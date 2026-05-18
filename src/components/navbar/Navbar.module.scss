@@ -181,6 +181,36 @@
   overflow: hidden;
 }
 
+.walletTabRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.walletTabButton {
+  min-height: 42px;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid rgba(203, 213, 225, 0.92);
+  border-radius: 999px;
+  background: #ffffff;
+  color: #64748b;
+  font-size: 0.84rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.walletTabButtonActive {
+  border-color: rgba(15, 23, 42, 0.08);
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: #ffffff;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.14);
+}
+
 .walletMiniFill,
 .walletBarFill {
   height: 100%;
@@ -350,6 +380,12 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+  }
+
+  > input,
+  > textarea {
+    @include input-surface(42px);
+    width: 100%;
   }
 }
 
@@ -553,15 +589,11 @@
 }
 
 .walletTextarea {
-  width: 100%;
   min-height: 110px;
-  padding: 0.9rem 1rem;
-  border: 1px solid #d9e2ec;
-  border-radius: 18px;
-  background: #fbfdff;
-  color: #0f172a;
+  padding-top: 0.9rem;
+  padding-bottom: 0.9rem;
   resize: vertical;
-  font: inherit;
+  line-height: 1.5;
 }
 
 .walletWithdrawActions {
