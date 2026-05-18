@@ -2,6 +2,12 @@
 
 .page {
   @include app-page;
+  min-height: calc(100vh - 2rem);
+  overflow: hidden;
+
+  @include respond(md) {
+    overflow: visible;
+  }
 }
 
 .header {
@@ -63,11 +69,13 @@
   display: grid;
   grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
   gap: 1.2rem;
-  min-height: 68vh;
+  min-height: 0;
+  height: calc(100vh - 18rem);
   align-items: start;
 
   @include respond(md) {
     grid-template-columns: 1fr;
+    height: auto;
   }
 }
 
@@ -80,22 +88,21 @@
 }
 
 .sidebar {
-  max-height: clamp(560px, 72vh, 860px);
+  height: 100%;
+  overflow: hidden;
 
   @include respond(md) {
-    max-height: none;
+    height: auto;
   }
 }
 
 .chatPanel {
-  height: clamp(560px, 72vh, 860px);
+  height: 100%;
+  overflow: hidden;
 
   @include respond(md) {
-    height: 72vh;
-  }
-
-  @include respond(sm) {
-    height: 76vh;
+    min-height: 72vh;
+    height: auto;
   }
 }
 
