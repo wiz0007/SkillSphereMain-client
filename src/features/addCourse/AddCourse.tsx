@@ -27,6 +27,7 @@ type FormState = {
   skills: string;
   price: string;
   duration: string;
+  demoVideoUrl: string;
   contentDriveLink: string;
   tuitionStartTime: string;
   tuitionDays: string;
@@ -44,6 +45,7 @@ const fieldOrder: FormField[] = [
   "duration",
   "skills",
   "price",
+  "demoVideoUrl",
   "contentDriveLink",
   "tuitionStartTime",
   "tuitionDays",
@@ -59,6 +61,7 @@ const fieldLabels: Record<FormField, string> = {
   skills: "Skills",
   price: "Price",
   duration: "Duration",
+  demoVideoUrl: "Demo video link",
   contentDriveLink: "Google Drive link",
   tuitionStartTime: "Tuition start time",
   tuitionDays: "Tuition days",
@@ -135,6 +138,7 @@ const AddCourse = () => {
       skills: state?.skills?.join(", ") || "",
       price: state?.price ? String(state.price) : "",
       duration: state?.duration || "",
+      demoVideoUrl: state?.demoVideoUrl || "",
       contentDriveLink: state?.contentDriveLink || "",
       tuitionStartTime: state?.tuitionSchedule?.startTime || "",
       tuitionDays: state?.tuitionSchedule?.days?.join(", ") || "",
@@ -261,6 +265,28 @@ const AddCourse = () => {
           : form.type === "tuition"
             ? "Add the duration of each tuition class."
             : "Add a session duration.";
+      case "demoVideoUrl":
+        if (!value.trim()) {
+          return "";
+        }
+        try {
+          const url = new URL(value.trim());
+          const hostname = url.hostname.toLowerCase();
+          const isAllowedHost = [
+            "youtube.com",
+            "www.youtube.com",
+            "youtu.be",
+            "drive.google.com",
+            "www.drive.google.com",
+            "res.cloudinary.com",
+          ].includes(hostname);
+
+          return isAllowedHost
+            ? ""
+            : "Use a YouTube, Google Drive, or Cloudinary demo video link.";
+        } catch {
+          return "Use a valid video URL for the course demo.";
+        }
       case "contentDriveLink":
         if (form.type !== "recorded") {
           return "";
@@ -448,6 +474,7 @@ const AddCourse = () => {
       ...form,
       price: Number(form.price),
       skills: normalizeSkills(form.skills),
+      demoVideoUrl: form.demoVideoUrl.trim(),
       contentDriveLink: isRecordedCourse ? form.contentDriveLink.trim() : "",
       tuitionSchedule: isTuitionCourse
         ? {
@@ -901,6 +928,31 @@ const AddCourse = () => {
               {section.id === "pricing" ? (
                 <div className={styles.fieldGrid}>
                   <label
+                    className={`${styles.field} ${styles.fieldWide} ${
+                      visibleErrors.demoVideoUrl ? styles.fieldInvalid : ""
+                    }`}
+                  >
+                    <span>Demo video link</span>
+                    <input
+                      ref={setFieldRef("demoVideoUrl")}
+                      name="demoVideoUrl"
+                      value={form.demoVideoUrl}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      placeholder="https://youtu.be/... or https://drive.google.com/..."
+                    />
+                    {visibleErrors.demoVideoUrl ? (
+                      <small className={styles.errorText}>
+                        {visibleErrors.demoVideoUrl}
+                      </small>
+                    ) : (
+                      <small className={styles.helperText}>
+                        Optional. Add a short teaching preview from YouTube, Google Drive, or Cloudinary so learners can watch your style before booking.
+                      </small>
+                    )}
+                  </label>
+
+                  <label
                     className={`${styles.field} ${
                       visibleErrors.price ? styles.fieldInvalid : ""
                     }`}
@@ -1075,6 +1127,12 @@ const AddCourse = () => {
                   </span>
                 </div>
             </div>
+
+            {form.demoVideoUrl.trim() ? (
+              <div className={styles.skills}>
+                <span>Demo video ready</span>
+              </div>
+            ) : null}
           </div>
         </aside>
       </div>

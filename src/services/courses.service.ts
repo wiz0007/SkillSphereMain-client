@@ -123,6 +123,7 @@ export interface Course {
   price?: number;
   duration?: string;
   contentDriveLink?: string;
+  demoVideoUrl?: string;
   tuitionSchedule?: TuitionSchedule;
   isPublished?: boolean;
   tutor: Tutor;
@@ -150,6 +151,7 @@ export interface CoursePayload {
   price?: number;
   duration?: string;
   contentDriveLink?: string;
+  demoVideoUrl?: string;
   tuitionSchedule?: TuitionSchedule;
   isPublished?: boolean;
 }

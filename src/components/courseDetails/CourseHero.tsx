@@ -9,6 +9,72 @@ import {
 import { useNavigate } from "react-router-dom";
 import styles from "./CourseDetails.module.scss";
 
+const getDemoVideoEmbed = (demoVideoUrl?: string) => {
+  if (!demoVideoUrl?.trim()) {
+    return null;
+  }
+
+  try {
+    const url = new URL(demoVideoUrl.trim());
+    const hostname = url.hostname.toLowerCase();
+
+    if (hostname === "youtu.be") {
+      const videoId = url.pathname.replaceAll("/", "");
+      return videoId
+        ? {
+            type: "iframe" as const,
+            src: `https://www.youtube.com/embed/${videoId}`,
+          }
+        : null;
+    }
+
+    if (hostname === "youtube.com" || hostname === "www.youtube.com") {
+      const videoId =
+        url.searchParams.get("v") ||
+        url.pathname.split("/").filter(Boolean).at(-1) ||
+        "";
+
+      return videoId
+        ? {
+            type: "iframe" as const,
+            src: `https://www.youtube.com/embed/${videoId}`,
+          }
+        : null;
+    }
+
+    if (hostname === "drive.google.com") {
+      const fileMatch =
+        url.pathname.match(/\/file\/d\/([^/]+)/)?.[1] ||
+        url.searchParams.get("id");
+
+      return fileMatch
+        ? {
+            type: "iframe" as const,
+            src: `https://drive.google.com/file/d/${fileMatch}/preview`,
+          }
+        : null;
+    }
+
+    const isDirectVideo = /\.(mp4|webm|ogg)(\?|#|$)/i.test(url.pathname);
+    const isCloudinaryVideo =
+      hostname === "res.cloudinary.com" && url.pathname.includes("/video/");
+
+    if (isDirectVideo || isCloudinaryVideo) {
+      return {
+        type: "video" as const,
+        src: demoVideoUrl.trim(),
+      };
+    }
+
+    return {
+      type: "link" as const,
+      src: demoVideoUrl.trim(),
+    };
+  } catch {
+    return null;
+  }
+};
+
 const CourseHero = ({
   course,
   hover,
@@ -44,6 +110,7 @@ const CourseHero = ({
   const tutorAvatar =
     course.tutor?.profilePhoto ||
     `https://ui-avatars.com/api/?name=${encodeURIComponent(tutorName)}`;
+  const demoVideo = getDemoVideoEmbed(course.demoVideoUrl);
 
   return (
     <article className={styles.left}>
@@ -135,6 +202,41 @@ const CourseHero = ({
           </strong>
         </div>
       </div>
+
+      {demoVideo ? (
+        <section className={styles.demoSection}>
+          <div className={styles.demoHeader}>
+            <span className={styles.kicker}>Watch demo</span>
+            <strong>Preview how this tutor teaches</strong>
+          </div>
+
+          <div className={styles.demoFrame}>
+            {demoVideo.type === "iframe" ? (
+              <iframe
+                src={demoVideo.src}
+                title={`${course.title} demo video`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            ) : demoVideo.type === "video" ? (
+              <video controls preload="metadata">
+                <source src={demoVideo.src} />
+                Your browser does not support inline video playback.
+              </video>
+            ) : (
+              <div className={styles.demoFallback}>
+                <p>
+                  This demo is available on an external platform. Open it in a
+                  new tab to preview the tutor.
+                </p>
+                <a href={demoVideo.src} target="_blank" rel="noreferrer">
+                  Watch demo
+                </a>
+              </div>
+            )}
+          </div>
+        </section>
+      ) : null}
 
       <div className={styles.ratePanel}>
         <div>
