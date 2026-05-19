@@ -30,7 +30,7 @@ export const getExplorerUrl = (
   }
 
   if (network === "amoy") {
-    return `https://www.oklink.com/amoy/tx/${chainTxHash}`;
+    return `https://amoy.polygonscan.com/tx/${chainTxHash}`;
   }
 
   return `https://polygonscan.com/tx/${chainTxHash}`;

@@ -223,6 +223,7 @@
   top: calc(100% + 0.8rem);
   right: 0;
   width: min(92vw, 360px);
+  max-height: min(80vh, 760px);
   padding: 1rem;
   border-radius: 22px;
   background: rgba(255, 255, 255, 0.98);
@@ -230,8 +231,22 @@
   box-shadow: $shadow-lg;
   display: flex;
   flex-direction: column;
-  gap: 0.9rem;
+  overflow: hidden;
   animation: dropdownIn 0.18s ease;
+}
+
+.walletPanelContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 0.15rem;
+}
+
+.walletPanelContentCompact {
+  flex: 1;
 }
 
 .walletPanelHeader {
@@ -559,10 +574,12 @@
   flex-direction: column;
   gap: 0.9rem;
   padding: 1rem;
+  max-height: calc(100dvh - #{$shell-navbar-height} - 3rem);
   border-radius: 24px;
   background: rgba(255, 255, 255, 0.96);
   border: 1px solid rgba(226, 232, 240, 0.95);
   box-shadow: $shadow-lg;
+  overflow: hidden;
 }
 
 .walletSectionHeader {
@@ -973,6 +990,7 @@
   .walletPanel {
     right: -0.5rem;
     width: min(calc(100vw - 2rem), 360px);
+    max-height: calc(100dvh - #{$shell-navbar-height} - 1.5rem);
   }
 
   .walletStats {
@@ -985,6 +1003,14 @@
 
   .walletInputRow {
     grid-template-columns: 1fr;
+  }
+
+  .walletPage {
+    padding-bottom: 1rem;
+  }
+
+  .walletPageCard {
+    max-height: calc(100dvh - #{$shell-navbar-height} - 2.2rem);
   }
 
   .bottomNav {

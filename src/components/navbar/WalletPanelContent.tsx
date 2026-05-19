@@ -65,7 +65,11 @@ const WalletPanelContent = ({
   const [activeTab, setActiveTab] = useState<WalletTab>("recharge");
 
   return (
-    <>
+    <div
+      className={`${styles.walletPanelContent} ${
+        compact ? styles.walletPanelContentCompact : ""
+      }`}
+    >
       <div className={styles.walletPanelHeader}>
         <div>
           <span className={styles.walletKicker}>Wallet</span>
@@ -366,7 +370,7 @@ const WalletPanelContent = ({
       </div>
 
       {compact ? <div className={styles.walletPageSpacer} /> : null}
-    </>
+    </div>
   );
 };
 
