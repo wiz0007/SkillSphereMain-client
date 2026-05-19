@@ -156,6 +156,7 @@ export interface AdminWalletTransaction {
   lockedAfter: number;
   auditStatus: "pending" | "anchored" | "failed";
   chainTxHash: string | null;
+  network: string | null;
   createdAt: string;
   user: AdminUser;
 }

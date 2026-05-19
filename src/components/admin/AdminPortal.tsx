@@ -33,6 +33,7 @@ import {
   type AdminWithdrawalRequest,
   type AdminWalletTransaction,
 } from "../../services/admin.service";
+import { getExplorerUrl } from "../navbar/walletHelpers";
 import styles from "./AdminPortal.module.scss";
 
 type AdminTab =
@@ -1673,6 +1674,7 @@ const AdminPortal = () => {
                     <th>Type</th>
                     <th>Amount</th>
                     <th>Audit</th>
+                    <th>Explorer</th>
                     <th>Description</th>
                     <th>Created</th>
                   </tr>
@@ -1684,6 +1686,20 @@ const AdminPortal = () => {
                       <td>{entry.type}</td>
                       <td>{entry.amount} SC</td>
                       <td>{entry.auditStatus}</td>
+                      <td>
+                        {entry.chainTxHash ? (
+                          <a
+                            href={getExplorerUrl(entry.chainTxHash, entry.network)}
+                            target="_blank"
+                            rel="noreferrer"
+                            className={styles.attachmentLink}
+                          >
+                            Explorer
+                          </a>
+                        ) : (
+                          <span className={styles.mutedCopy}>Not anchored</span>
+                        )}
+                      </td>
                       <td>{entry.description}</td>
                       <td>{new Date(entry.createdAt).toLocaleString()}</td>
                     </tr>
