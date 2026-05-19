@@ -15,6 +15,7 @@ import styles from "./AddCourse.module.scss";
 
 import {
   createCourse,
+  getCourseById,
   updateCourse,
 } from "../../services/courses.service";
 
@@ -117,43 +118,44 @@ const sectionDefinitions = [
   },
 ] as const;
 
+const buildFormState = (source?: any): FormState => ({
+  title: source?.title || "",
+  description: source?.description || "",
+  type:
+    source?.type === "recorded"
+      ? "recorded"
+      : source?.type === "tuition"
+        ? "tuition"
+        : "live",
+  category: source?.category || "",
+  level: source?.level || "Beginner",
+  skills: source?.skills?.join(", ") || "",
+  price: source?.price ? String(source.price) : "",
+  duration: source?.duration || "",
+  demoVideoUrl: source?.demoVideoUrl || "",
+  contentDriveLink: source?.contentDriveLink || "",
+  tuitionStartTime: source?.tuitionSchedule?.startTime || "",
+  tuitionDays: source?.tuitionSchedule?.days?.join(", ") || "",
+  tuitionWeeks: source?.tuitionSchedule?.weeks?.map(String)?.join(", ") || "",
+});
+
 const AddCourse = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { state } = location;
   const { id } = useParams();
 
-  const initialForm = useMemo<FormState>(
-    () => ({
-      title: state?.title || "",
-      description: state?.description || "",
-      type:
-        state?.type === "recorded"
-          ? "recorded"
-          : state?.type === "tuition"
-            ? "tuition"
-            : "live",
-      category: state?.category || "",
-      level: state?.level || "Beginner",
-      skills: state?.skills?.join(", ") || "",
-      price: state?.price ? String(state.price) : "",
-      duration: state?.duration || "",
-      demoVideoUrl: state?.demoVideoUrl || "",
-      contentDriveLink: state?.contentDriveLink || "",
-      tuitionStartTime: state?.tuitionSchedule?.startTime || "",
-      tuitionDays: state?.tuitionSchedule?.days?.join(", ") || "",
-      tuitionWeeks:
-        state?.tuitionSchedule?.weeks?.map(String)?.join(", ") || "",
-    }),
-    [state]
-  );
+  const initialForm = useMemo<FormState>(() => buildFormState(state), [state]);
 
   const [form, setForm] = useState<FormState>(initialForm);
+  const [initialSnapshot, setInitialSnapshot] =
+    useState<FormState>(initialForm);
   const [touched, setTouched] = useState<Partial<Record<FormField, boolean>>>(
     {}
   );
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [hydrating, setHydrating] = useState(Boolean(id));
   const [serverError, setServerError] = useState("");
   const [showLeaveDialog, setShowLeaveDialog] = useState(false);
 
@@ -364,7 +366,7 @@ const AddCourse = () => {
   const hasValidationErrors = totalErrors > 0;
 
   const previewSkills = normalizeSkills(form.skills).slice(0, 4);
-  const isDirty = JSON.stringify(form) !== JSON.stringify(initialForm);
+  const isDirty = JSON.stringify(form) !== JSON.stringify(initialSnapshot);
   const isRecordedCourse = form.type === "recorded";
   const isTuitionCourse = form.type === "tuition";
   const selectedTuitionDays = parseSelectionList(form.tuitionDays);
@@ -378,6 +380,53 @@ const AddCourse = () => {
         form.tuitionStartTime ? ` at ${form.tuitionStartTime}` : ""
       }`
     : "";
+
+  useEffect(() => {
+    if (!id) {
+      setForm(initialForm);
+      setInitialSnapshot(initialForm);
+      setHydrating(false);
+      return;
+    }
+
+    let cancelled = false;
+
+    const loadCourseForEdit = async () => {
+      try {
+        setHydrating(true);
+        const latestCourse = await getCourseById(id);
+
+        if (cancelled) {
+          return;
+        }
+
+        const nextForm = buildFormState(latestCourse);
+        setForm(nextForm);
+        setInitialSnapshot(nextForm);
+        setTouched({});
+        setSubmitAttempted(false);
+        setServerError("");
+      } catch (error: any) {
+        if (cancelled) {
+          return;
+        }
+
+        setServerError(
+          error?.message || "We could not load this course for editing."
+        );
+      } finally {
+        if (!cancelled) {
+          setHydrating(false);
+        }
+      }
+    };
+
+    void loadCourseForEdit();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [id, initialForm]);
 
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
@@ -506,6 +555,18 @@ const AddCourse = () => {
 
   return (
     <section className={styles.layout}>
+      {hydrating ? (
+        <div className={styles.summary} role="status">
+          <div className={styles.summaryHeader}>
+            <AlertTriangle size={18} />
+            <div>
+              <strong>Loading course details for editing...</strong>
+              <p>Fetching the latest saved course data so every field stays in sync.</p>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       <div className={styles.header}>
         <div>
           <span className={styles.kicker}>
