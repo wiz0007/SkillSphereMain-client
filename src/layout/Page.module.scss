@@ -3,7 +3,8 @@
 .layout {
   width: 100%;
   min-height: 100vh;
-  background: $color-bg;
+  background: var(--color-bg);
+  transition: background-color 0.25s ease;
 }
 
 .shell {

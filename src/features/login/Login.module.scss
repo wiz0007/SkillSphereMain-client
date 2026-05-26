@@ -5,9 +5,9 @@
   padding: 2rem 1.5rem 2.5rem;
   overflow-x: clip;
   background:
-    radial-gradient(circle at top left, rgba(46, 196, 182, 0.12), transparent 26%),
-    radial-gradient(circle at bottom right, rgba(255, 183, 3, 0.14), transparent 24%),
-    #f8fafc;
+    radial-gradient(circle at top left, rgba(var(--color-accent-rgb), 0.12), transparent 26%),
+    radial-gradient(circle at bottom right, rgba(255, 183, 3, 0.12), transparent 24%),
+    linear-gradient(180deg, var(--color-bg) 0%, color-mix(in srgb, var(--color-bg) 86%, #08101f) 100%);
 }
 
 .shell {
@@ -34,7 +34,7 @@
     margin: 0 0 0.8rem;
     font-size: clamp(2rem, 4.5vw, 3.2rem);
     line-height: 1.04;
-    color: #0f172a;
+    color: var(--color-text-primary);
   }
 }
 
@@ -45,7 +45,7 @@
 
 .subtitle {
   margin: 0;
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.98rem;
   line-height: 1.7;
 }
@@ -62,12 +62,12 @@
   h2 {
     margin: 0 0 0.3rem;
     font-size: 1.35rem;
-    color: #0f172a;
+    color: var(--color-text-primary);
   }
 
   p {
     margin: 0;
-    color: #64748b;
+    color: var(--color-text-secondary);
     font-size: 0.92rem;
   }
 }
@@ -96,7 +96,7 @@
   min-width: 0;
 
   span {
-    color: #475569;
+    color: var(--color-text-secondary);
     font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -112,7 +112,7 @@
 .inputError {
   border-color: rgba(225, 29, 72, 0.55) !important;
   box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.08);
-  background: #fffafc;
+  background: color-mix(in srgb, var(--color-surface) 92%, #4c0519 8%);
 }
 
 .helperText,
@@ -122,7 +122,7 @@
 }
 
 .helperText {
-  color: #64748b;
+  color: var(--color-text-secondary);
 }
 
 .errorText {
@@ -153,7 +153,7 @@
   border: none;
   border-radius: 12px;
   background: transparent;
-  color: #64748b;
+  color: var(--color-text-secondary);
   transform: translateY(-50%);
   cursor: pointer;
 }
@@ -174,7 +174,7 @@
   padding: 0.85rem 0.95rem;
   border-radius: 16px;
   border: 1px solid rgba(251, 191, 36, 0.4);
-  background: #fff9ef;
+  background: color-mix(in srgb, var(--color-surface) 86%, #fffbeb 14%);
   color: #8a5a0a;
   font-size: 0.84rem;
   font-weight: 700;
@@ -182,12 +182,12 @@
 
 .footer {
   margin: 1rem 0 0;
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.88rem;
   text-align: center;
 
   a {
-    color: #0f172a;
+    color: var(--color-text-primary);
     font-weight: 700;
     text-decoration: none;
   }

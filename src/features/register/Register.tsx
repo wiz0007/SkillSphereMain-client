@@ -16,6 +16,7 @@ import {
   resendOTP,
   checkUsername,
 } from "../../services/auth.service";
+import SocialAuthButtons from "../../components/auth/SocialAuthButtons";
 
 interface RegisterForm {
   username: string;
@@ -295,7 +296,8 @@ const Register = () => {
           ) : null}
 
           {!isOtpStep ? (
-            <form onSubmit={handleSubmit} className={styles.form}>
+            <>
+              <form onSubmit={handleSubmit} className={styles.form}>
               <label className={styles.field}>
                 <span>Username</span>
                 <input
@@ -508,20 +510,22 @@ const Register = () => {
                 </div>
               ) : null}
 
-              <button
-                type="submit"
-                className={styles.submitButton}
-                disabled={
-                  loading ||
-                  !isPasswordValid ||
-                  !isMatch ||
-                  !acceptedTerms ||
-                  usernameStatus !== "available"
-                }
-              >
-                {loading ? "Creating account..." : "Create account"}
-              </button>
-            </form>
+                <button
+                  type="submit"
+                  className={styles.submitButton}
+                  disabled={
+                    loading ||
+                    !isPasswordValid ||
+                    !isMatch ||
+                    !acceptedTerms ||
+                    usernameStatus !== "available"
+                  }
+                >
+                  {loading ? "Creating account..." : "Create account"}
+                </button>
+              </form>
+              <SocialAuthButtons />
+            </>
           ) : (
             <div className={styles.form}>
               <label className={styles.field}>

@@ -1,5 +1,21 @@
 import { api } from "../api/api";
 
+export type SocialAuthProvider = "google" | "linkedin" | "github";
+
+const getApiOrigin = () => {
+  const baseUrl = String(api.defaults.baseURL || "");
+
+  if (!baseUrl) {
+    return "";
+  }
+
+  return baseUrl.replace(/\/api\/?$/, "");
+};
+
+export const getSocialAuthStartUrl = (
+  provider: SocialAuthProvider
+) => `${getApiOrigin()}/api/auth/${provider}/start`;
+
 export const loginUser = async (data: {
   email: string;
   password: string;
@@ -74,6 +90,12 @@ export const getCurrentUser = async () => {
       _id: string;
       name?: string;
       email: string;
+      authProvider: "local" | "google" | "linkedin" | "github";
+      linkedProviders: {
+        google: boolean;
+        linkedin: boolean;
+        github: boolean;
+      };
       profilePhoto?: string;
       profileCompleted?: boolean;
       isTutor: boolean;

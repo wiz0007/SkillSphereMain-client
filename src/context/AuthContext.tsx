@@ -12,6 +12,12 @@ export interface User {
   _id: string;
   name?: string;
   email: string;
+  authProvider: "local" | "google" | "linkedin" | "github";
+  linkedProviders: {
+    google: boolean;
+    linkedin: boolean;
+    github: boolean;
+  };
   profilePhoto?: string;
   profileCompleted?: boolean;
   isTutor: boolean;

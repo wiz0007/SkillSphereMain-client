@@ -11,6 +11,7 @@ import { AlertTriangle } from "lucide-react";
 import styles from "./Login.module.scss";
 import { loginUser } from "../../services/auth.service";
 import { useAuth } from "../../context/AuthContext";
+import SocialAuthButtons from "../../components/auth/SocialAuthButtons";
 
 interface LoginForm {
   email: string;
@@ -222,6 +223,8 @@ export function Login() {
               {loading ? "Signing in..." : "Sign in"}
             </button>
           </form>
+
+          <SocialAuthButtons compact />
 
           <p className={styles.footer}>
             <Link to="/forgot-password">Forgot your password?</Link>

@@ -7,12 +7,14 @@ import {
   changePassword,
   checkUsername,
   deleteAccount,
+  getSocialAuthStartUrl,
 } from "../../services/auth.service";
 import {
   getMyProfile,
   updateProfile,
   type ProfileSettings,
 } from "../../services/profile.service";
+import { FaGithub, FaGoogle, FaLinkedinIn } from "react-icons/fa6";
 
 interface SettingsProfile {
   fullName: string;
@@ -51,7 +53,28 @@ const normalizeSettings = (settings?: ProfileSettings): ProfileSettings => ({
 
 const Settings = () => {
   const { user, logout, setUser } = useAuth();
-  const { dark, toggleTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
+  const isLocalAuth = (user?.authProvider || "local") === "local";
+  const socialConnections = [
+    {
+      key: "google" as const,
+      label: "Google",
+      icon: <FaGoogle aria-hidden="true" />,
+      linked: Boolean(user?.linkedProviders?.google),
+    },
+    {
+      key: "linkedin" as const,
+      label: "LinkedIn",
+      icon: <FaLinkedinIn aria-hidden="true" />,
+      linked: Boolean(user?.linkedProviders?.linkedin),
+    },
+    {
+      key: "github" as const,
+      label: "GitHub",
+      icon: <FaGithub aria-hidden="true" />,
+      linked: Boolean(user?.linkedProviders?.github),
+    },
+  ];
 
   const [profile, setProfile] = useState<SettingsProfile | null>(null);
   const [form, setForm] = useState<SettingsProfile>({
@@ -138,12 +161,11 @@ const Settings = () => {
     if (!profile) return;
 
     const desiredTheme = form.settings.theme || "dark";
-    const isDarkDesired = desiredTheme === "dark";
 
-    if (dark !== isDarkDesired) {
-      toggleTheme();
+    if (theme !== desiredTheme) {
+      setTheme(desiredTheme);
     }
-  }, [dark, form.settings.theme, profile, toggleTheme]);
+  }, [form.settings.theme, profile, setTheme, theme]);
 
   const passwordChecks = useMemo(
     () => ({
@@ -556,90 +578,141 @@ const Settings = () => {
         <div className={styles.card}>
           <div className={styles.sectionHeader}>
             <div>
-              <h2>Change Password</h2>
-              <p>Use a strong password you are not using anywhere else.</p>
+              <h2>{isLocalAuth ? "Change Password" : "Account Sign-in"}</h2>
+              <p>
+                {isLocalAuth
+                  ? "Use a strong password you are not using anywhere else."
+                  : "Your account signs in through a social provider. You can still see which providers are attached here."}
+              </p>
             </div>
           </div>
+          {isLocalAuth ? (
+            <>
+              <div className={styles.formGrid}>
+                <label>
+                  Current Password
+                  <input
+                    type="password"
+                    value={passwordForm.currentPassword}
+                    onChange={(e) =>
+                      setPasswordForm((prev) => ({
+                        ...prev,
+                        currentPassword: e.target.value,
+                      }))
+                    }
+                    placeholder="Current password"
+                  />
+                </label>
 
-          <div className={styles.formGrid}>
-            <label>
-              Current Password
-              <input
-                type="password"
-                value={passwordForm.currentPassword}
-                onChange={(e) =>
-                  setPasswordForm((prev) => ({
-                    ...prev,
-                    currentPassword: e.target.value,
-                  }))
-                }
-                placeholder="Current password"
-              />
-            </label>
+                <label>
+                  New Password
+                  <input
+                    type="password"
+                    value={passwordForm.newPassword}
+                    onChange={(e) =>
+                      setPasswordForm((prev) => ({
+                        ...prev,
+                        newPassword: e.target.value,
+                      }))
+                    }
+                    placeholder="New password"
+                  />
+                </label>
 
-            <label>
-              New Password
-              <input
-                type="password"
-                value={passwordForm.newPassword}
-                onChange={(e) =>
-                  setPasswordForm((prev) => ({
-                    ...prev,
-                    newPassword: e.target.value,
-                  }))
-                }
-                placeholder="New password"
-              />
-            </label>
+                <label>
+                  Confirm Password
+                  <input
+                    type="password"
+                    value={passwordForm.confirmPassword}
+                    onChange={(e) =>
+                      setPasswordForm((prev) => ({
+                        ...prev,
+                        confirmPassword: e.target.value,
+                      }))
+                    }
+                    placeholder="Confirm new password"
+                  />
+                </label>
+              </div>
 
-            <label>
-              Confirm Password
-              <input
-                type="password"
-                value={passwordForm.confirmPassword}
-                onChange={(e) =>
-                  setPasswordForm((prev) => ({
-                    ...prev,
-                    confirmPassword: e.target.value,
-                  }))
-                }
-                placeholder="Confirm new password"
-              />
-            </label>
-          </div>
+              <div className={styles.passwordRules}>
+                <span className={passwordChecks.length ? styles.ruleValid : ""}>
+                  8+ characters
+                </span>
+                <span className={passwordChecks.upper ? styles.ruleValid : ""}>
+                  uppercase
+                </span>
+                <span className={passwordChecks.lower ? styles.ruleValid : ""}>
+                  lowercase
+                </span>
+                <span className={passwordChecks.number ? styles.ruleValid : ""}>
+                  number
+                </span>
+                <span className={passwordChecks.special ? styles.ruleValid : ""}>
+                  special char
+                </span>
+              </div>
 
-          <div className={styles.passwordRules}>
-            <span className={passwordChecks.length ? styles.ruleValid : ""}>
-              8+ characters
-            </span>
-            <span className={passwordChecks.upper ? styles.ruleValid : ""}>
-              uppercase
-            </span>
-            <span className={passwordChecks.lower ? styles.ruleValid : ""}>
-              lowercase
-            </span>
-            <span className={passwordChecks.number ? styles.ruleValid : ""}>
-              number
-            </span>
-            <span className={passwordChecks.special ? styles.ruleValid : ""}>
-              special char
-            </span>
-          </div>
+              <div className={styles.inlineActions}>
+                <span className={styles.feedback}>
+                  {passwordMessage || "Password changes take effect immediately."}
+                </span>
 
-          <div className={styles.inlineActions}>
-            <span className={styles.feedback}>
-              {passwordMessage || "Password changes take effect immediately."}
-            </span>
+                <button
+                  type="button"
+                  className={styles.primaryButton}
+                  onClick={handlePasswordChange}
+                  disabled={passwordSaving}
+                >
+                  {passwordSaving ? "Updating..." : "Update Password"}
+                </button>
+              </div>
+            </>
+          ) : (
+            <div className={styles.providerStack}>
+              <div className={styles.providerSummary}>
+                <strong>Primary sign-in method</strong>
+                <span>{user?.authProvider || "social"}</span>
+              </div>
 
-            <button
-              type="button"
-              className={styles.primaryButton}
-              onClick={handlePasswordChange}
-              disabled={passwordSaving}
-            >
-              {passwordSaving ? "Updating..." : "Update Password"}
-            </button>
-          </div>
+              {socialConnections.map((provider) => (
+                <div key={provider.key} className={styles.providerRow}>
+                  <div className={styles.providerMeta}>
+                    <span className={styles.providerIcon}>{provider.icon}</span>
+                    <div>
+                      <strong>{provider.label}</strong>
+                      <span>
+                        {provider.linked
+                          ? "Connected to this account"
+                          : "Not linked yet"}
+                      </span>
+                    </div>
+                  </div>
+
+                  {provider.linked ? (
+                    <span className={styles.pill}>Connected</span>
+                  ) : (
+                    <button
+                      type="button"
+                      className={styles.secondaryButton}
+                      onClick={() =>
+                        window.location.assign(
+                          getSocialAuthStartUrl(provider.key)
+                        )
+                      }
+                    >
+                      Connect
+                    </button>
+                  )}
+                </div>
+              ))}
+
+              <div className={styles.feedback}>
+                Social accounts skip OTP and password management, but still
+                follow the same SkillSphere profile and token flow.
+              </div>
+            </div>
+          )}
         </div>
 
         <div className={`${styles.card} ${styles.dangerCard}`}>

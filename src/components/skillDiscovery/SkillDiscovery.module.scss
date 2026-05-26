@@ -19,12 +19,12 @@
     margin: 0 0 0.45rem;
     font-size: clamp(1.9rem, 4vw, 2.8rem);
     line-height: 1.05;
-    color: #0f172a;
+    color: var(--color-text-primary);
   }
 
   p {
     max-width: 58ch;
-    color: #64748b;
+    color: var(--color-text-secondary);
     font-size: 0.96rem;
   }
 }
@@ -40,7 +40,7 @@
     width: 100%;
     border: none;
     background: transparent;
-    color: #0f172a;
+    color: var(--color-text-primary);
     font-size: 0.96rem;
 
     &:focus {
@@ -48,13 +48,13 @@
     }
 
     &::placeholder {
-      color: #94a3b8;
+      color: var(--color-text-secondary);
     }
   }
 }
 
 .searchIcon {
-  color: #2ec4b6;
+  color: var(--color-accent);
   font-size: 1.1rem;
 }
 
@@ -89,7 +89,7 @@
   @include panel(20px, 1.2rem);
   margin-top: 1rem;
   text-align: center;
-  color: #64748b;
+  color: var(--color-text-secondary);
 }
 
 @keyframes fadeUp {

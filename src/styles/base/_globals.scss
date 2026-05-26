@@ -1,5 +1,46 @@
 @use '../abstracts' as *;
 
+:root,
+html[data-theme="light"],
+body[data-theme="light"] {
+  color-scheme: light;
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-soft: #fbfdff;
+  --color-primary: #1e2a38;
+  --color-accent: #2ec4b6;
+  --color-accent-rgb: 46, 196, 182;
+  --color-cta: #ffb703;
+  --color-danger: #dc2626;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #64748b;
+  --color-border: #e2e8f0;
+  --color-border-strong: #dbe4ee;
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 20px 48px rgba(15, 23, 42, 0.12);
+}
+
+html[data-theme="dark"],
+body[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #08111f;
+  --color-surface: #0f172a;
+  --color-surface-soft: #162033;
+  --color-primary: #e2e8f0;
+  --color-accent: #4fd1c5;
+  --color-accent-rgb: 79, 209, 197;
+  --color-cta: #ffb703;
+  --color-danger: #f87171;
+  --color-text-primary: #e5eef8;
+  --color-text-secondary: #9aaabd;
+  --color-border: #233047;
+  --color-border-strong: #334155;
+  --shadow-sm: 0 8px 18px rgba(2, 6, 23, 0.38);
+  --shadow-md: 0 16px 32px rgba(2, 6, 23, 0.45);
+  --shadow-lg: 0 24px 56px rgba(2, 6, 23, 0.55);
+}
+
 html,
 body {
   width: 100%;
@@ -10,13 +51,16 @@ body {
 body {
   margin: 0;
   font-family: $font-family;
-  background: $color-bg;
-  color: $color-text-primary;
+  background: var(--color-bg);
+  color: var(--color-text-primary);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   user-select: none;
   -webkit-user-select: none;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
 }
 
 button,
@@ -24,6 +68,7 @@ input,
 textarea,
 select {
   font: inherit;
+  color: inherit;
 }
 
 input,

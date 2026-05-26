@@ -5,6 +5,7 @@ import LoginPage from "../pages/auth/LoginPage";
 import RegisterPage from "../pages/auth/RegisterPage";
 import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage";
 import ResetPasswordPage from "../pages/auth/ResetPasswordPage";
+import SocialAuthCallbackPage from "../pages/auth/SocialAuthCallbackPage";
 import UserDetailFormPage from "../pages/userDetailForm/UserDetailFormPage";
 import DashboardPage from "../pages/dashboard/DashboardPage";
 import TutorPage from "../pages/tutor/TutorPage";
@@ -34,6 +35,7 @@ const AllRoutes = () => {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+      <Route path="/social-auth/callback" element={<SocialAuthCallbackPage />} />
       <Route path="/userDetails" element={<UserDetailFormPage />} />
 
       <Route element={<MainLayout />}>

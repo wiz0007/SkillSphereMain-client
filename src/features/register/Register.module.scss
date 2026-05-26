@@ -5,9 +5,9 @@
   padding: 2rem 1.5rem 2.5rem;
   overflow-x: clip;
   background:
-    radial-gradient(circle at top left, rgba(46, 196, 182, 0.12), transparent 26%),
-    radial-gradient(circle at bottom right, rgba(255, 183, 3, 0.14), transparent 24%),
-    #f8fafc;
+    radial-gradient(circle at top left, rgba(var(--color-accent-rgb), 0.12), transparent 26%),
+    radial-gradient(circle at bottom right, rgba(255, 183, 3, 0.12), transparent 24%),
+    linear-gradient(180deg, var(--color-bg) 0%, color-mix(in srgb, var(--color-bg) 86%, #08101f) 100%);
 }
 
 .shell {
@@ -34,7 +34,7 @@
     margin: 0 0 0.8rem;
     font-size: clamp(2rem, 4.5vw, 3.2rem);
     line-height: 1.04;
-    color: #0f172a;
+    color: var(--color-text-primary);
   }
 }
 
@@ -45,7 +45,7 @@
 
 .subtitle {
   margin: 0;
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.98rem;
   line-height: 1.7;
 }
@@ -62,12 +62,12 @@
   h2 {
     margin: 0 0 0.3rem;
     font-size: 1.35rem;
-    color: #0f172a;
+    color: var(--color-text-primary);
   }
 
   p {
     margin: 0;
-    color: #64748b;
+    color: var(--color-text-secondary);
     font-size: 0.92rem;
   }
 }
@@ -96,7 +96,7 @@
   min-width: 0;
 
   span {
-    color: #475569;
+    color: var(--color-text-secondary);
     font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -112,7 +112,7 @@
 .inputError {
   border-color: rgba(225, 29, 72, 0.55) !important;
   box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.08);
-  background: #fffafc;
+  background: color-mix(in srgb, var(--color-surface) 92%, #4c0519 8%);
 }
 
 .passwordField {
@@ -138,13 +138,13 @@
   border: none;
   border-radius: 12px;
   background: transparent;
-  color: #64748b;
+  color: var(--color-text-secondary);
   transform: translateY(-50%);
   cursor: pointer;
 }
 
 .inlineHint {
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.78rem;
   font-weight: 600;
 }
@@ -156,7 +156,7 @@
   padding: 0.85rem 0.95rem;
   border-radius: 16px;
   border: 1px solid rgba(251, 191, 36, 0.4);
-  background: #fff9ef;
+  background: color-mix(in srgb, var(--color-surface) 86%, #fffbeb 14%);
   color: #8a5a0a;
   font-size: 0.84rem;
   font-weight: 700;
@@ -173,8 +173,8 @@
 }
 
 .valid {
-  background: rgba(46, 196, 182, 0.16) !important;
-  color: #0f766e !important;
+  background: rgba(var(--color-accent-rgb), 0.18) !important;
+  color: var(--color-accent) !important;
 }
 
 .termsRow {
@@ -182,10 +182,10 @@
   align-items: flex-start;
   gap: 0.7rem;
   padding: 0.95rem 1rem;
-  border: 1px solid rgba(226, 232, 240, 0.9);
+  border: 1px solid var(--color-border);
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.72);
-  color: #334155;
+  background: color-mix(in srgb, var(--color-surface-soft) 88%, transparent);
+  color: var(--color-text-secondary);
   font-size: 0.9rem;
   line-height: 1.6;
 
@@ -201,7 +201,7 @@
   border: none;
   padding: 0;
   background: transparent;
-  color: #0f172a;
+  color: var(--color-text-primary);
   font-size: inherit;
   font-weight: 700;
   text-decoration: underline;
@@ -228,12 +228,12 @@
 
 .footer {
   margin: 1rem 0 0;
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.88rem;
   text-align: center;
 
   a {
-    color: #0f172a;
+    color: var(--color-text-primary);
     font-weight: 700;
     text-decoration: none;
   }
@@ -257,12 +257,12 @@
 
   h3 {
     margin: 0 0 0.5rem;
-    color: #0f172a;
+    color: var(--color-text-primary);
   }
 
   p {
     margin: 0 0 1rem;
-    color: #64748b;
+    color: var(--color-text-secondary);
     line-height: 1.65;
   }
 }
