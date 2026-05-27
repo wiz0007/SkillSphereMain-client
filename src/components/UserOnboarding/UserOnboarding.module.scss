@@ -268,3 +268,48 @@
     cursor: wait;
   }
 }
+
+:global(html[data-theme="dark"]) .container,
+:global(body[data-theme="dark"]) .container {
+  .form {
+    background:
+      radial-gradient(circle at top right, rgba(var(--color-accent-rgb), 0.12), transparent 38%),
+      linear-gradient(
+        145deg,
+        color-mix(in srgb, var(--color-surface) 96%, #0b1220 4%),
+        color-mix(in srgb, var(--color-surface-soft) 94%, transparent)
+      );
+  }
+
+  .header h1 {
+    color: #e8f1fb;
+  }
+
+  .subtitle,
+  .panelHeader p,
+  .field label,
+  .fieldHint,
+  .counter,
+  .summaryList span {
+    color: #aab9cc;
+  }
+
+  .panel {
+    background:
+      radial-gradient(circle at top right, rgba(var(--color-accent-rgb), 0.12), transparent 36%),
+      linear-gradient(
+        155deg,
+        color-mix(in srgb, var(--color-surface) 92%, #08111f 8%),
+        color-mix(in srgb, var(--color-surface-soft) 96%, transparent)
+      );
+    border-color: color-mix(in srgb, var(--color-border-strong) 92%, transparent);
+  }
+
+  .uploadBox {
+    background: color-mix(in srgb, var(--color-surface-soft) 92%, #0b1220 8%);
+  }
+
+  .summaryBanner {
+    color: #f6c86c;
+  }
+}
