@@ -55,6 +55,8 @@ const Settings = () => {
   const { user, logout, setUser } = useAuth();
   const { theme, setTheme } = useTheme();
   const isLocalAuth = (user?.authProvider || "local") === "local";
+  const hasPassword = user?.hasPassword ?? true;
+  const needsFirstPassword = !hasPassword;
   const socialConnections = [
     {
       key: "google" as const,
@@ -277,7 +279,7 @@ const Settings = () => {
   const handlePasswordChange = async () => {
     setPasswordMessage("");
 
-    if (!passwordForm.currentPassword) {
+    if (hasPassword && !passwordForm.currentPassword) {
       setPasswordMessage("Current password is required.");
       return;
     }
@@ -296,7 +298,9 @@ const Settings = () => {
 
     try {
       const res = await changePassword({
-        currentPassword: passwordForm.currentPassword,
+        ...(hasPassword
+          ? { currentPassword: passwordForm.currentPassword }
+          : {}),
         newPassword: passwordForm.newPassword,
       });
 
@@ -578,34 +582,40 @@ const Settings = () => {
         <div className={styles.card}>
           <div className={styles.sectionHeader}>
             <div>
-              <h2>{isLocalAuth ? "Change Password" : "Account Sign-in"}</h2>
+              <h2>
+                {needsFirstPassword
+                  ? "Set Password"
+                  : "Change Password"}
+              </h2>
               <p>
-                {isLocalAuth
-                  ? "Use a strong password you are not using anywhere else."
-                  : "Your account signs in through a social provider. You can still see which providers are attached here."}
+                {needsFirstPassword
+                  ? "Your account currently signs in through a social provider only. Set a local password if you also want email/password login."
+                  : "Use a strong password you are not using anywhere else."}
               </p>
             </div>
           </div>
-          {isLocalAuth ? (
+          {isLocalAuth || hasPassword || needsFirstPassword ? (
             <>
               <div className={styles.formGrid}>
-                <label>
-                  Current Password
-                  <input
-                    type="password"
-                    value={passwordForm.currentPassword}
-                    onChange={(e) =>
-                      setPasswordForm((prev) => ({
-                        ...prev,
-                        currentPassword: e.target.value,
-                      }))
-                    }
-                    placeholder="Current password"
-                  />
-                </label>
+                {hasPassword ? (
+                  <label>
+                    Current Password
+                    <input
+                      type="password"
+                      value={passwordForm.currentPassword}
+                      onChange={(e) =>
+                        setPasswordForm((prev) => ({
+                          ...prev,
+                          currentPassword: e.target.value,
+                        }))
+                      }
+                      placeholder="Current password"
+                    />
+                  </label>
+                ) : null}
 
                 <label>
-                  New Password
+                  {needsFirstPassword ? "Create Password" : "New Password"}
                   <input
                     type="password"
                     value={passwordForm.newPassword}
@@ -655,7 +665,10 @@ const Settings = () => {
 
               <div className={styles.inlineActions}>
                 <span className={styles.feedback}>
-                  {passwordMessage || "Password changes take effect immediately."}
+                  {passwordMessage ||
+                    (needsFirstPassword
+                      ? "Set a password once and you can sign in either socially or with email/password."
+                      : "Password changes take effect immediately.")}
                 </span>
 
                 <button
@@ -664,7 +677,13 @@ const Settings = () => {
                   onClick={handlePasswordChange}
                   disabled={passwordSaving}
                 >
-                  {passwordSaving ? "Updating..." : "Update Password"}
+                  {passwordSaving
+                    ? needsFirstPassword
+                      ? "Setting..."
+                      : "Updating..."
+                    : needsFirstPassword
+                      ? "Set Password"
+                      : "Update Password"}
                 </button>
               </div>
             </>

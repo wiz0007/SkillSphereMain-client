@@ -432,3 +432,51 @@
   text-align: center;
   color: #64748b;
 }
+
+:global(html[data-theme="dark"]) .container,
+:global(body[data-theme="dark"]) .container {
+  color: var(--color-text-primary);
+
+  .heroCard,
+  .snapshot,
+  .panel,
+  .statCard,
+  .detailRow,
+  .infoTile,
+  .portfolioLink {
+    background: color-mix(in srgb, var(--color-surface) 96%, transparent);
+    border-color: var(--color-border);
+  }
+
+  .headerCopy h1,
+  .snapshot strong,
+  .statValue,
+  .panelHeader h2,
+  .detailRow strong,
+  .infoTile strong,
+  .tag {
+    color: var(--color-text-primary);
+  }
+
+  .headerMeta,
+  .summary,
+  .snapshotLabel,
+  .snapshotHint,
+  .statLabel,
+  .statMeta,
+  .panelHeader p,
+  .valueBlock,
+  .detailRow span,
+  .fieldBlock label {
+    color: var(--color-text-secondary);
+  }
+
+  .ghostBadge {
+    background: rgba(var(--color-accent-rgb), 0.14);
+    color: var(--color-accent);
+  }
+
+  .tag {
+    background: color-mix(in srgb, var(--color-surface-soft) 82%, var(--color-border) 18%);
+  }
+}

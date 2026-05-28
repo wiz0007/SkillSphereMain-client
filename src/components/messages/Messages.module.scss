@@ -425,3 +425,62 @@
 .loading {
   min-height: 260px;
 }
+
+:global(html[data-theme="dark"]) .page,
+:global(body[data-theme="dark"]) .page {
+  .header h1,
+  .snapshot strong,
+  .contactTop strong,
+  .chatIdentity strong,
+  .messageBubble p,
+  .emptyState strong,
+  .placeholder strong {
+    color: var(--color-text-primary);
+  }
+
+  .header p,
+  .snapshotLabel,
+  .snapshotHint,
+  .searchBox svg,
+  .contactContent p,
+  .contactMeta,
+  .contactTop span,
+  .chatIdentity span,
+  .messageBubble span,
+  .emptyState,
+  .placeholder,
+  .loading {
+    color: var(--color-text-secondary);
+  }
+
+  .searchBox,
+  .contactCard,
+  .theirs .messageBubble,
+  .emptyState,
+  .placeholder,
+  .loading {
+    background: var(--color-surface-soft);
+    border-color: var(--color-border);
+  }
+
+  .searchBox input {
+    color: var(--color-text-primary);
+  }
+
+  .contactCardActive {
+    background:
+      linear-gradient(180deg, rgba(var(--color-accent-rgb), 0.12), transparent),
+      var(--color-surface);
+  }
+
+  .avatar,
+  .placeholderIcon {
+    background: rgba(var(--color-accent-rgb), 0.14);
+    color: var(--color-accent);
+  }
+
+  .unreadBadge {
+    background: var(--color-text-primary);
+    color: var(--color-surface);
+  }
+}

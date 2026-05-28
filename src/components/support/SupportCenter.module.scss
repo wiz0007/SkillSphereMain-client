@@ -571,3 +571,81 @@
     max-width: 100%;
   }
 }
+
+:global(html[data-theme="dark"]) .page,
+:global(body[data-theme="dark"]) .page {
+  .header h1,
+  .snapshot strong,
+  .createHeader strong,
+  .threadCard strong,
+  .chatHeader h2,
+  .messageBubble p,
+  .placeholder strong,
+  .emptyState strong {
+    color: var(--color-text-primary);
+  }
+
+  .header p,
+  .snapshotHint,
+  .identityRow,
+  .createHeader span,
+  .threadCard p,
+  .threadDate,
+  .messageBubble span,
+  .placeholder,
+  .emptyState,
+  .loading,
+  .fileField small {
+    color: var(--color-text-secondary);
+  }
+
+  .header,
+  .snapshot,
+  .sidebar,
+  .chatPanel,
+  .searchBox,
+  .createCard,
+  .threadCard,
+  .messageBubble,
+  .placeholderIcon {
+    border-color: var(--color-border);
+  }
+
+  .header,
+  .snapshot,
+  .sidebar,
+  .chatPanel,
+  .searchBox,
+  .createCard,
+  .threadCard,
+  .messageBubble,
+  .placeholder {
+    background: color-mix(in srgb, var(--color-surface) 96%, transparent);
+  }
+
+  .createCard select,
+  .createCard input,
+  .createCard textarea,
+  .fileField input[type="file"],
+  .composer textarea {
+    background: var(--color-surface-soft);
+    border-color: var(--color-border-strong);
+    color: var(--color-text-primary);
+  }
+
+  .inputError {
+    background: color-mix(in srgb, var(--color-surface) 92%, #4c0519 8%) !important;
+  }
+
+  .iconWrap,
+  .placeholderIcon {
+    background: rgba(var(--color-accent-rgb), 0.14);
+    color: var(--color-accent);
+  }
+
+  .statusActions button {
+    background: var(--color-surface-soft);
+    color: var(--color-text-primary);
+    border-color: var(--color-border-strong);
+  }
+}

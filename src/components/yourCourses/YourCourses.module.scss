@@ -219,3 +219,44 @@
     line-height: 1.55;
   }
 }
+
+:global(html[data-theme="dark"]) .page,
+:global(body[data-theme="dark"]) .page {
+  .header h1,
+  .snapshot strong,
+  .cardTop h3,
+  .emptyPanel strong,
+  .loading strong {
+    color: var(--color-text-primary);
+  }
+
+  .header p,
+  .snapshotLabel,
+  .snapshotHint,
+  .metaText,
+  .infoRow,
+  .emptyPanel,
+  .loading {
+    color: var(--color-text-secondary);
+  }
+
+  .tabs button {
+    background: var(--color-surface-soft);
+    border-color: var(--color-border-strong);
+    color: var(--color-text-secondary);
+  }
+
+  .tabs strong {
+    background: color-mix(in srgb, var(--color-surface-soft) 82%, var(--color-border) 18%);
+  }
+
+  .courseCard {
+    background:
+      radial-gradient(circle at top right, rgba(var(--color-accent-rgb), 0.08), transparent 36%),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-surface) 96%, #08111f 4%),
+        color-mix(in srgb, var(--color-surface-soft) 96%, transparent)
+      );
+  }
+}

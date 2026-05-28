@@ -433,3 +433,68 @@
     color: #2ec4b6;
   }
 }
+
+:global(html[data-theme="dark"]) .layout,
+:global(body[data-theme="dark"]) .layout {
+  .header h1,
+  .snapshot strong,
+  .summaryHeader strong,
+  .summaryItem span,
+  .sectionHeader h2,
+  .optionChip,
+  .secondaryAction,
+  .card h3 {
+    color: var(--color-text-primary);
+  }
+
+  .header p,
+  .snapshotLabel,
+  .snapshotHint,
+  .helperText,
+  .field span,
+  .card p,
+  .metric,
+  .summaryList,
+  .summaryHeader p,
+  .summaryItem small {
+    color: var(--color-text-secondary);
+  }
+
+  .sectionNavButton,
+  .optionChip,
+  .secondaryAction {
+    background: var(--color-surface-soft);
+    border-color: var(--color-border-strong);
+  }
+
+  .summary {
+    background:
+      radial-gradient(circle at top right, rgba(255, 196, 61, 0.14), transparent 30%),
+      color-mix(in srgb, var(--color-surface) 88%, #2b1804 12%);
+  }
+
+  .summaryItem,
+  .card {
+    background:
+      radial-gradient(circle at top right, rgba(var(--color-accent-rgb), 0.1), transparent 34%),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-surface) 96%, #08111f 4%),
+        color-mix(in srgb, var(--color-surface-soft) 96%, transparent)
+      );
+    border-color: var(--color-border);
+  }
+
+  .fieldInvalid {
+    input,
+    select,
+    textarea {
+      background: color-mix(in srgb, var(--color-surface) 92%, #4c0519 8%);
+    }
+  }
+
+  .category {
+    background: rgba(var(--color-accent-rgb), 0.14);
+    color: var(--color-accent);
+  }
+}

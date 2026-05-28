@@ -301,3 +301,46 @@
   margin-bottom: 0.35rem;
   color: #0f172a;
 }
+
+:global(html[data-theme="dark"]) .container,
+:global(body[data-theme="dark"]) .container {
+  .header h1,
+  .snapshot strong,
+  .cardTop h3,
+  .emptyState strong,
+  .loadingPanel strong {
+    color: var(--color-text-primary);
+  }
+
+  .header p,
+  .snapshotLabel,
+  .snapshotHint,
+  .personLine,
+  .infoRow,
+  .completedLabel,
+  .emptyState,
+  .loadingPanel,
+  .ghost {
+    color: var(--color-text-secondary);
+  }
+
+  .tabs button,
+  .ghost {
+    background: var(--color-surface-soft);
+    border-color: var(--color-border-strong);
+  }
+
+  .tabs strong {
+    background: color-mix(in srgb, var(--color-surface-soft) 82%, var(--color-border) 18%);
+  }
+
+  .card {
+    background:
+      radial-gradient(circle at top right, rgba(var(--color-accent-rgb), 0.1), transparent 34%),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-surface) 96%, #08111f 4%),
+        color-mix(in srgb, var(--color-surface-soft) 96%, transparent)
+      );
+  }
+}

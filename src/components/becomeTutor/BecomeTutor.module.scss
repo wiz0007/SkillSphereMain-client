@@ -322,3 +322,57 @@
   background: #ecfdf5;
   color: #0f9f6e;
 }
+
+:global(html[data-theme="dark"]) .container,
+:global(body[data-theme="dark"]) .container {
+  .header h1,
+  .snapshot strong,
+  .sectionHeader h2,
+  .createHeader strong,
+  .uploadField strong,
+  .successModal h2 {
+    color: var(--color-text-primary);
+  }
+
+  .header p,
+  .snapshotLabel,
+  .snapshotHint,
+  .statusCard span,
+  .field span,
+  .createHeader span,
+  .uploadField small,
+  .successModal p {
+    color: var(--color-text-secondary);
+  }
+
+  .statusCard,
+  .uploadField,
+  .radioOption {
+    background: var(--color-surface-soft);
+    border-color: var(--color-border-strong);
+  }
+
+  .infoBanner {
+    background:
+      radial-gradient(circle at top right, rgba(var(--color-accent-rgb), 0.14), transparent 38%),
+      color-mix(in srgb, var(--color-surface) 94%, transparent);
+    color: var(--color-text-primary);
+
+    span {
+      color: var(--color-text-secondary);
+    }
+  }
+
+  .inputError {
+    background: color-mix(in srgb, var(--color-surface) 92%, #4c0519 8%) !important;
+  }
+
+  .error {
+    background: color-mix(in srgb, var(--color-surface) 90%, #3b0a12 10%);
+  }
+
+  .checkmark {
+    background: rgba(var(--color-accent-rgb), 0.14);
+    color: var(--color-accent);
+  }
+}

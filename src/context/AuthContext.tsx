@@ -13,6 +13,7 @@ export interface User {
   name?: string;
   email: string;
   authProvider: "local" | "google" | "linkedin" | "github";
+  hasPassword: boolean;
   linkedProviders: {
     google: boolean;
     linkedin: boolean;

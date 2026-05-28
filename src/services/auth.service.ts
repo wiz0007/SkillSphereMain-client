@@ -67,7 +67,7 @@ export const checkUsername = async (username: string) => {
 };
 
 export const changePassword = async (data: {
-  currentPassword: string;
+  currentPassword?: string;
   newPassword: string;
 }) => {
   const res = await api.post("/auth/change-password", data);
@@ -91,6 +91,7 @@ export const getCurrentUser = async () => {
       name?: string;
       email: string;
       authProvider: "local" | "google" | "linkedin" | "github";
+      hasPassword: boolean;
       linkedProviders: {
         google: boolean;
         linkedin: boolean;
