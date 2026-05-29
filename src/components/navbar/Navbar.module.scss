@@ -110,6 +110,19 @@
   }
 }
 
+:global(html[data-theme="dark"]) .becomeTutor,
+:global(body[data-theme="dark"]) .becomeTutor {
+  background: rgba(255, 183, 3, 0.16);
+  color: #facc15 !important;
+  border-color: rgba(255, 183, 3, 0.22);
+
+  &:hover,
+  &:global(.active) {
+    background: #ffb703 !important;
+    color: #111827 !important;
+  }
+}
+
 .actions {
   gap: 0.7rem;
 }
@@ -531,6 +544,73 @@
   color: var(--color-text-secondary);
   font-size: 0.84rem;
   text-align: center;
+}
+
+:global(html[data-theme="dark"]) .walletPanel,
+:global(body[data-theme="dark"]) .walletPanel,
+:global(html[data-theme="dark"]) .walletPageCard,
+:global(body[data-theme="dark"]) .walletPageCard {
+  .walletTabButton {
+    background: color-mix(in srgb, var(--color-surface-soft) 88%, transparent);
+    color: var(--color-text-secondary);
+    border-color: var(--color-border);
+  }
+
+  .walletTabButtonActive {
+    background: var(--color-text-primary);
+    color: var(--color-bg);
+  }
+
+  .walletOfferCard {
+    border-color: rgba(255, 183, 3, 0.24);
+    background:
+      radial-gradient(circle at top right, rgba(255, 183, 3, 0.16), transparent 42%),
+      color-mix(in srgb, var(--color-surface-soft) 90%, #020617 10%);
+
+    span {
+      color: #fbbf24;
+    }
+
+    strong {
+      color: var(--color-text-primary);
+    }
+
+    small {
+      color: #facc15;
+    }
+  }
+
+  .walletOfferHint {
+    color: #fbbf24;
+  }
+
+  .walletAuditPending {
+    background: rgba(251, 146, 60, 0.14);
+    color: #fdba74 !important;
+  }
+
+  .walletAuditAnchored {
+    background: rgba(16, 185, 129, 0.14);
+    color: #6ee7b7 !important;
+  }
+
+  .walletAuditFailed {
+    background: rgba(244, 63, 94, 0.16);
+    color: #fda4af !important;
+  }
+
+  .walletProofButton,
+  .walletExplorerLink {
+    color: var(--color-accent);
+  }
+
+  .walletTxnPositive {
+    color: #6ee7b7 !important;
+  }
+
+  .walletTxnNegative {
+    color: #fbbf24 !important;
+  }
 }
 
 .walletPage {

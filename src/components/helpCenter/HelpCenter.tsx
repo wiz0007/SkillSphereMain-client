@@ -263,7 +263,7 @@ const HelpCenter = () => {
           <div className={styles.sectionHeader}>
             <div>
               <span className={styles.sectionKicker}>Browse by category</span>
-              <h2>Start with the part of the product you’re using</h2>
+              <h2>Start with the part of the product you're using</h2>
             </div>
           </div>
 
@@ -302,7 +302,7 @@ const HelpCenter = () => {
                 {selectedCategory
                   ? selectedCategory.description
                   : query
-                    ? `Results for “${query}”`
+                    ? `Results for "${query}"`
                     : "Most helpful articles"}
               </h2>
             </div>

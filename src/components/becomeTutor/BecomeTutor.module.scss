@@ -352,6 +352,23 @@
     border-color: var(--color-border-strong);
   }
 
+  .statusCard strong,
+  .radioOption span {
+    color: var(--color-text-primary);
+  }
+
+  .field input,
+  .field select,
+  .field textarea {
+    background: color-mix(in srgb, var(--color-surface-soft) 94%, transparent);
+    border-color: var(--color-border-strong);
+    color: var(--color-text-primary);
+
+    &::placeholder {
+      color: color-mix(in srgb, var(--color-text-secondary) 82%, transparent);
+    }
+  }
+
   .infoBanner {
     background:
       radial-gradient(circle at top right, rgba(var(--color-accent-rgb), 0.14), transparent 38%),

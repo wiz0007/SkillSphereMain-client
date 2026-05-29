@@ -627,10 +627,27 @@
   .createCard input,
   .createCard textarea,
   .fileField input[type="file"],
+  .searchBox input,
   .composer textarea {
     background: var(--color-surface-soft);
     border-color: var(--color-border-strong);
     color: var(--color-text-primary);
+  }
+
+  .createCard select::placeholder,
+  .createCard input::placeholder,
+  .createCard textarea::placeholder,
+  .searchBox input::placeholder,
+  .composer textarea::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  .createCard select,
+  .createCard input,
+  .createCard textarea,
+  .fileField input[type="file"],
+  .composer textarea {
+    box-shadow: none;
   }
 
   .inputError {
@@ -647,5 +664,73 @@
     background: var(--color-surface-soft);
     color: var(--color-text-primary);
     border-color: var(--color-border-strong);
+  }
+
+  .chatHeader,
+  .composer {
+    border-color: var(--color-border);
+  }
+
+  .threadCardActive {
+    border-color: rgba(var(--color-accent-rgb), 0.55);
+    background: color-mix(in srgb, var(--color-surface-soft) 88%, var(--color-accent) 12%);
+    box-shadow: 0 0 0 3px rgba(var(--color-accent-rgb), 0.16);
+  }
+
+  .threadTopic,
+  .attachmentLink,
+  .chatKicker,
+  .kicker,
+  .snapshotLabel {
+    color: var(--color-accent);
+  }
+
+  .fileField span,
+  .senderLabel {
+    color: var(--color-text-primary) !important;
+  }
+
+  .open {
+    background: color-mix(in srgb, var(--color-surface-soft) 82%, #94a3b8 18%);
+    color: var(--color-text-secondary);
+  }
+
+  .waiting_on_support {
+    background: rgba(251, 146, 60, 0.14);
+    color: #fdba74;
+  }
+
+  .waiting_on_user {
+    background: rgba(59, 130, 246, 0.14);
+    color: #93c5fd;
+  }
+
+  .resolved {
+    background: rgba(16, 185, 129, 0.14);
+    color: #6ee7b7;
+  }
+
+  .unreadBadge {
+    background: var(--color-warning);
+    color: #111827;
+  }
+
+  .mine .messageBubble {
+    background: linear-gradient(135deg, rgba(var(--color-accent-rgb), 0.9), rgba(15, 118, 110, 0.9));
+    border-color: rgba(var(--color-accent-rgb), 0.42);
+
+    p,
+    span,
+    .senderLabel,
+    .attachmentLink {
+      color: #ecfeff !important;
+    }
+  }
+
+  .primaryButton,
+  .sendButton,
+  .helpLink {
+    background: var(--color-text-primary);
+    color: var(--color-bg);
   }
 }

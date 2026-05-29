@@ -2,24 +2,30 @@
 
 .wrapper {
   position: relative;
+  z-index: 1;
+
+  &:focus-within {
+    z-index: 30;
+  }
 }
 
 .selector {
   @include flex(center, space-between, 0.9rem);
   min-height: 54px;
   padding: 0.7rem 0.85rem;
-  border: 1px solid $color-border-strong;
+  border: 1px solid var(--color-border-strong);
   border-radius: 18px;
-  background: $color-surface-soft;
+  background: var(--color-surface-soft);
+  color: var(--color-text-primary);
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease,
     background 0.2s ease;
 
   &:focus-within {
-    border-color: $color-accent;
-    box-shadow: 0 0 0 4px rgba($color-accent, 0.12);
-    background: $color-surface;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 4px rgba(var(--color-accent-rgb), 0.12);
+    background: var(--color-surface);
   }
 }
 
@@ -36,12 +42,12 @@
     border: none;
     outline: none;
     background: transparent;
-    color: $color-text-primary;
+    color: var(--color-text-primary);
     font-size: 0.94rem;
     padding: 0.15rem 0;
 
     &::placeholder {
-      color: $color-text-secondary;
+      color: var(--color-text-secondary);
     }
   }
 }
@@ -52,8 +58,8 @@
   gap: 0.35rem;
   padding: 0.45rem 0.72rem;
   border-radius: 999px;
-  background: rgba($color-accent, 0.12);
-  color: #0f766e;
+  background: rgba(var(--color-accent-rgb), 0.12);
+  color: var(--color-accent);
   font-size: 0.8rem;
   font-weight: 700;
 
@@ -80,7 +86,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   flex-shrink: 0;
   transition:
     transform 0.2s ease,
@@ -89,7 +95,7 @@
 
 .rotate {
   transform: rotate(180deg);
-  color: $color-text-primary;
+  color: var(--color-text-primary);
 }
 
 .dropdown {
@@ -97,16 +103,20 @@
   top: calc(100% + 0.55rem);
   left: 0;
   right: 0;
-  max-height: 280px;
+  max-height: min(260px, 42vh);
   overflow-y: auto;
-  z-index: 20;
-  @include panel(18px, 0.5rem);
-  box-shadow: $shadow-lg;
+  z-index: 80;
+  padding: 0.45rem;
+  border: 1px solid color-mix(in srgb, var(--color-border-strong) 96%, transparent);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--color-surface) 98%, transparent);
+  box-shadow: var(--shadow-lg);
+  overscroll-behavior: contain;
 }
 
 .empty {
   padding: 0.85rem 0.9rem;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   font-size: 0.88rem;
 }
 
@@ -117,7 +127,7 @@
   border: none;
   border-radius: 14px;
   background: transparent;
-  color: $color-text-primary;
+  color: var(--color-text-primary);
   font: inherit;
   text-align: left;
   cursor: pointer;
@@ -127,19 +137,19 @@
     transform 0.2s ease;
 
   &:hover {
-    background: #f8fafc;
+    background: var(--color-surface-soft);
     transform: translateY(-1px);
   }
 }
 
 .active {
-  background: rgba($color-accent, 0.12);
-  color: #0f766e;
+  background: rgba(var(--color-accent-rgb), 0.14);
+  color: var(--color-accent);
   font-weight: 700;
 }
 
 .highlight {
-  background: rgba($color-accent, 0.08);
+  background: rgba(var(--color-accent-rgb), 0.1);
 }
 
 .check {
@@ -149,7 +159,36 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: rgba($color-accent, 0.12);
-  color: #0f766e;
+  background: rgba(var(--color-accent-rgb), 0.14);
+  color: var(--color-accent);
   flex-shrink: 0;
+}
+
+:global(html[data-theme="dark"]) .wrapper,
+:global(body[data-theme="dark"]) .wrapper {
+  .selector {
+    border-color: var(--color-border-strong);
+    background: color-mix(in srgb, var(--color-surface-soft) 94%, transparent);
+  }
+
+  .dropdown {
+    border-color: rgba(var(--color-accent-rgb), 0.28);
+    background: color-mix(in srgb, var(--color-surface) 96%, #020617 4%);
+    box-shadow: 0 24px 56px rgba(2, 6, 23, 0.72);
+  }
+
+  .option {
+    color: var(--color-text-secondary);
+
+    &:hover {
+      color: var(--color-text-primary);
+      background: color-mix(in srgb, var(--color-surface-soft) 82%, var(--color-accent) 18%);
+    }
+  }
+
+  .active,
+  .highlight {
+    color: var(--color-text-primary);
+    background: color-mix(in srgb, var(--color-surface-soft) 78%, var(--color-accent) 22%);
+  }
 }
