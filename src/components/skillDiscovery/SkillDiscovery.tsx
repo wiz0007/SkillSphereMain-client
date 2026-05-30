@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { FiSearch } from "react-icons/fi";
+import { FiSearch, FiX } from "react-icons/fi";
 import styles from "./SkillDiscovery.module.scss";
 import CourseCard from "../courseCard/CourseCard";
 import { getAllCourses, type Course } from "../../services/courses.service";
@@ -31,22 +31,45 @@ const SkillDiscovery = () => {
   }, []);
 
   const categories = useMemo(() => {
-    return Array.from(new Set(courses.map((c) => c.category).filter(Boolean)));
+    return Array.from(
+      new Set(
+        courses
+          .map((c) => c.category)
+          .filter((cat): cat is string => Boolean(cat))
+      )
+    );
   }, [courses]);
+
+  const featuredCategories = useMemo(() => categories.slice(0, 4), [categories]);
 
   const filteredCourses = useMemo(() => {
     let result = [...courses];
+    const query = search.trim().toLowerCase();
 
-    if (!user?._id) return result;
-
-    result = result.filter(
-      (course) => String(course.tutor?._id) !== String(user._id),
-    );
-
-    if (search) {
-      result = result.filter((course) =>
-        (course.title || "").toLowerCase().includes(search.toLowerCase()),
+    if (user?._id) {
+      result = result.filter(
+        (course) => String(course.tutor?._id) !== String(user._id),
       );
+    }
+
+    if (query) {
+      result = result.filter((course) => {
+        const searchable = [
+          course.title,
+          course.description,
+          course.type,
+          course.category,
+          course.level,
+          course.tutor?.username,
+          course.tutor?.fullName,
+          ...(Array.isArray(course.skills) ? course.skills : []),
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+
+        return searchable.includes(query);
+      });
     }
 
     if (category) {
@@ -71,15 +94,48 @@ const SkillDiscovery = () => {
           </p>
         </div>
 
-        <div className={styles.searchBox}>
-          <FiSearch className={styles.searchIcon} />
-          <input
-            type="text"
-            placeholder="Search courses or topics"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
+        <section className={styles.searchPanel} aria-label="Course search">
+          <div className={styles.searchPanelHeader}>
+            <span>Find your next skill</span>
+            <strong>{filteredCourses.length} matches</strong>
+          </div>
+
+          <label className={styles.searchBox}>
+            <FiSearch className={styles.searchIcon} />
+            <span className={styles.searchLabel}>Search</span>
+            <input
+              type="search"
+              placeholder="Try React, editing, cricket, beginner..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            {search ? (
+              <button
+                type="button"
+                className={styles.clearSearch}
+                onClick={() => setSearch("")}
+                aria-label="Clear search"
+              >
+                <FiX />
+              </button>
+            ) : null}
+          </label>
+
+          {featuredCategories.length ? (
+            <div className={styles.quickPicks} aria-label="Quick categories">
+              {featuredCategories.map((cat) => (
+                <button
+                  type="button"
+                  key={cat}
+                  className={category === cat ? styles.quickPickActive : ""}
+                  onClick={() => setCategory((current) => current === cat ? "" : cat)}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          ) : null}
+        </section>
       </div>
 
       {/* FILTERS */}
