@@ -100,11 +100,11 @@
 }
 
 .dangerCard {
-  border-color: rgba(229, 62, 62, 0.15);
+  border-color: rgba(229, 62, 62, 0.22);
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, #fff1f2 96%, transparent),
-    color-mix(in srgb, var(--color-surface) 96%, transparent)
+    color-mix(in srgb, var(--color-surface) 88%, #fff1f2 12%),
+    color-mix(in srgb, var(--color-surface) 96%, #fff1f2 4%)
   );
 }
 
@@ -438,4 +438,59 @@
   padding: 3rem 1rem;
   text-align: center;
   color: var(--color-text-secondary);
+}
+
+:global(html[data-theme="dark"]) .container,
+:global(body[data-theme="dark"]) .container {
+  .dangerCard {
+    border-color: rgba(248, 113, 113, 0.28);
+    background:
+      radial-gradient(circle at top right, rgba(248, 113, 113, 0.16), transparent 40%),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-surface) 92%, #450a0a 8%),
+        color-mix(in srgb, var(--color-surface-soft) 94%, #7f1d1d 6%)
+      );
+    box-shadow: 0 18px 40px rgba(2, 6, 23, 0.42);
+
+    .sectionHeader h2 {
+      color: #fecaca;
+    }
+
+    .sectionHeader p,
+    .feedback {
+      color: color-mix(in srgb, var(--color-text-secondary) 86%, #fecaca 14%);
+    }
+
+    label,
+    .confirmRow {
+      color: var(--color-text-primary);
+    }
+
+    input {
+      background: color-mix(in srgb, var(--color-surface-soft) 90%, #020617 10%);
+      border-color: color-mix(in srgb, var(--color-border-strong) 82%, #f87171 18%);
+      color: var(--color-text-primary);
+
+      &::placeholder {
+        color: var(--color-text-muted);
+      }
+    }
+
+    input[type="checkbox"] {
+      accent-color: var(--color-danger);
+      background: var(--color-surface-soft);
+    }
+  }
+
+  .dangerButton {
+    background: rgba(248, 113, 113, 0.14);
+    color: #fecaca;
+    border: 1px solid rgba(248, 113, 113, 0.38);
+
+    &:hover {
+      background: rgba(248, 113, 113, 0.22);
+      box-shadow: 0 12px 28px rgba(127, 29, 29, 0.3);
+    }
+  }
 }

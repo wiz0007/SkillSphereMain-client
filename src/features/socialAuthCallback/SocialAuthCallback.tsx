@@ -16,7 +16,6 @@ const SocialAuthCallback = () => {
 
   useEffect(() => {
     const run = async () => {
-      const token = hashParams.get("token");
       const callbackError = hashParams.get("error");
       const profileCompleted = hashParams.get("profileCompleted") === "true";
 
@@ -27,13 +26,8 @@ const SocialAuthCallback = () => {
         return;
       }
 
-      if (!token) {
-        setError("Social sign-in could not be completed.");
-        return;
-      }
-
       try {
-        localStorage.setItem("token", token);
+        localStorage.removeItem("token");
         const { user } = await getCurrentUser();
         setUser(user);
         navigate(profileCompleted ? "/" : "/userDetails", {

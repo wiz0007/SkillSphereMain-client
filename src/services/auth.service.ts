@@ -24,6 +24,11 @@ export const loginUser = async (data: {
   return res.data;
 };
 
+export const logoutUser = async () => {
+  const res = await api.post("/auth/logout");
+  return res.data as { message: string };
+};
+
 export const registerUser = async (data: {
   username: string;
   email: string;
@@ -83,7 +88,9 @@ export const deleteAccount = async (data: {
 };
 
 export const getCurrentUser = async () => {
-  const res = await api.get("/auth/me");
+  const res = await api.get("/auth/me", {
+    headers: { "x-skip-auth-redirect": "true" },
+  });
   return res.data as {
     user: {
       username: string;

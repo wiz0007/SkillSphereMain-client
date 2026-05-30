@@ -90,9 +90,9 @@ export function Login() {
       setLoading(true);
 
       const data = await loginUser(form);
-      const { token, user } = data;
+      const { user } = data;
 
-      localStorage.setItem("token", token);
+      localStorage.removeItem("token");
       setUser(user);
 
       navigate(user.profileCompleted ? "/" : "/userDetails");

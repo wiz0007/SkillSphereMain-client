@@ -4,7 +4,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { getCurrentUser } from "../services/auth.service";
+import { getCurrentUser, logoutUser } from "../services/auth.service";
 import { socket } from "../utils/socket";
 
 export interface User {
@@ -45,13 +45,25 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
-  logout: () => void;
+  logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(
   undefined
 );
+
+const normalizeUser = (user: User): User => ({
+  ...user,
+  _id: String(user._id),
+  skillCoinBalance: Number(user.skillCoinBalance || 0),
+  lockedSkillCoins: Number(user.lockedSkillCoins || 0),
+  availableSkillCoins: Number(
+    user.availableSkillCoins ||
+      Number(user.skillCoinBalance || 0) -
+        Number(user.lockedSkillCoins || 0)
+  ),
+});
 
 export const AuthProvider = ({
   children,
@@ -62,16 +74,9 @@ export const AuthProvider = ({
   const [loading, setLoading] = useState(true);
 
   const refreshUser = async () => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      setUser(null);
-      return;
-    }
-
     try {
       const { user: nextUser } = await getCurrentUser();
-      setUser(nextUser);
+      setUser(normalizeUser(nextUser));
     } catch {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
@@ -79,44 +84,47 @@ export const AuthProvider = ({
     }
   };
 
-  // ✅ Load user from storage
-  useEffect(() => {
+  const hydrateStoredUser = () => {
     try {
       const stored = localStorage.getItem("user");
 
-      if (stored) {
-        const parsed: User = JSON.parse(stored);
+      if (!stored) {
+        return;
+      }
 
-        if (parsed?._id) {
-          setUser({
-            ...parsed,
-            _id: String(parsed._id),
-            skillCoinBalance: Number(parsed.skillCoinBalance || 0),
-            lockedSkillCoins: Number(parsed.lockedSkillCoins || 0),
-            availableSkillCoins: Number(
-              parsed.availableSkillCoins ||
-                Number(parsed.skillCoinBalance || 0) -
-                  Number(parsed.lockedSkillCoins || 0)
-            ),
-          });
-        } else {
-          localStorage.removeItem("user");
-        }
+      const parsed: User = JSON.parse(stored);
+
+      if (parsed?._id) {
+        setUser(normalizeUser(parsed));
+      } else {
+        localStorage.removeItem("user");
       }
     } catch {
       localStorage.removeItem("user");
-    } finally {
-      setLoading(false);
     }
-  }, []);
+  };
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      void refreshUser();
-    }
+    let active = true;
+
+    const initializeAuth = async () => {
+      try {
+        hydrateStoredUser();
+        await refreshUser();
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
+      }
+    };
+
+    void initializeAuth();
+
+    return () => {
+      active = false;
+    };
   }, []);
 
-  // ✅ Sync user to storage
   useEffect(() => {
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
@@ -154,7 +162,13 @@ export const AuthProvider = ({
     };
   }, [user?._id]);
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await logoutUser();
+    } catch {
+      // Client state is still cleared even if the network request fails.
+    }
+
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
