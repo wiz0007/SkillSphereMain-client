@@ -1,4 +1,5 @@
 import { api } from "../api/api";
+import type { WalletProof } from "./auth.service";
 
 export interface AdminUser {
   _id: string;
@@ -472,6 +473,17 @@ export const getAdminWalletTransactions = async (): Promise<
     return res.data;
   } catch (error: any) {
     return handleError(error, "getAdminWalletTransactions");
+  }
+};
+
+export const getAdminWalletProof = async (
+  transactionId: string
+): Promise<WalletProof> => {
+  try {
+    const res = await api.get(`/admin/wallet/${transactionId}/proof`);
+    return res.data;
+  } catch (error: any) {
+    return handleError(error, "getAdminWalletProof");
   }
 };
 

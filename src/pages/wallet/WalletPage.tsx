@@ -6,12 +6,14 @@ import {
   getWithdrawalRequests,
   getWalletProof,
   getWalletTransactions,
+  type WalletProof,
   requestWithdrawal,
   verifyWalletRecharge,
 } from "../../services/auth.service";
 import { useAuth } from "../../context/AuthContext";
 import WalletPanelContent from "../../components/navbar/WalletPanelContent";
 import AppDialog from "../../components/ui/AppDialog";
+import AuditProofViewer from "../../components/wallet/AuditProofViewer";
 import {
   getRechargeBonus,
   type WalletHistoryItem,
@@ -79,6 +81,7 @@ const WalletPage = () => {
   const [withdrawNote, setWithdrawNote] = useState("");
   const [withdrawLoading, setWithdrawLoading] = useState(false);
   const [proofLoadingId, setProofLoadingId] = useState("");
+  const [selectedProof, setSelectedProof] = useState<WalletProof | null>(null);
   const [dialog, setDialog] = useState<{
     title: string;
     message: string;
@@ -185,21 +188,7 @@ const WalletPage = () => {
     try {
       setProofLoadingId(transactionId);
       const proof = await getWalletProof(transactionId);
-
-      const summary = [
-        `Audit status: ${proof.auditStatus}`,
-        `Transaction hash: ${proof.hash}`,
-        `Previous hash: ${proof.previousHash || "Genesis"}`,
-        `Anchor batch: ${proof.anchor?.batchId || "Not anchored yet"}`,
-        `Root hash: ${proof.anchor?.rootHash || "Pending"}`,
-        `Chain tx: ${proof.anchor?.chainTxHash || "Pending"}`,
-        `Proof nodes: ${proof.proof.proofPath.length}`,
-      ].join("\n");
-
-      setDialog({
-        title: "Wallet proof summary",
-        message: summary,
-      });
+      setSelectedProof(proof);
     } catch (error: any) {
       setDialog({
         title: "Proof unavailable",
@@ -321,6 +310,16 @@ const WalletPage = () => {
         tone={dialog?.tone}
         onClose={() => setDialog(null)}
       />
+
+      <AppDialog
+        open={Boolean(selectedProof)}
+        title="Wallet audit proof"
+        kicker="Tamper-evident transaction"
+        size="wide"
+        onClose={() => setSelectedProof(null)}
+      >
+        {selectedProof ? <AuditProofViewer proof={selectedProof} /> : null}
+      </AppDialog>
     </section>
   );
 };

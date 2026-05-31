@@ -4,11 +4,13 @@ import { useNavigate } from "react-router-dom";
 import styles from "./Navbar.module.scss";
 import { useAuth } from "../../context/AuthContext";
 import AppDialog from "../ui/AppDialog";
+import AuditProofViewer from "../wallet/AuditProofViewer";
 import {
   createWalletRechargeOrder,
   getWithdrawalRequests,
   getWalletProof,
   getWalletTransactions,
+  type WalletProof,
   requestWithdrawal,
   verifyWalletRecharge,
 } from "../../services/auth.service";
@@ -69,6 +71,7 @@ const SkillCoinWallet = () => {
   const [withdrawNote, setWithdrawNote] = useState("");
   const [withdrawLoading, setWithdrawLoading] = useState(false);
   const [proofLoadingId, setProofLoadingId] = useState("");
+  const [selectedProof, setSelectedProof] = useState<WalletProof | null>(null);
   const [dialog, setDialog] = useState<{
     title: string;
     message: string;
@@ -199,21 +202,7 @@ const SkillCoinWallet = () => {
     try {
       setProofLoadingId(transactionId);
       const proof = await getWalletProof(transactionId);
-
-      const summary = [
-        `Audit status: ${proof.auditStatus}`,
-        `Transaction hash: ${proof.hash}`,
-        `Previous hash: ${proof.previousHash || "Genesis"}`,
-        `Anchor batch: ${proof.anchor?.batchId || "Not anchored yet"}`,
-        `Root hash: ${proof.anchor?.rootHash || "Pending"}`,
-        `Chain tx: ${proof.anchor?.chainTxHash || "Pending"}`,
-        `Proof nodes: ${proof.proof.proofPath.length}`,
-      ].join("\n");
-
-      setDialog({
-        title: "Wallet proof summary",
-        message: summary,
-      });
+      setSelectedProof(proof);
     } catch (error: any) {
       setDialog({
         title: "Proof unavailable",
@@ -349,6 +338,16 @@ const SkillCoinWallet = () => {
         tone={dialog?.tone}
         onClose={() => setDialog(null)}
       />
+
+      <AppDialog
+        open={Boolean(selectedProof)}
+        title="Wallet audit proof"
+        kicker="Tamper-evident transaction"
+        size="wide"
+        onClose={() => setSelectedProof(null)}
+      >
+        {selectedProof ? <AuditProofViewer proof={selectedProof} /> : null}
+      </AppDialog>
     </div>
   );
 };

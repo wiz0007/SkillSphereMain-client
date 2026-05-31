@@ -194,28 +194,30 @@ export const requestWithdrawal = async (payload: {
   };
 };
 
+export type WalletProof = {
+  transactionId: string;
+  hash: string;
+  previousHash: string | null;
+  canonicalPayload: string;
+  auditStatus: "pending" | "anchored" | "failed";
+  anchor: null | {
+    batchId: string;
+    rootHash: string;
+    chainName: string;
+    network: string;
+    chainTxHash: string | null;
+    anchoredAt: string | null;
+    anchorStatus: string;
+  };
+  proof: {
+    proofPath: string[];
+    verificationType: string;
+  };
+};
+
 export const getWalletProof = async (transactionId: string) => {
   const res = await api.get(`/auth/wallet/proof/${transactionId}`);
-  return res.data as {
-    transactionId: string;
-    hash: string;
-    previousHash: string | null;
-    canonicalPayload: string;
-    auditStatus: "pending" | "anchored" | "failed";
-    anchor: null | {
-      batchId: string;
-      rootHash: string;
-      chainName: string;
-      network: string;
-      chainTxHash: string | null;
-      anchoredAt: string | null;
-      anchorStatus: string;
-    };
-    proof: {
-      proofPath: string[];
-      verificationType: string;
-    };
-  };
+  return res.data as WalletProof;
 };
 
 export const createWalletRechargeOrder = async (amount: number) => {

@@ -147,8 +147,8 @@
 
 @mixin button-danger {
   @include button-base;
-  background: #fff5f5;
-  border: 1px solid #fecaca;
+  background: color-mix(in srgb, var(--color-surface) 88%, var(--color-danger) 12%);
+  border: 1px solid color-mix(in srgb, var(--color-danger) 36%, var(--color-border) 64%);
   color: var(--color-danger);
 }
 

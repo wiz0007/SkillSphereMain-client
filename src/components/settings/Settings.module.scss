@@ -399,8 +399,8 @@
 }
 
 .dangerButton {
-  background: #fff1f2;
-  color: #b42318;
+  background: color-mix(in srgb, var(--color-surface) 86%, var(--color-danger) 14%);
+  color: var(--color-danger);
 }
 
 .primaryButton:disabled,

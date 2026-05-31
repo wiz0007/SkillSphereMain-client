@@ -92,3 +92,84 @@ a {
   width: 100%;
   min-height: 100vh;
 }
+
+html[data-theme="dark"] body {
+  :where(
+      [class*="card"],
+      [class*="Card"],
+      [class*="panel"],
+      [class*="Panel"],
+      [class*="section"],
+      [class*="Section"],
+      [class*="row"],
+      [class*="Row"],
+      [class*="item"],
+      [class*="Item"],
+      [class*="empty"],
+      [class*="Empty"],
+      [class*="summary"],
+      [class*="Summary"],
+      [class*="snapshot"],
+      [class*="Snapshot"],
+      [class*="conversation"],
+      [class*="Conversation"],
+      [class*="messageList"],
+      [class*="MessageList"],
+      [class*="form"],
+      [class*="Form"]
+    ):not(button):not(a):not([class*="button"]):not([class*="Button"]):not([class*="badge"]):not([class*="Badge"]):not([class*="pill"]):not([class*="Pill"]):not([class*="tag"]):not([class*="Tag"]) {
+    border-color: color-mix(in srgb, var(--color-border) 92%, transparent);
+    background-color: color-mix(in srgb, var(--color-surface) 95%, transparent);
+    color: var(--color-text-primary);
+  }
+
+  :where(
+      [class*="card"],
+      [class*="Card"],
+      [class*="panel"],
+      [class*="Panel"],
+      [class*="section"],
+      [class*="Section"],
+      [class*="row"],
+      [class*="Row"],
+      [class*="item"],
+      [class*="Item"],
+      [class*="empty"],
+      [class*="Empty"],
+      [class*="summary"],
+      [class*="Summary"],
+      [class*="snapshot"],
+      [class*="Snapshot"],
+      [class*="conversation"],
+      [class*="Conversation"],
+      [class*="form"],
+      [class*="Form"]
+    ):not(button):not(a):not([class*="button"]):not([class*="Button"]) {
+    h1,
+    h2,
+    h3,
+    h4,
+    strong,
+    label {
+      color: var(--color-text-primary);
+    }
+
+    p,
+    span,
+    small {
+      color: inherit;
+    }
+  }
+
+  input,
+  textarea,
+  select {
+    border-color: var(--color-border-strong);
+    background: var(--color-surface-soft);
+    color: var(--color-text-primary);
+
+    &::placeholder {
+      color: var(--color-text-muted);
+    }
+  }
+}

@@ -15,6 +15,7 @@ import {
   getAdminUsers,
   getAdminVerificationRequests,
   getAdminWithdrawalRequests,
+  getAdminWalletProof,
   getAdminWalletTransactions,
   reviewAdminVerificationRequest,
   setAdminCoursePublishStatus,
@@ -33,7 +34,10 @@ import {
   type AdminWithdrawalRequest,
   type AdminWalletTransaction,
 } from "../../services/admin.service";
+import type { WalletProof } from "../../services/auth.service";
 import { getExplorerUrl } from "../navbar/walletHelpers";
+import AppDialog from "../ui/AppDialog";
+import AuditProofViewer from "../wallet/AuditProofViewer";
 import styles from "./AdminPortal.module.scss";
 
 type AdminTab =
@@ -141,6 +145,9 @@ const AdminPortal = () => {
   const [support, setSupport] = useState<AdminSupportConversation[]>([]);
   const [reviews, setReviews] = useState<AdminReview[]>([]);
   const [wallet, setWallet] = useState<AdminWalletTransaction[]>([]);
+  const [walletProofLoadingId, setWalletProofLoadingId] = useState("");
+  const [selectedWalletProof, setSelectedWalletProof] =
+    useState<WalletProof | null>(null);
   const [withdrawals, setWithdrawals] = useState<AdminWithdrawalRequest[]>([]);
 
   const loadAll = async (userSearch = "") => {
@@ -240,6 +247,18 @@ const AdminPortal = () => {
     setSupportReplyText("");
     setSupportReplyAttachment(null);
   }, [selectedSupportId]);
+
+  const handleViewWalletProof = async (transactionId: string) => {
+    try {
+      setWalletProofLoadingId(transactionId);
+      const proof = await getAdminWalletProof(transactionId);
+      setSelectedWalletProof(proof);
+    } catch (nextError: any) {
+      setError(nextError?.message || "Wallet proof could not be loaded");
+    } finally {
+      setWalletProofLoadingId("");
+    }
+  };
 
   const filteredUsers = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -760,6 +779,18 @@ const AdminPortal = () => {
           </div>
         </div>
       ) : null}
+
+      <AppDialog
+        open={Boolean(selectedWalletProof)}
+        title="Wallet audit proof"
+        kicker="Admin audit viewer"
+        size="wide"
+        onClose={() => setSelectedWalletProof(null)}
+      >
+        {selectedWalletProof ? (
+          <AuditProofViewer proof={selectedWalletProof} />
+        ) : null}
+      </AppDialog>
 
       {loading && !overview ? (
         <div className={styles.loadingState}>Loading admin workspace...</div>
@@ -1674,7 +1705,7 @@ const AdminPortal = () => {
                     <th>Type</th>
                     <th>Amount</th>
                     <th>Audit</th>
-                    <th>Explorer</th>
+                    <th>Proof</th>
                     <th>Description</th>
                     <th>Created</th>
                   </tr>
@@ -1687,6 +1718,16 @@ const AdminPortal = () => {
                       <td>{entry.amount} SC</td>
                       <td>{entry.auditStatus}</td>
                       <td>
+                        <button
+                          type="button"
+                          className={styles.attachmentLink}
+                          disabled={walletProofLoadingId === entry._id}
+                          onClick={() => void handleViewWalletProof(entry._id)}
+                        >
+                          {walletProofLoadingId === entry._id
+                            ? "Loading..."
+                            : "View proof"}
+                        </button>
                         {entry.chainTxHash ? (
                           <a
                             href={getExplorerUrl(entry.chainTxHash, entry.network)}

@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import styles from "./AppDialog.module.scss";
 
 type AppDialogTone = "default" | "success" | "warning" | "danger";
+type AppDialogSize = "default" | "wide";
 
 interface AppDialogProps {
   open: boolean;
@@ -13,6 +14,7 @@ interface AppDialogProps {
   cancelLabel?: string;
   busyLabel?: string;
   busy?: boolean;
+  size?: AppDialogSize;
   onConfirm?: () => void;
   onClose: () => void;
   children?: ReactNode;
@@ -28,6 +30,7 @@ const AppDialog = ({
   cancelLabel = "Cancel",
   busyLabel,
   busy = false,
+  size = "default",
   onConfirm,
   onClose,
   children,
@@ -40,7 +43,7 @@ const AppDialog = ({
 
   return (
     <div className={styles.overlay} role="dialog" aria-modal="true">
-      <div className={`${styles.card} ${styles[tone]}`}>
+      <div className={`${styles.card} ${styles[tone]} ${styles[size]}`}>
         {kicker ? <span className={styles.kicker}>{kicker}</span> : null}
         <h2>{title}</h2>
         {message ? <p>{message}</p> : null}
