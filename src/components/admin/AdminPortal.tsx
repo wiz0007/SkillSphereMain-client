@@ -1612,7 +1612,6 @@ const AdminPortal = () => {
                 <tr>
                   <th>Course</th>
                   <th>Reviewer</th>
-                  <th>Rating</th>
                   <th>Comment</th>
                   <th>Actions</th>
                 </tr>
@@ -1622,7 +1621,6 @@ const AdminPortal = () => {
                   <tr key={review._id}>
                     <td>{review.course?.title || "Removed course"}</td>
                     <td>{review.user.fullName || review.user.username}</td>
-                    <td>{review.rating}/5</td>
                     <td>{review.comment || "No comment"}</td>
                     <td>
                       <button

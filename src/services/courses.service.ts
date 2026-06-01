@@ -22,10 +22,14 @@ export interface ReviewUser {
 export interface Review {
   _id?: string;
   user: string | ReviewUser;
-  rating: number;
   comment: string;
   createdAt: string;
   updatedAt?: string;
+}
+
+export interface RatingBreakdownItem {
+  star: number;
+  count: number;
 }
 
 export interface RecordedAccessSummary {
@@ -129,6 +133,7 @@ export interface Course {
   tutor: Tutor;
   averageRating?: number;
   totalRatings?: number;
+  ratingBreakdown?: RatingBreakdownItem[];
   reviews?: Review[];
   reviewEligibility?: {
     canReview: boolean;
@@ -350,11 +355,9 @@ export const rateCourse = async (id: string, value: number) => {
 
 export const addReview = async (
   id: string,
-  rating: number,
   comment: string
 ) => {
   const res = await api.post(`/courses/${id}/review`, {
-    rating,
     comment,
   });
   return res.data;

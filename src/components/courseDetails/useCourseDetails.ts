@@ -22,7 +22,6 @@ export const useCourseDetails = (id?: string) => {
   const [userRating, setUserRating] = useState(0);
 
   const [reviewText, setReviewText] = useState("");
-  const [reviewRating, setReviewRating] = useState(0);
   const [error, setError] = useState("");
   const [submitLoading, setSubmitLoading] = useState(false);
   const [recordedActionLoading, setRecordedActionLoading] = useState("");
@@ -55,7 +54,6 @@ export const useCourseDetails = (id?: string) => {
       });
 
       if (currentUserReview) {
-        setReviewRating(currentUserReview.rating || 0);
         setReviewText(currentUserReview.comment || "");
       }
     } finally {
@@ -78,25 +76,27 @@ export const useCourseDetails = (id?: string) => {
       ...prev,
       averageRating: res.averageRating,
       totalRatings: res.totalRatings,
+      ratingBreakdown: res.ratingBreakdown,
     }));
   };
 
   const handleReviewSubmit = async () => {
-    if (!id || !reviewRating || !reviewText.trim()) {
-      setError("Complete rating + review");
+    if (!id || !reviewText.trim()) {
+      setError("Write a short review before submitting.");
       return;
     }
 
     try {
       setSubmitLoading(true);
 
-      const res = await addReview(id, reviewRating, reviewText);
+      const res = await addReview(id, reviewText);
 
       setCourse((prev: any) => ({
         ...prev,
         reviews: res.reviews,
         averageRating: res.averageRating,
         totalRatings: res.totalRatings,
+        ratingBreakdown: res.ratingBreakdown,
       }));
 
       setError("");
@@ -244,8 +244,6 @@ export const useCourseDetails = (id?: string) => {
 
     reviewText,
     setReviewText,
-    reviewRating,
-    setReviewRating,
     handleReviewSubmit,
     submitLoading,
     error,

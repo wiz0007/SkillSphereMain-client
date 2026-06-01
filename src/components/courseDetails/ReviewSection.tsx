@@ -3,8 +3,6 @@ import styles from "./CourseDetails.module.scss";
 
 const ReviewSection = ({
   course,
-  reviewRating,
-  setReviewRating,
   reviewText,
   setReviewText,
   handleReviewSubmit,
@@ -17,6 +15,7 @@ const ReviewSection = ({
   const total = course.totalRatings || 0;
   const average = course.averageRating || 0;
   const reviews = course.reviews || [];
+  const ratingBreakdown = course.ratingBreakdown || [];
 
   const getReviewerName = (user: any) => {
     if (typeof user === "object") {
@@ -36,8 +35,8 @@ const ReviewSection = ({
           <span className={styles.kicker}>Reviews</span>
           <h2>What learners are saying</h2>
           <p>
-            Ratings and written feedback update here as soon as new
-            responses land.
+            Rating stats and written feedback update here as soon as
+            learners respond.
           </p>
         </div>
 
@@ -78,10 +77,10 @@ const ReviewSection = ({
         <div className={styles.breakdown}>
           {[5, 4, 3, 2, 1].map((star) => {
             const count =
-              reviews.filter(
-                (review: { rating: number }) =>
-                  review.rating === star
-              ).length || 0;
+              ratingBreakdown.find(
+                (entry: { star: number; count: number }) =>
+                  entry.star === star
+              )?.count || 0;
 
             const percent = total ? (count / total) * 100 : 0;
 
@@ -107,29 +106,13 @@ const ReviewSection = ({
         <div className={styles.reviewComposer}>
           <div className={styles.composerHeader}>
             <div>
-              <span className={styles.summaryLabel}>Add your review</span>
+              <span className={styles.summaryLabel}>Add written feedback</span>
               <h3>Share what stood out</h3>
             </div>
             <PenLine size={18} className={styles.composerIcon} />
           </div>
 
           <p className={styles.composerNote}>{reviewHint}</p>
-
-          <div className={styles.reviewStars}>
-            {[1, 2, 3, 4, 5].map((star) => (
-              <button
-                key={star}
-                type="button"
-                className={`${styles.starButton} ${
-                  star <= reviewRating ? styles.activeStar : ""
-                }`}
-                onClick={() => setReviewRating(star)}
-                aria-label={`Select ${star} star rating`}
-              >
-                <Star size={17} fill="currentColor" />
-              </button>
-            ))}
-          </div>
 
           <textarea
             value={reviewText}
@@ -143,7 +126,7 @@ const ReviewSection = ({
             type="button"
             className={styles.composeButton}
             onClick={handleReviewSubmit}
-            disabled={!reviewRating || !reviewText.trim()}
+            disabled={!reviewText.trim()}
           >
             <MessageSquareText size={16} />
             {submitLoading ? "Submitting..." : "Submit review"}
@@ -186,20 +169,6 @@ const ReviewSection = ({
                     </span>
                   </div>
 
-                  <div className={styles.inlineStars}>
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <span
-                        key={star}
-                        className={`${styles.starIcon} ${
-                          star <= review.rating
-                            ? styles.activeStar
-                            : ""
-                        }`}
-                      >
-                        <Star size={15} fill="currentColor" />
-                      </span>
-                    ))}
-                  </div>
                 </div>
 
                 <p className={styles.comment}>{review.comment}</p>

@@ -25,8 +25,6 @@ const CourseDetails = () => {
     handleRate,
     reviewText,
     setReviewText,
-    reviewRating,
-    setReviewRating,
     handleReviewSubmit,
     submitLoading,
     error,
@@ -56,12 +54,12 @@ const CourseDetails = () => {
   const reviewHint = isOwnCourse
     ? "Learner ratings and written feedback are shown here. Review submission is disabled while previewing your own course."
     : !user
-      ? "Sign in and complete an enrollment before leaving a review."
+      ? "Sign in and complete an enrollment before leaving written feedback."
       : canReview
         ? reviewEligibility?.hasReviewed
-          ? "Update your review any time based on your learning experience."
-          : "You have enrolled in this course, so you can leave a review."
-        : "Review submission unlocks after you have an accepted booking for this course.";
+          ? "Update your written feedback any time based on your learning experience."
+          : "You have enrolled in this course, so you can leave written feedback."
+        : "Written feedback unlocks after you have an accepted booking for this course.";
 
   if (loading || !course) {
     return (
@@ -125,8 +123,6 @@ const CourseDetails = () => {
 
         <ReviewSection
           course={course}
-          reviewRating={reviewRating}
-          setReviewRating={setReviewRating}
           reviewText={reviewText}
           setReviewText={setReviewText}
           handleReviewSubmit={handleReviewSubmit}

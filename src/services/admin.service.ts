@@ -110,7 +110,6 @@ export interface AdminSupportMessage {
 
 export interface AdminReview {
   _id: string;
-  rating: number;
   comment: string;
   createdAt: string;
   updatedAt?: string;
