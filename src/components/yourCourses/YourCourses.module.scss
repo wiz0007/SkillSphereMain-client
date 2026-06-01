@@ -259,4 +259,21 @@
         color-mix(in srgb, var(--color-surface-soft) 96%, transparent)
       );
   }
+
+  .statusPill {
+    background: rgba(var(--color-accent-rgb), 0.14);
+    color: var(--color-accent);
+  }
+
+  .secondaryButton {
+    background: color-mix(in srgb, var(--color-surface-soft) 86%, transparent);
+    border-color: var(--color-border-strong);
+    color: var(--color-text-primary);
+  }
+
+  .activeTab {
+    background: var(--color-text-primary) !important;
+    border-color: var(--color-text-primary) !important;
+    color: var(--color-bg) !important;
+  }
 }

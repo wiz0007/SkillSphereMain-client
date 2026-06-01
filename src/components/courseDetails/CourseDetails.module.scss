@@ -824,3 +824,115 @@
   font-size: 0.84rem;
   font-weight: 600;
 }
+
+:global(html[data-theme="dark"]) .page,
+:global(body[data-theme="dark"]) .page {
+  .left,
+  .previewCard,
+  .card,
+  .sectionSnapshot,
+  .avg,
+  .breakdown,
+  .reviewComposer,
+  .emptyReviews,
+  .loadingState,
+  .reviewCard,
+  .ratePanel,
+  .demoSection {
+    border-color: var(--color-border);
+    background:
+      radial-gradient(circle at top right, rgba(var(--color-accent-rgb), 0.1), transparent 34%),
+      color-mix(in srgb, var(--color-surface) 96%, transparent);
+    color: var(--color-text-primary);
+  }
+
+  .left h1,
+  .previewCard h3,
+  .price,
+  .metricValue,
+  .rateLabel,
+  .recordedRequestsHeader strong,
+  .requestCardHeader strong,
+  .sidebarItem strong,
+  .sectionHeader h2,
+  .sectionSnapshot strong,
+  .avg h1,
+  .composerHeader h3,
+  .name,
+  .emptyReviews strong,
+  .demoHeader strong,
+  .tutorText strong {
+    color: var(--color-text-primary);
+  }
+
+  .desc,
+  .previewCard p,
+  .priceNote,
+  .snapshotHint,
+  .metricLabel,
+  .rateCopy,
+  .ratingText,
+  .skillsLabel,
+  .summaryLabel,
+  .priceLabel,
+  .snapshotLabel,
+  .requestCardHeader span,
+  .requestTime,
+  .emptyRequestState,
+  .sidebarItem span,
+  .sectionHeader p,
+  .barLabel,
+  .barCount,
+  .composerNote,
+  .time,
+  .comment,
+  .emptyReviews,
+  .loadingState,
+  .tutorText span {
+    color: var(--color-text-secondary);
+  }
+
+  .tutor,
+  .metricCard,
+  .requestCard,
+  .sidebarItem,
+  .supportThreadFacts > div {
+    border-color: var(--color-border);
+    background: color-mix(in srgb, var(--color-surface-soft) 90%, transparent);
+    color: var(--color-text-primary);
+  }
+
+  .badges span,
+  .previewTags span,
+  .requestStatus {
+    background: color-mix(in srgb, var(--color-surface-soft) 82%, var(--color-border) 18%);
+    color: var(--color-text-secondary);
+  }
+
+  .starButton,
+  .starIcon {
+    border-color: var(--color-border-strong);
+    background: color-mix(in srgb, var(--color-surface-soft) 88%, transparent);
+    color: var(--color-text-muted);
+  }
+
+  .activeStar {
+    border-color: rgba(245, 158, 11, 0.36);
+    background: rgba(245, 158, 11, 0.16);
+    color: #fbbf24;
+  }
+
+  .bar {
+    background: color-mix(in srgb, var(--color-surface-soft) 76%, var(--color-border) 24%);
+  }
+
+  .rejectAction {
+    border-color: color-mix(in srgb, var(--color-danger) 34%, var(--color-border) 66%);
+    background: color-mix(in srgb, var(--color-surface) 88%, var(--color-danger) 12%);
+    color: var(--color-danger);
+  }
+
+  .emptyRequestState {
+    border-color: var(--color-border-strong);
+  }
+}

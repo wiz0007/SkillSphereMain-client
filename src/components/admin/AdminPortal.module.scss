@@ -101,6 +101,118 @@
   gap: 1rem;
 }
 
+.revenueGrid {
+  display: grid;
+  grid-template-columns: 1.25fr repeat(4, minmax(0, 1fr));
+  gap: 0.9rem;
+
+  @include respond(lg) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include respond(sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.revenueCard {
+  @include panel(24px, 1.1rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  min-height: 150px;
+  background:
+    radial-gradient(circle at top right, rgba(var(--color-accent-rgb), 0.12), transparent 42%),
+    color-mix(in srgb, var(--color-surface) 96%, transparent);
+
+  span {
+    color: var(--color-accent);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  strong {
+    color: var(--color-text-primary);
+    font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+    line-height: 1;
+  }
+
+  p {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: 0.84rem;
+    line-height: 1.5;
+  }
+}
+
+.revenuePrimary {
+  background:
+    radial-gradient(circle at top right, rgba(255, 183, 3, 0.18), transparent 42%),
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--color-surface) 90%, var(--color-cta) 10%),
+      color-mix(in srgb, var(--color-surface-soft) 94%, transparent)
+    );
+}
+
+.auditHealthPanel {
+  @include panel(24px, 1.1rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background:
+    radial-gradient(circle at top left, rgba(var(--color-accent-rgb), 0.12), transparent 34%),
+    color-mix(in srgb, var(--color-surface) 96%, transparent);
+
+  @include respond(md) {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  h2 {
+    margin: 0.2rem 0;
+    color: var(--color-text-primary);
+  }
+
+  p {
+    max-width: 62ch;
+    margin: 0;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+}
+
+.auditHealthStats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(90px, 1fr));
+  gap: 0.7rem;
+
+  @include respond(sm) {
+    grid-template-columns: 1fr;
+  }
+
+  span {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.8rem 0.9rem;
+    border: 1px solid color-mix(in srgb, var(--color-border) 92%, transparent);
+    border-radius: 18px;
+    background: color-mix(in srgb, var(--color-surface-soft) 92%, transparent);
+    color: var(--color-text-secondary);
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  strong {
+    color: var(--color-text-primary);
+    font-size: 1.35rem;
+  }
+}
+
 .metricGrid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -744,6 +856,121 @@
 
   input {
     display: none;
+  }
+}
+
+:global(html[data-theme="dark"]) .page,
+:global(body[data-theme="dark"]) .page {
+  .header h1,
+  .panelHeader h2,
+  .metricCard strong,
+  .table td,
+  .table td strong,
+  .historyStack strong,
+  .listRow strong,
+  .modalCard h2,
+  .modalNote strong,
+  .supportThreadTop strong,
+  .supportDetailHeader h3,
+  .supportThreadFacts strong,
+  .supportMessageHeader strong,
+  .supportMessageCard p,
+  .supportReplyHeader h4 {
+    color: var(--color-text-primary);
+  }
+
+  .header p,
+  .metricCard span,
+  .table th,
+  .table td span,
+  .historyStack span,
+  .historyStack small,
+  .mutedCopy,
+  .listRow span,
+  .modalCard p,
+  .modalNote span,
+  .supportThreadTop span,
+  .supportThreadMeta,
+  .supportDetailHeader p,
+  .supportThreadFacts span,
+  .supportMessageHeader span,
+  .supportMessageHeader time,
+  .supportEmptyState,
+  .supportReplyHeader span {
+    color: var(--color-text-secondary);
+  }
+
+  .tabButton {
+    border-color: var(--color-border);
+    background: color-mix(in srgb, var(--color-surface-soft) 88%, transparent);
+    color: var(--color-text-secondary);
+  }
+
+  .activeTab {
+    border-color: rgba(var(--color-accent-rgb), 0.46);
+    background: rgba(var(--color-accent-rgb), 0.14);
+    color: var(--color-accent);
+  }
+
+  .metricCard,
+  .panel,
+  .modalCard,
+  .supportDetail {
+    border-color: var(--color-border);
+    background: color-mix(in srgb, var(--color-surface) 96%, transparent);
+  }
+
+  .listRow,
+  .modalNote,
+  .supportThreadCard,
+  .supportThreadFacts > div,
+  .supportMessageCard,
+  .supportReplyBox {
+    border-color: var(--color-border);
+    background: color-mix(in srgb, var(--color-surface-soft) 90%, transparent);
+  }
+
+  .supportThreadCardActive {
+    border-color: rgba(var(--color-accent-rgb), 0.44);
+    background:
+      radial-gradient(circle at top right, rgba(var(--color-accent-rgb), 0.14), transparent 42%),
+      color-mix(in srgb, var(--color-surface-soft) 88%, transparent);
+  }
+
+  .table {
+    th,
+    td {
+      border-bottom-color: var(--color-border);
+    }
+  }
+
+  .errorBanner {
+    border-color: color-mix(in srgb, var(--color-danger) 34%, var(--color-border) 66%);
+    background: color-mix(in srgb, var(--color-surface) 88%, var(--color-danger) 12%);
+    color: var(--color-danger);
+  }
+
+  .successBanner {
+    border-color: rgba(16, 185, 129, 0.26);
+    background: color-mix(in srgb, var(--color-surface) 88%, #10b981 12%);
+    color: #6ee7b7;
+  }
+
+  .dangerAction {
+    border-color: color-mix(in srgb, var(--color-danger) 34%, var(--color-border) 66%);
+    background: color-mix(in srgb, var(--color-surface) 88%, var(--color-danger) 12%);
+    color: var(--color-danger);
+  }
+
+  .secondaryAction,
+  .supportAttachmentButton {
+    border-color: var(--color-border-strong);
+    background: color-mix(in srgb, var(--color-surface-soft) 86%, transparent);
+    color: var(--color-text-primary);
+  }
+
+  .attachmentLink {
+    color: var(--color-accent);
   }
 }
 

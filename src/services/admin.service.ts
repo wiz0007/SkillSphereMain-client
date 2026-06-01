@@ -178,6 +178,16 @@ export interface AdminOverview {
     pendingSupportThreads: number;
     totalReviews: number;
     totalWalletTransactions: number;
+    anchoredWalletTransactions: number;
+    pendingWalletTransactions: number;
+    failedWalletTransactions: number;
+  };
+  revenue: {
+    rechargeVolume: number;
+    tutorPayouts: number;
+    withdrawalsPaid: number;
+    platformCommission: number;
+    totalLockedSkillCoins: number;
   };
   recentUsers: AdminUser[];
   recentActivities: Array<{

@@ -87,6 +87,9 @@ const tabs: Array<{ id: AdminTab; label: string }> = [
   { id: "wallet", label: "Wallet" },
 ];
 
+const formatSkillCoin = (value: number) =>
+  `${Math.round(Number(value || 0)).toLocaleString()} SC`;
+
 const hasTrustMark = (user?: AdminUser | null) =>
   !!user &&
   (user.isAdmin || ["identity", "tutor"].includes(user.verifiedBadgeLevel || "none"));
@@ -798,6 +801,59 @@ const AdminPortal = () => {
 
       {activeTab === "overview" && overview ? (
         <div className={styles.stack}>
+          <div className={styles.revenueGrid}>
+            <article className={`${styles.revenueCard} ${styles.revenuePrimary}`}>
+              <span>Platform commission</span>
+              <strong>{formatSkillCoin(overview.revenue.platformCommission)}</strong>
+              <p>10% retained from admin-released live session settlements.</p>
+            </article>
+            <article className={styles.revenueCard}>
+              <span>Recharge volume</span>
+              <strong>{formatSkillCoin(overview.revenue.rechargeVolume)}</strong>
+              <p>Total SkillCoin credited through successful wallet recharges.</p>
+            </article>
+            <article className={styles.revenueCard}>
+              <span>Tutor payouts</span>
+              <strong>{formatSkillCoin(overview.revenue.tutorPayouts)}</strong>
+              <p>SkillCoin earned by tutors from sessions, tuition, and recorded courses.</p>
+            </article>
+            <article className={styles.revenueCard}>
+              <span>Withdrawals paid</span>
+              <strong>{formatSkillCoin(overview.revenue.withdrawalsPaid)}</strong>
+              <p>Locked SkillCoin marked paid through admin withdrawal review.</p>
+            </article>
+            <article className={styles.revenueCard}>
+              <span>Locked exposure</span>
+              <strong>{formatSkillCoin(overview.revenue.totalLockedSkillCoins)}</strong>
+              <p>SkillCoin currently held for sessions, withdrawals, and pending flows.</p>
+            </article>
+          </div>
+
+          <div className={styles.auditHealthPanel}>
+            <div>
+              <span className={styles.kicker}>Audit health</span>
+              <h2>Anchoring coverage</h2>
+              <p>
+                Wallet events are hash-chained locally and can be anchored in
+                Polygon batches for external audit proof.
+              </p>
+            </div>
+            <div className={styles.auditHealthStats}>
+              <span>
+                <strong>{overview.metrics.anchoredWalletTransactions}</strong>
+                Anchored
+              </span>
+              <span>
+                <strong>{overview.metrics.pendingWalletTransactions}</strong>
+                Pending
+              </span>
+              <span>
+                <strong>{overview.metrics.failedWalletTransactions}</strong>
+                Failed
+              </span>
+            </div>
+          </div>
+
           <div className={styles.metricGrid}>
             {[
               ["Users", overview.metrics.totalUsers],
