@@ -18,11 +18,18 @@ export const api = axios.create({
   withCredentials: true,
 });
 
-const shouldAttachCsrf = (config: InternalAxiosRequestConfig) => {
+const isUnsafeMethod = (config: InternalAxiosRequestConfig) => {
   const method = String(config.method || "get").toLowerCase();
+  return UNSAFE_METHODS.has(method);
+};
+
+const shouldAttachCsrf = (config: InternalAxiosRequestConfig) => {
   const url = String(config.url || "");
 
-  return UNSAFE_METHODS.has(method) && !url.includes("/auth/csrf");
+  return (
+    isUnsafeMethod(config) &&
+    !url.includes("/auth/csrf")
+  );
 };
 
 const fetchCsrfToken = async () => {
@@ -33,7 +40,9 @@ const fetchCsrfToken = async () => {
   if (!csrfTokenRequest) {
     csrfTokenRequest = api
       .get("/auth/csrf", {
-        headers: { "x-skip-auth-redirect": "true" },
+        headers: {
+          "x-skip-auth-redirect": "true",
+        },
       })
       .then((response) => {
         csrfToken = String(response.data?.csrfToken || "");
@@ -48,35 +57,78 @@ const fetchCsrfToken = async () => {
 };
 
 api.interceptors.request.use(async (config) => {
+  /**
+   * Replay protection
+   * Added to ALL unsafe requests
+   */
+  if (isUnsafeMethod(config)) {
+    config.headers.set(
+      "X-Timestamp",
+      Date.now().toString()
+    );
+
+    config.headers.set(
+      "X-Nonce",
+      crypto.randomUUID()
+    );
+  }
+
+  /**
+   * CSRF protection
+   */
   if (shouldAttachCsrf(config)) {
     const token = await fetchCsrfToken();
-    config.headers.set(CSRF_HEADER_NAME, token);
+
+    config.headers.set(
+      CSRF_HEADER_NAME,
+      token
+    );
   }
 
   return config;
 });
 
 api.interceptors.response.use(
-  (res) => res,
+  (response) => response,
   async (error: AxiosError<any>) => {
-    console.error("API ERROR:", error.response?.data || error.message);
+    console.error(
+      "API ERROR:",
+      error.response?.data || error.message
+    );
 
     const skipAuthRedirect =
-      error.config?.headers?.["x-skip-auth-redirect"] === "true";
+      error.config?.headers?.["x-skip-auth-redirect"] ===
+      "true";
 
     const isCsrfFailure =
       error.response?.status === 403 &&
-      String(error.response?.data?.code || "").startsWith("CSRF_TOKEN_");
+      String(
+        error.response?.data?.code || ""
+      ).startsWith("CSRF_TOKEN_");
 
-    if (isCsrfFailure && error.config && !(error.config as any)._csrfRetry) {
+    if (
+      isCsrfFailure &&
+      error.config &&
+      !(error.config as any)._csrfRetry
+    ) {
       csrfToken = "";
+
       (error.config as any)._csrfRetry = true;
+
       const token = await fetchCsrfToken();
-      error.config.headers?.set(CSRF_HEADER_NAME, token);
+
+      error.config.headers?.set(
+        CSRF_HEADER_NAME,
+        token
+      );
+
       return api.request(error.config);
     }
 
-    if (error.response?.status === 401 && !skipAuthRedirect) {
+    if (
+      error.response?.status === 401 &&
+      !skipAuthRedirect
+    ) {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
 
