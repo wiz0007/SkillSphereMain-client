@@ -32,24 +32,30 @@ export const sidebarItems: SidebarItem[] = [
   },
   {
     id: 5,
+    title: "Notifications",
+    icon: "ri-notification-3-line",
+    route: "/notifications",
+  },
+  {
+    id: 6,
     title: "Messages",
     icon: "ri-chat-3-line",
     route: "/messages",
   },
   {
-    id: 6,
+    id: 7,
     title: "Profile",
     icon: "ri-user-line",
     route: "/profile",
   },
   {
-    id: 7,
+    id: 8,
     title: "Settings",
     icon: "ri-settings-3-line",
     route: "/settings",
   },
   {
-    id: 8,
+    id: 9,
     title: "Help Center",
     icon: "ri-question-line",
     route: "/help-center",

@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { BadgeCheck } from "lucide-react";
-import { FiChevronDown, FiMessageSquare } from "react-icons/fi";
+import { FiBell, FiChevronDown, FiMessageSquare } from "react-icons/fi";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { useNotifications } from "../../context/NotificationContext";
 import NavbarBell from "./NavbarBell";
 import SkillCoinWallet from "./SkillCoinWallet";
 import styles from "./Navbar.module.scss";
@@ -13,6 +14,7 @@ interface NavbarProps {
 
 const Navbar = ({ onToggleSidebar }: NavbarProps) => {
   const { user, logout, loading } = useAuth();
+  const { count: notificationCount } = useNotifications();
   const navigate = useNavigate();
 
   const [profileOpen, setProfileOpen] = useState(false);
@@ -220,6 +222,24 @@ const Navbar = ({ onToggleSidebar }: NavbarProps) => {
 
         <NavLink to="/sessions">Sessions</NavLink>
         <NavLink to="/dashboard">Dashboard</NavLink>
+
+        {user ? (
+          <NavLink
+            to="/notifications"
+            className={styles.bottomNavItem}
+            aria-label="Open notifications"
+          >
+            <span className={styles.bottomNavIconWrap}>
+              <FiBell />
+              {notificationCount > 0 ? (
+                <span className={styles.bottomNavBadge}>
+                  {notificationCount > 9 ? "9+" : notificationCount}
+                </span>
+              ) : null}
+            </span>
+            Alerts
+          </NavLink>
+        ) : null}
 
         {shouldShowTutorVerificationCta ? (
           <NavLink to="/become-tutor">

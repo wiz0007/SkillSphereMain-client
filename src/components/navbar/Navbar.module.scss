@@ -923,6 +923,42 @@
   -webkit-user-select: none;
 }
 
+.bottomNavItem {
+  position: relative;
+  gap: 0.18rem;
+}
+
+.bottomNavIconWrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+.bottomNavBadge {
+  position: absolute;
+  top: -0.52rem;
+  right: -0.72rem;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #ffb703;
+  color: #111827;
+  font-size: 0.62rem;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 0 6px 12px rgba(255, 183, 3, 0.24);
+}
+
 @keyframes dropdownIn {
   from {
     opacity: 0;
@@ -1115,6 +1151,13 @@
       min-width: 0;
       padding: 0.72rem 0.5rem;
       font-size: 0.76rem;
+    }
+
+    .bottomNavItem {
+      flex-direction: column;
+      gap: 0.08rem;
+      padding-block: 0.5rem;
+      line-height: 1.1;
     }
   }
 

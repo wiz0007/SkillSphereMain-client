@@ -5,7 +5,7 @@
   inset: 0;
   z-index: 1600;
   padding: 1.2rem;
-  background: rgba(15, 23, 42, 0.58);
+  background: rgba(15, 23, 42, 0.62);
   backdrop-filter: blur(10px);
   @include flex(center, center);
 }
@@ -17,9 +17,14 @@
   overflow-y: auto;
   @include panel(28px, 1.4rem);
   background:
-    radial-gradient(circle at top right, rgba($color-accent, 0.14), transparent 34%),
-    linear-gradient(180deg, #ffffff, #fbfdff);
-  box-shadow: $shadow-lg;
+    radial-gradient(circle at top right, rgba(var(--color-accent-rgb), 0.14), transparent 34%),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-surface) 98%, white 2%),
+      var(--color-surface-soft)
+    );
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-lg);
 }
 
 .successModal {
@@ -35,10 +40,10 @@
   justify-content: center;
   width: 38px;
   height: 38px;
-  border: 1px solid $color-border-strong;
+  border: 1px solid var(--color-border-strong);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.9);
-  color: $color-text-secondary;
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+  color: var(--color-text-secondary);
   cursor: pointer;
   transition:
     transform 0.2s ease,
@@ -47,8 +52,9 @@
 
   &:hover {
     transform: translateY(-1px);
-    border-color: rgba($color-accent, 0.3);
-    color: $color-text-primary;
+    border-color: rgba(var(--color-accent-rgb), 0.34);
+    color: var(--color-text-primary);
+    background: var(--color-surface);
   }
 }
 
@@ -67,7 +73,7 @@
 
   h2 {
     margin: 0.35rem 0 0.4rem;
-    color: $color-text-primary;
+    color: var(--color-text-primary);
     font-size: clamp(1.55rem, 3vw, 2rem);
     line-height: 1.1;
   }
@@ -75,7 +81,7 @@
   p {
     margin: 0;
     max-width: 54ch;
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     font-size: 0.94rem;
     line-height: 1.6;
   }
@@ -93,8 +99,9 @@
   min-height: 38px;
   padding: 0.55rem 0.8rem;
   border-radius: 999px;
-  background: #ecfeff;
-  color: #0f766e;
+  border: 1px solid rgba(var(--color-accent-rgb), 0.22);
+  background: rgba(var(--color-accent-rgb), 0.12);
+  color: var(--color-accent);
   font-size: 0.82rem;
   font-weight: 700;
   white-space: nowrap;
@@ -136,14 +143,14 @@
 .fieldInvalid textarea {
   border-color: rgba(225, 29, 72, 0.55) !important;
   box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.08);
-  background: #fffafc;
+  background: color-mix(in srgb, var(--color-surface-soft) 86%, var(--color-danger) 14%);
 }
 
 .label {
   display: inline-flex;
   align-items: center;
   gap: 0.42rem;
-  color: $color-text-primary;
+  color: var(--color-text-primary);
   font-size: 0.83rem;
   font-weight: 700;
 }
@@ -159,15 +166,15 @@
 .errorBanner {
   padding: 0.85rem 0.95rem;
   border-radius: 16px;
-  border: 1px solid #fecaca;
-  background: #fff5f5;
-  color: #b42318;
+  border: 1px solid color-mix(in srgb, var(--color-danger) 42%, var(--color-border) 58%);
+  background: color-mix(in srgb, var(--color-surface) 86%, var(--color-danger) 14%);
+  color: var(--color-danger);
   font-size: 0.88rem;
   font-weight: 600;
 }
 
 .errorText {
-  color: #be123c;
+  color: var(--color-danger);
   font-size: 0.82rem;
   font-weight: 600;
   line-height: 1.45;
@@ -204,16 +211,16 @@
   }
 
   span {
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     font-size: 0.78rem;
     font-weight: 600;
   }
 }
 
 .durationActive {
-  background: #0f172a;
-  border-color: #0f172a;
-  color: #ffffff;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-surface);
 
   span {
     color: rgba(255, 255, 255, 0.72);
@@ -229,7 +236,7 @@
 
   h3 {
     margin: 0;
-    color: $color-text-primary;
+    color: var(--color-text-primary);
     font-size: 1.1rem;
   }
 }
@@ -237,7 +244,7 @@
 .summaryMeta,
 .successNote {
   margin: 0;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   font-size: 0.9rem;
   line-height: 1.6;
 }
@@ -247,13 +254,13 @@
   flex-direction: column;
   gap: 0.25rem;
   padding: 0.8rem 0.9rem;
-  border: 1px solid rgba($color-border, 0.95);
+  border: 1px solid color-mix(in srgb, var(--color-border) 95%, transparent);
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.76);
+  background: color-mix(in srgb, var(--color-surface) 84%, transparent);
 }
 
 .summaryLabel {
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   font-size: 0.78rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -261,7 +268,7 @@
 }
 
 .summaryValue {
-  color: $color-text-primary;
+  color: var(--color-text-primary);
   font-size: 0.95rem;
   line-height: 1.5;
 }
@@ -269,7 +276,7 @@
 .balanceBar {
   height: 10px;
   border-radius: 999px;
-  background: #e2e8f0;
+  background: color-mix(in srgb, var(--color-border) 78%, var(--color-surface-soft) 22%);
   overflow: hidden;
 }
 
@@ -281,7 +288,7 @@
 
 .lockCopy {
   margin: 0;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   font-size: 0.88rem;
   line-height: 1.6;
 }
@@ -325,7 +332,8 @@
   margin-bottom: 0.85rem;
   padding: 0.4rem 0.7rem;
   border-radius: 999px;
-  background: #ecfdf5;
+  border: 1px solid color-mix(in srgb, #0f9f6e 32%, var(--color-border) 68%);
+  background: color-mix(in srgb, var(--color-surface) 84%, #0f9f6e 16%);
   color: #0f9f6e;
   font-size: 0.8rem;
   font-weight: 800;
@@ -333,7 +341,7 @@
 
 .successModal h2 {
   margin: 0 0 0.45rem;
-  color: $color-text-primary;
+  color: var(--color-text-primary);
   font-size: 1.8rem;
 }
 
@@ -341,8 +349,61 @@
   margin: 0;
   padding: 2rem 0.5rem;
   text-align: center;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   font-size: 0.95rem;
+}
+
+:global(html[data-theme="dark"]) {
+  .overlay {
+    background: rgba(2, 6, 23, 0.72);
+  }
+
+  .modal {
+    border-color: rgba(51, 65, 85, 0.9);
+    background:
+      radial-gradient(circle at top right, rgba(var(--color-accent-rgb), 0.14), transparent 38%),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-surface) 96%, #1e293b 4%),
+        color-mix(in srgb, var(--color-bg) 78%, var(--color-surface) 22%)
+      );
+  }
+
+  .close {
+    background: color-mix(in srgb, var(--color-surface-soft) 88%, transparent);
+
+    &:hover {
+      background: var(--color-surface-soft);
+    }
+  }
+
+  .headerBadge {
+    background: rgba(var(--color-accent-rgb), 0.14);
+  }
+
+  .durationActive {
+    background: color-mix(in srgb, var(--color-accent) 22%, var(--color-surface-soft) 78%);
+    border-color: rgba(var(--color-accent-rgb), 0.45);
+    color: var(--color-text-primary);
+
+    span {
+      color: var(--color-text-secondary);
+    }
+  }
+
+  .summaryItem {
+    background: color-mix(in srgb, var(--color-surface-soft) 72%, transparent);
+  }
+
+  .balanceBar {
+    background: color-mix(in srgb, var(--color-surface-soft) 70%, #020617 30%);
+  }
+
+  .errorBanner,
+  .fieldInvalid input,
+  .fieldInvalid textarea {
+    background: color-mix(in srgb, var(--color-surface-soft) 84%, var(--color-danger) 16%);
+  }
 }
 
 @media (max-width: 1180px) {
