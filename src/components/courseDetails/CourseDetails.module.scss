@@ -5,18 +5,23 @@
 }
 
 .container {
-  max-width: 1180px;
+  width: min(100%, 1180px);
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  padding-inline: clamp(0.85rem, 2vw, 1.25rem);
 }
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(300px, 0.88fr);
+  grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.86fr);
   gap: 1rem;
   align-items: start;
+
+  @media (max-width: 1180px) {
+    grid-template-columns: 1fr;
+  }
 
   @include respond(md) {
     grid-template-columns: 1fr;
@@ -28,6 +33,7 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  min-width: 0;
 }
 
 .heroTop {
@@ -35,6 +41,10 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
+
+  @media (max-width: 1180px) {
+    align-items: flex-start;
+  }
 
   @include respond(sm) {
     flex-direction: column;
@@ -55,6 +65,8 @@
   min-height: 40px;
   border-radius: 999px;
   width: fit-content;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .saved {
@@ -65,15 +77,16 @@
 
 .left h1 {
   margin: 0;
-  color: $color-text-primary;
-  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--color-text-primary);
+  font-size: clamp(1.85rem, 4vw, 3rem);
   line-height: 1.02;
+  overflow-wrap: anywhere;
 }
 
 .desc {
   margin: 0;
   max-width: 64ch;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   font-size: 0.96rem;
   line-height: 1.7;
 }
@@ -83,10 +96,11 @@
   align-items: center;
   gap: 0.85rem;
   width: fit-content;
+  max-width: 100%;
   padding: 0.8rem 1rem;
-  border: 1px solid #dbe4ee;
+  border: 1px solid var(--color-border-strong);
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.8);
+  background: color-mix(in srgb, var(--color-surface) 82%, transparent);
   cursor: pointer;
   transition:
     transform 0.2s ease,
@@ -96,7 +110,7 @@
   &:hover {
     transform: translateY(-1px);
     border-color: rgba(46, 196, 182, 0.28);
-    box-shadow: $shadow-sm;
+    box-shadow: var(--shadow-sm);
   }
 
   img {
@@ -113,12 +127,12 @@
   gap: 0.15rem;
 
   strong {
-    color: $color-text-primary;
+    color: var(--color-text-primary);
     font-size: 0.95rem;
   }
 
   span {
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     font-size: 0.82rem;
   }
 }
@@ -158,6 +172,14 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.8rem;
 
+  @media (max-width: 1180px) and (min-width: 641px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   @include respond(sm) {
     grid-template-columns: 1fr;
   }
@@ -190,6 +212,7 @@
   border-radius: 20px;
   background: #0f172a;
   aspect-ratio: 16 / 9;
+  min-width: 0;
 
   iframe,
   video {
@@ -239,6 +262,7 @@
   border: 1px solid #edf2f7;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.76);
+  min-width: 0;
 
   svg {
     color: $color-accent;
@@ -363,6 +387,21 @@
   position: sticky;
   top: 1rem;
   align-self: start;
+  min-width: 0;
+
+  @media (max-width: 1180px) {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    .card {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 860px) {
+    display: flex;
+  }
 
   @include respond(md) {
     position: static;
@@ -374,6 +413,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
+  min-width: 0;
 
   h3 {
     margin: 0;
@@ -398,6 +438,7 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  min-width: 0;
 }
 
 .priceBlock {
@@ -431,6 +472,7 @@
   width: 100%;
   min-height: 48px;
   border-radius: 999px;
+  text-align: center;
 }
 
 .sidebarList {
@@ -549,6 +591,7 @@
   border: 1px solid #edf2f7;
   border-radius: 18px;
   background: #fbfdff;
+  min-width: 0;
 
   svg {
     color: $color-accent;
@@ -567,6 +610,7 @@
     color: #475569;
     font-size: 0.84rem;
     line-height: 1.55;
+    overflow-wrap: anywhere;
   }
 }
 
@@ -580,6 +624,10 @@
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.88fr);
   gap: 1rem;
+
+  @media (max-width: 1180px) {
+    grid-template-columns: 1fr;
+  }
 
   @include respond(md) {
     grid-template-columns: 1fr;

@@ -73,14 +73,37 @@
 }
 
 .feedbackBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
   margin-bottom: 1rem;
-  padding: 0.85rem 0.95rem;
+  padding: 0.95rem 1rem;
   border-radius: 16px;
-  border: 1px solid rgba(46, 196, 182, 0.24);
-  background: rgba(46, 196, 182, 0.08);
-  color: #0f766e;
   font-size: 0.88rem;
-  font-weight: 600;
+  font-weight: 800;
+  line-height: 1.45;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.feedbackError {
+  border: 1px solid rgba(248, 113, 113, 0.7);
+  background:
+    radial-gradient(circle at top left, rgba(248, 113, 113, 0.2), transparent 42%),
+    color-mix(in srgb, var(--color-surface) 88%, #fee2e2 12%);
+  color: #b91c1c;
+  box-shadow:
+    0 0 0 4px rgba(248, 113, 113, 0.12),
+    0 16px 34px rgba(127, 29, 29, 0.12);
+}
+
+.feedbackSuccess {
+  border: 1px solid rgba(46, 196, 182, 0.34);
+  background: rgba(46, 196, 182, 0.1);
+  color: #0f766e;
+  box-shadow: 0 0 0 4px rgba(46, 196, 182, 0.08);
 }
 
 .form {
@@ -149,17 +172,31 @@
   font-weight: 600;
 }
 
+.field input[aria-invalid="true"] + .inlineHint,
+.field .inputError ~ .inlineHint {
+  color: #f43f5e;
+}
+
 .summaryBanner {
   display: flex;
   align-items: center;
   gap: 0.55rem;
-  padding: 0.85rem 0.95rem;
+  padding: 0.95rem 1rem;
   border-radius: 16px;
-  border: 1px solid rgba(251, 191, 36, 0.4);
-  background: color-mix(in srgb, var(--color-surface) 86%, #fffbeb 14%);
-  color: #8a5a0a;
+  border: 1px solid rgba(251, 146, 60, 0.7);
+  background:
+    radial-gradient(circle at top left, rgba(251, 146, 60, 0.22), transparent 40%),
+    color-mix(in srgb, var(--color-surface) 84%, #fff7ed 16%);
+  color: #c2410c;
   font-size: 0.84rem;
-  font-weight: 700;
+  font-weight: 850;
+  box-shadow:
+    0 0 0 4px rgba(251, 146, 60, 0.12),
+    0 16px 34px rgba(154, 52, 18, 0.12);
+
+  &:focus {
+    outline: none;
+  }
 }
 
 .passwordRules {

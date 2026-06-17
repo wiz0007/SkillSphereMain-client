@@ -1,10 +1,15 @@
 @use "../../styles/abstracts" as *;
 
 .navbar {
+  box-sizing: border-box;
+  container-type: inline-size;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   height: $shell-navbar-height;
   padding: 0 1.5rem;
   position: sticky;
@@ -34,10 +39,13 @@
 }
 
 .leftSection {
+  flex: 0 1 auto;
   gap: 0.9rem;
+  min-width: 0;
 }
 
 .logo {
+  flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   min-height: 48px;
@@ -65,6 +73,8 @@
 }
 
 .desktopLinks {
+  flex: 0 1 auto;
+  min-width: 0;
   gap: 0.45rem;
   padding: 0.35rem;
   border-radius: 999px;
@@ -74,6 +84,7 @@
 
 .desktopLinks a,
 .bottomNav a {
+  white-space: nowrap;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -124,14 +135,19 @@
 }
 
 .actions {
+  flex: 0 1 auto;
   gap: 0.7rem;
+  min-width: 0;
 }
 
 .walletWrap {
+  flex: 0 1 auto;
+  min-width: 0;
   position: relative;
 }
 
 .walletTrigger {
+  max-width: 100%;
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
@@ -170,6 +186,7 @@
   flex-direction: column;
   gap: 0.18rem;
   min-width: 126px;
+  max-width: 150px;
 
   span {
     color: var(--color-text-secondary);
@@ -180,6 +197,9 @@
   }
 
   strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     color: var(--color-text-primary);
     font-size: 0.9rem;
     line-height: 1;
@@ -708,6 +728,7 @@
 }
 
 .iconWrapper {
+  flex: 0 0 auto;
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -787,6 +808,7 @@
 }
 
 .profile {
+  flex: 0 1 auto;
   position: relative;
   gap: 0.65rem;
   min-height: 46px;
@@ -796,6 +818,7 @@
   border: 1px solid color-mix(in srgb, var(--color-border) 92%, transparent);
   box-shadow: 0 10px 22px rgba(15, 23, 42, 0.04);
   cursor: pointer;
+  min-width: 0;
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease,
@@ -808,6 +831,7 @@
   }
 
   img {
+    flex: 0 0 auto;
     width: 36px;
     height: 36px;
     border-radius: 12px;
@@ -816,7 +840,7 @@
 }
 
 .username {
-  max-width: 140px;
+  max-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -838,6 +862,7 @@
 }
 
 .tutorBadge {
+  flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   min-height: 24px;
@@ -968,6 +993,101 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@container (max-width: 1280px) {
+  .desktopLinks {
+    display: none;
+  }
+
+  .hamburger {
+    display: inline-flex;
+  }
+
+  .walletMeta {
+    min-width: 82px;
+    max-width: 96px;
+  }
+
+  .username {
+    max-width: 88px;
+  }
+
+  .tutorBadge {
+    display: none;
+  }
+}
+
+@container (max-width: 980px) {
+  .navbar {
+    gap: 0.55rem;
+    padding-inline: 0.85rem;
+  }
+
+  .actions {
+    gap: 0.35rem;
+  }
+
+  .walletTrigger {
+    gap: 0.45rem;
+    padding: 0.34rem 0.55rem 0.34rem 0.36rem;
+  }
+
+  .walletMeta {
+    min-width: 56px;
+    max-width: 74px;
+
+    span {
+      display: none;
+    }
+  }
+
+  .walletMiniBar {
+    display: none;
+  }
+
+  .iconWrapper {
+    width: 40px;
+    height: 40px;
+    border-radius: 13px;
+  }
+
+  .profile {
+    gap: 0.3rem;
+    padding-right: 0.35rem;
+  }
+
+  .profile .username {
+    display: none;
+  }
+}
+
+@container (max-width: 740px) {
+  .fullLogo {
+    display: none;
+  }
+
+  .compactLogo {
+    display: inline;
+  }
+
+  .mobileAuxAction {
+    display: none;
+  }
+
+  .profile {
+    gap: 0;
+    min-height: 40px;
+    padding: 0.22rem;
+
+    svg {
+      display: none;
+    }
+  }
+
+  .verifiedTick {
+    display: none;
   }
 }
 

@@ -48,10 +48,15 @@ const Register = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [cooldown, setCooldown] = useState(0);
   const [submitAttempted, setSubmitAttempted] = useState(false);
+  const [feedbackTone, setFeedbackTone] = useState<"success" | "error">(
+    "error"
+  );
   const [touched, setTouched] = useState<
     Partial<Record<keyof RegisterForm | "terms" | "otp", boolean>>
   >({});
 
+  const feedbackRef = useRef<HTMLDivElement | null>(null);
+  const summaryRef = useRef<HTMLDivElement | null>(null);
   const usernameRef = useRef<HTMLInputElement | null>(null);
   const emailRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
@@ -70,6 +75,23 @@ const Register = () => {
   const isMatch =
     form.confirmPassword.length > 0 &&
     form.password === form.confirmPassword;
+
+  const scrollToWarning = (target: HTMLElement | null) => {
+    window.requestAnimationFrame(() => {
+      target?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    });
+  };
+
+  const showFeedback = (
+    message: string,
+    tone: "success" | "error" = "error"
+  ) => {
+    setFeedbackTone(tone);
+    setFeedback(message);
+  };
 
   const validationErrors = useMemo(
     () => ({
@@ -121,6 +143,26 @@ const Register = () => {
     field: keyof typeof validationErrors
   ) => ((touched[field] || submitAttempted) ? validationErrors[field] : "");
 
+  const hasBlockingErrors = Boolean(
+    validationErrors.username ||
+      validationErrors.email ||
+      validationErrors.password ||
+      validationErrors.confirmPassword ||
+      validationErrors.terms
+  );
+
+  useEffect(() => {
+    if (feedback) {
+      scrollToWarning(feedbackRef.current);
+    }
+  }, [feedback]);
+
+  useEffect(() => {
+    if (submitAttempted && hasBlockingErrors) {
+      scrollToWarning(summaryRef.current);
+    }
+  }, [hasBlockingErrors, submitAttempted]);
+
   useEffect(() => {
     const normalizedUsername = form.username.trim().toLowerCase();
 
@@ -171,6 +213,7 @@ const Register = () => {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setFeedback("");
+    setFeedbackTone("error");
     setSubmitAttempted(true);
     setTouched({
       username: true,
@@ -182,30 +225,35 @@ const Register = () => {
 
     if (validationErrors.username) {
       usernameRef.current?.focus();
+      scrollToWarning(summaryRef.current || usernameRef.current);
       return;
     }
 
     if (validationErrors.email) {
       emailRef.current?.focus();
+      scrollToWarning(summaryRef.current || emailRef.current);
       return;
     }
 
     if (validationErrors.password) {
       passwordRef.current?.focus();
+      scrollToWarning(summaryRef.current || passwordRef.current);
       return;
     }
 
     if (validationErrors.confirmPassword) {
       confirmPasswordRef.current?.focus();
+      scrollToWarning(summaryRef.current || confirmPasswordRef.current);
       return;
     }
 
     if (validationErrors.terms) {
+      scrollToWarning(summaryRef.current);
       return;
     }
 
     if (usernameStatus !== "available") {
-      setFeedback("Choose an available username before creating the account.");
+      showFeedback("Choose an available username before creating the account.");
       return;
     }
 
@@ -221,11 +269,9 @@ const Register = () => {
       setUserId(res.userId);
       setIsOtpStep(true);
       setCooldown(30);
-      setFeedback("We sent a verification code to your email.");
+      showFeedback("We sent a verification code to your email.", "success");
     } catch (err: any) {
-      setFeedback(
-        err?.response?.data?.message || "Registration failed."
-      );
+      showFeedback(err?.response?.data?.message || "Registration failed.");
     } finally {
       setLoading(false);
     }
@@ -236,6 +282,7 @@ const Register = () => {
 
     if (validationErrors.otp) {
       otpRef.current?.focus();
+      scrollToWarning(otpRef.current);
       return;
     }
 
@@ -244,7 +291,7 @@ const Register = () => {
       await verifyOTP({ userId: userId!, otp: otp.trim() });
       navigate("/login");
     } catch (err: any) {
-      setFeedback(err?.response?.data?.message || "Invalid OTP.");
+      showFeedback(err?.response?.data?.message || "Invalid OTP.");
     } finally {
       setLoading(false);
     }
@@ -256,9 +303,9 @@ const Register = () => {
     try {
       await resendOTP({ userId });
       setCooldown(30);
-      setFeedback("A new verification code has been sent.");
+      showFeedback("A new verification code has been sent.", "success");
     } catch {
-      setFeedback("Failed to resend OTP.");
+      showFeedback("Failed to resend OTP.");
     }
   };
 
@@ -292,7 +339,19 @@ const Register = () => {
           </div>
 
           {feedback ? (
-            <div className={styles.feedbackBanner}>{feedback}</div>
+            <div
+              ref={feedbackRef}
+              className={`${styles.feedbackBanner} ${
+                feedbackTone === "error"
+                  ? styles.feedbackError
+                  : styles.feedbackSuccess
+              }`}
+              role={feedbackTone === "error" ? "alert" : "status"}
+              tabIndex={-1}
+            >
+              {feedbackTone === "error" ? <AlertTriangle size={17} /> : null}
+              <span>{feedback}</span>
+            </div>
           ) : null}
 
           {!isOtpStep ? (
@@ -495,13 +554,13 @@ const Register = () => {
                 </small>
               ) : null}
 
-              {submitAttempted &&
-              (validationErrors.username ||
-                validationErrors.email ||
-                validationErrors.password ||
-                validationErrors.confirmPassword ||
-                validationErrors.terms) ? (
-                <div className={styles.summaryBanner} role="alert">
+              {submitAttempted && hasBlockingErrors ? (
+                <div
+                  ref={summaryRef}
+                  className={styles.summaryBanner}
+                  role="alert"
+                  tabIndex={-1}
+                >
                   <AlertTriangle size={16} />
                   <span>
                     Fix the highlighted fields before creating the
