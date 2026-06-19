@@ -41,6 +41,9 @@ const SessionCard = ({ session, onUpdate, onHide }: any) => {
     ? "expired"
     : session.status;
   const isTuitionSession = session.sessionKind === "tuition";
+  const skillCoinAmount = Number(session.skillCoinAmount);
+  const hasSkillCoinAmount =
+    Number.isFinite(skillCoinAmount) && skillCoinAmount > 0;
   const skillCoinLabel =
     session.billingType === "included_in_tuition"
       ? "included in tuition plan"
@@ -125,7 +128,9 @@ const SessionCard = ({ session, onUpdate, onHide }: any) => {
           <span>
             {session.billingType === "included_in_tuition"
               ? skillCoinLabel
-              : `${session.skillCoinAmount} SC ${skillCoinLabel}`}
+              : hasSkillCoinAmount
+                ? `${skillCoinAmount} SC ${skillCoinLabel}`
+                : `SkillCoin ${skillCoinLabel}`}
           </span>
         </div>
       </div>

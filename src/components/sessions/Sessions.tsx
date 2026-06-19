@@ -16,7 +16,7 @@ interface Session {
   date: string;
   duration: number;
   skillCoinAmount: number;
-  coinStatus: "locked" | "released" | "settled";
+  coinStatus: "locked" | "awaiting_admin_release" | "released" | "settled";
   sessionKind?: "single" | "tuition";
   billingType?: "pay_per_session" | "included_in_tuition";
   studentConfirmedCompletionAt?: string;

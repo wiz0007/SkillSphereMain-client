@@ -343,4 +343,29 @@
         color-mix(in srgb, var(--color-surface-soft) 96%, transparent)
       );
   }
+
+  .pending {
+    background: rgba(251, 146, 60, 0.16);
+    color: #fdba74;
+    border: 1px solid rgba(251, 146, 60, 0.24);
+  }
+
+  .expired,
+  .cancelled {
+    background: rgba(244, 63, 94, 0.16);
+    color: #fda4af;
+    border: 1px solid rgba(244, 63, 94, 0.26);
+  }
+
+  .accepted {
+    background: rgba(16, 185, 129, 0.16);
+    color: #6ee7b7;
+    border: 1px solid rgba(16, 185, 129, 0.24);
+  }
+
+  .completed {
+    background: rgba(96, 165, 250, 0.18);
+    color: #bfdbfe;
+    border: 1px solid rgba(96, 165, 250, 0.26);
+  }
 }

@@ -997,12 +997,9 @@
 }
 
 @container (max-width: 1280px) {
-  .desktopLinks {
-    display: none;
-  }
-
-  .hamburger {
-    display: inline-flex;
+  .navbar {
+    gap: 0.7rem;
+    padding-inline: 1rem;
   }
 
   .walletMeta {
@@ -1016,6 +1013,27 @@
 
   .tutorBadge {
     display: none;
+  }
+
+  .desktopLinks {
+    gap: 0.25rem;
+    padding: 0.28rem;
+
+    a {
+      min-height: 38px;
+      padding-inline: 0.75rem;
+      font-size: 0.82rem;
+    }
+  }
+}
+
+@container (max-width: 1080px) {
+  .desktopLinks {
+    display: none;
+  }
+
+  .hamburger {
+    display: inline-flex;
   }
 }
 
