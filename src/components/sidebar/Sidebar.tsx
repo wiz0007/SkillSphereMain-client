@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+﻿import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { sidebarItems } from "../sidebar/sidebarData";
 import styles from "./Sidebar.module.scss";
@@ -12,9 +12,19 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout, user } = useAuth();
+  const guestItems = [
+    {
+      id: 0,
+      title: "Explore",
+      icon: "ri-compass-3-line",
+      route: "/explore",
+    },
+    ...sidebarItems.filter((item) => item.route === "/help-center"),
+  ];
+  const authenticatedItems = user ? sidebarItems : guestItems;
   const items = user?.isAdmin
     ? [
-        ...sidebarItems,
+        ...authenticatedItems,
         {
           id: 999,
           title: "Admin Portal",
@@ -22,7 +32,7 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
           route: "/admin",
         },
       ]
-    : sidebarItems;
+    : authenticatedItems;
 
   return (
     <>
@@ -76,10 +86,21 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
         </nav>
 
         <div className={styles.footer}>
-          <div className={styles.logout} onClick={logout}>
-            <i className="ri-logout-box-r-line" />
-            <span>Logout</span>
-          </div>
+          {user ? (
+            <button type="button" className={styles.logout} onClick={logout}>
+              <i className="ri-logout-box-r-line" />
+              <span>Logout</span>
+            </button>
+          ) : (
+            <div className={styles.guestActions}>
+              <button type="button" onClick={() => navigate("/login")}>
+                Login
+              </button>
+              <button type="button" onClick={() => navigate("/register")}>
+                Register
+              </button>
+            </div>
+          )}
         </div>
       </aside>
     </>
@@ -87,3 +108,4 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
 };
 
 export default Sidebar;
+
