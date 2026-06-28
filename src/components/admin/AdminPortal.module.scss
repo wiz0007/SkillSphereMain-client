@@ -19,7 +19,7 @@
 
   h1 {
     margin: 0.35rem 0 0.45rem;
-    color: $color-text-primary;
+    color: var(--color-text-primary);
     font-size: clamp(2rem, 4vw, 2.8rem);
     line-height: 1.05;
   }
@@ -27,7 +27,7 @@
   p {
     margin: 0;
     max-width: 70ch;
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     font-size: 0.95rem;
     line-height: 1.65;
   }
@@ -242,7 +242,7 @@
   gap: 0.35rem;
 
   span {
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -250,7 +250,7 @@
   }
 
   strong {
-    color: $color-text-primary;
+    color: var(--color-text-primary);
     font-size: 1.7rem;
   }
 }
@@ -283,7 +283,7 @@
 
   h2 {
     margin: 0;
-    color: $color-text-primary;
+    color: var(--color-text-primary);
     font-size: 1.05rem;
   }
 }
@@ -331,7 +331,7 @@
   }
 
   th {
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     font-size: 0.78rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -339,7 +339,7 @@
   }
 
   td {
-    color: $color-text-primary;
+    color: var(--color-text-primary);
     font-size: 0.9rem;
 
     strong,
@@ -349,7 +349,7 @@
 
     span {
       margin-top: 0.18rem;
-      color: $color-text-secondary;
+      color: var(--color-text-secondary);
       font-size: 0.82rem;
       line-height: 1.5;
     }
@@ -375,12 +375,12 @@
   gap: 0.25rem;
 
   strong {
-    color: $color-text-primary;
+    color: var(--color-text-primary);
   }
 
   span,
   small {
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
   }
 }
 
@@ -506,14 +506,14 @@
 
   h2 {
     margin: 0;
-    color: $color-text-primary;
+    color: var(--color-text-primary);
     font-size: clamp(1.45rem, 2.8vw, 2rem);
     line-height: 1.08;
   }
 
   p {
     margin: 0;
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     line-height: 1.7;
   }
 }
@@ -619,12 +619,12 @@
   }
 
   strong {
-    color: $color-text-primary;
+    color: var(--color-text-primary);
     font-size: 0.95rem;
   }
 
   span {
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     font-size: 0.78rem;
     white-space: nowrap;
   }
@@ -658,13 +658,13 @@
 
   h3 {
     margin: 0;
-    color: $color-text-primary;
+    color: var(--color-text-primary);
     font-size: 1.1rem;
   }
 
   p {
     margin: 0.3rem 0 0;
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     font-size: 0.9rem;
   }
 }
@@ -698,7 +698,7 @@
   }
 
   span {
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     font-size: 0.76rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -707,7 +707,7 @@
 
   strong {
     margin-top: 0.35rem;
-    color: $color-text-primary;
+    color: var(--color-text-primary);
     line-height: 1.5;
   }
 }
@@ -729,7 +729,7 @@
 
   p {
     margin: 0.75rem 0 0;
-    color: $color-text-primary;
+    color: var(--color-text-primary);
     line-height: 1.65;
     white-space: pre-wrap;
     word-break: break-word;
@@ -753,13 +753,13 @@
   }
 
   strong {
-    color: $color-text-primary;
+    color: var(--color-text-primary);
     font-size: 0.92rem;
   }
 
   span,
   time {
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     font-size: 0.8rem;
   }
 }
@@ -808,12 +808,12 @@
 
   h4 {
     margin: 0;
-    color: $color-text-primary;
+    color: var(--color-text-primary);
     font-size: 0.95rem;
   }
 
   span {
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     font-size: 0.8rem;
     line-height: 1.5;
   }
@@ -1005,13 +1005,13 @@
   }
 
   strong {
-    color: $color-text-primary;
+    color: var(--color-text-primary);
     font-size: 0.95rem;
   }
 
   span {
     margin-top: 0.22rem;
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     font-size: 0.82rem;
   }
 }
@@ -1039,7 +1039,7 @@
   }
 
   span {
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     font-size: 0.75rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -1048,7 +1048,7 @@
 
   strong {
     margin-top: 0.35rem;
-    color: $color-text-primary;
+    color: var(--color-text-primary);
     line-height: 1.5;
   }
 }
@@ -1056,9 +1056,9 @@
 .verificationNoteBlock {
   margin-top: 0.95rem;
   padding: 0.95rem 1rem;
-  border: 1px solid rgba(46, 196, 182, 0.18);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 32%, var(--color-border) 68%);
   border-radius: 18px;
-  background: rgba(236, 254, 255, 0.92);
+  background: color-mix(in srgb, var(--color-surface-soft) 86%, var(--color-accent) 14%);
 
   span,
   strong {
@@ -1066,7 +1066,7 @@
   }
 
   span {
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     font-size: 0.76rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -1075,7 +1075,7 @@
 
   strong {
     margin-top: 0.35rem;
-    color: $color-text-primary;
+    color: var(--color-text-primary);
     line-height: 1.6;
   }
 }
@@ -1083,9 +1083,9 @@
 .verificationHistoryBlock {
   margin-top: 0.95rem;
   padding: 0.95rem 1rem;
-  border: 1px solid rgba(226, 232, 240, 0.92);
+  border: 1px solid var(--color-border);
   border-radius: 18px;
-  background: rgba(248, 250, 252, 0.95);
+  background: var(--color-surface);
 
   span,
   strong,
@@ -1094,7 +1094,7 @@
   }
 
   span {
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     font-size: 0.76rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -1103,13 +1103,13 @@
 
   strong {
     margin-top: 0.35rem;
-    color: $color-text-primary;
+    color: var(--color-text-primary);
     line-height: 1.6;
   }
 
   small {
     margin-top: 0.45rem;
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     line-height: 1.55;
   }
 }
@@ -1127,3 +1127,5 @@
   gap: 0.7rem;
   margin-top: 0.9rem;
 }
+
+
