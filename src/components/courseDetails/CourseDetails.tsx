@@ -64,6 +64,16 @@ const CourseDetails = () => {
           : "You have enrolled in this course, so you can leave written feedback."
         : "Written feedback unlocks after you have an accepted booking for this course.";
 
+  useEffect(() => {
+    if (!course) return;
+
+    trackSeoEvent("view_course", {
+      course_type: course.type,
+      course_level: course.level || "",
+      course_category: course.category || "",
+    });
+  }, [course?._id, course?.type, course?.level, course?.category]);
+
   if (loading || !course) {
     return (
       <section className={styles.page}>
@@ -86,14 +96,6 @@ const CourseDetails = () => {
 
     setOpen(true);
   };
-
-  useEffect(() => {
-    trackSeoEvent("view_course", {
-      course_type: course.type,
-      course_level: course.level || "",
-      course_category: course.category || "",
-    });
-  }, [course._id, course.type, course.level, course.category]);
 
   return (
     <section className={styles.page}>
