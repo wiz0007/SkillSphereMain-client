@@ -165,15 +165,6 @@ const Sessions = () => {
   return (
     <section className={styles.container}>
       <div className={styles.header}>
-        <div>
-          <span className={styles.kicker}>Sessions</span>
-          <h1>Your session timeline</h1>
-          <p>
-            Review incoming requests, upcoming meetings, and
-            completed sessions from one organized queue.
-          </p>
-        </div>
-
         <div className={styles.snapshot}>
           <span className={styles.snapshotLabel}>At a glance</span>
           <strong>{counts.upcoming} upcoming sessions</strong>

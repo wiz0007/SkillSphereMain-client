@@ -555,13 +555,13 @@
 
 .verificationError {
   border: 1px solid rgba(239, 68, 68, 0.2);
-  background: #fff5f5;
+  background: color-mix(in srgb, var(--color-surface) 88%, var(--color-danger) 12%);
   color: #b91c1c;
 }
 
 .verificationSuccess {
   border: 1px solid rgba(16, 185, 129, 0.18);
-  background: #f0fdf4;
+  background: color-mix(in srgb, var(--color-surface) 88%, #10b981 12%);
   color: #047857;
 }
 
@@ -703,3 +703,5 @@
   text-align: center;
   color: var(--color-text-secondary);
 }
+
+

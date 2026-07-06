@@ -106,15 +106,6 @@ export function ResetPassword() {
   return (
     <section className={styles.page}>
       <div className={styles.shell}>
-        <div className={styles.hero}>
-          <p className={styles.kicker}>Choose a New Password</p>
-          <h1>Secure your account and get back to learning fast.</h1>
-          <p className={styles.subtitle}>
-            Set a fresh password for your SkillSphere account. Once it’s updated,
-            you’ll be able to sign back in immediately.
-          </p>
-        </div>
-
         <div className={styles.card}>
           <div className={styles.cardHeader}>
             <h2>Reset password</h2>
@@ -242,3 +233,4 @@ export function ResetPassword() {
     </section>
   );
 }
+

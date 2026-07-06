@@ -5,27 +5,9 @@
 }
 
 .header {
-  display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.82fr);
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-
-  @include respond(md) {
-    grid-template-columns: 1fr;
-  }
-
-  h1 {
-    margin: 0.35rem 0 0.4rem;
-    font-size: clamp(1.9rem, 4vw, 2.8rem);
-    line-height: 1.05;
-    color: #0f172a;
-  }
-
-  p {
-    max-width: 60ch;
-    color: #64748b;
-    font-size: 0.96rem;
-  }
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 1rem;
 }
 
 .kicker {
@@ -41,7 +23,7 @@
 }
 
 .snapshotLabel {
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.78rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -49,12 +31,12 @@
 }
 
 .snapshot strong {
-  color: #0f172a;
+  color: var(--color-text-primary);
   font-size: 1.08rem;
 }
 
 .snapshotHint {
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.88rem;
 }
 
@@ -83,8 +65,8 @@
   padding: 0.75rem 1rem;
   border: 1px solid rgba(203, 213, 225, 0.95);
   border-radius: 999px;
-  background: #fff;
-  color: #0f172a;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
   font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
@@ -105,7 +87,7 @@
   height: 22px;
   padding: 0 0.35rem;
   border-radius: 999px;
-  background: #fff1f2;
+  background: color-mix(in srgb, var(--color-surface) 88%, #f43f5e 12%);
   color: #be123c;
   font-size: 0.78rem;
   font-weight: 800;
@@ -137,7 +119,7 @@
 
   strong {
     display: block;
-    color: #0f172a;
+    color: var(--color-text-primary);
     font-size: 0.98rem;
   }
 
@@ -161,7 +143,7 @@
   padding: 0.85rem 0.95rem;
   border: 1px solid rgba(251, 191, 36, 0.28);
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.9);
+  background: color-mix(in srgb, var(--color-surface) 90%, transparent);
   cursor: pointer;
   transition:
     border-color 0.2s ease,
@@ -169,7 +151,7 @@
 
   &:hover {
     border-color: rgba(217, 119, 6, 0.45);
-    background: #fffdf6;
+    background: color-mix(in srgb, var(--color-surface) 90%, #f59e0b 10%);
   }
 
   span,
@@ -178,7 +160,7 @@
   }
 
   span {
-    color: #0f172a;
+    color: var(--color-text-primary);
     font-weight: 700;
     font-size: 0.9rem;
   }
@@ -207,13 +189,13 @@
 
   h2 {
     margin: 0 0 0.25rem;
-    color: #0f172a;
+    color: var(--color-text-primary);
     font-size: 1.08rem;
   }
 
   p {
     margin: 0;
-    color: #64748b;
+    color: var(--color-text-secondary);
     font-size: 0.9rem;
     line-height: 1.55;
   }
@@ -239,7 +221,7 @@
   gap: 0.45rem;
 
   span {
-    color: #475569;
+    color: var(--color-text-secondary);
     font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -266,7 +248,7 @@
   textarea {
     border-color: rgba(225, 29, 72, 0.55);
     box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.08);
-    background: #fffafc;
+    background: color-mix(in srgb, var(--color-surface) 92%, var(--color-danger) 8%);
   }
 }
 
@@ -293,8 +275,8 @@
   padding: 0.72rem 0.95rem;
   border: 1px solid rgba(203, 213, 225, 0.95);
   border-radius: 999px;
-  background: #fff;
-  color: #0f172a;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
   font-size: 0.88rem;
   font-weight: 700;
   cursor: pointer;
@@ -317,7 +299,7 @@
 }
 
 .helperText {
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.82rem;
 }
 
@@ -342,8 +324,8 @@
   padding: 0.82rem 1rem;
   border: 1px solid rgba(203, 213, 225, 0.95);
   border-radius: 999px;
-  background: #fff;
-  color: #0f172a;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
@@ -376,7 +358,7 @@
   border-radius: 20px;
   background:
     radial-gradient(circle at top right, rgba(46, 196, 182, 0.12), transparent 34%),
-    linear-gradient(180deg, #ffffff, #fbfdff);
+    linear-gradient(180deg, var(--color-surface), var(--color-surface-soft));
 }
 
 .previewTop {
@@ -393,19 +375,19 @@
 }
 
 .category {
-  background: #ecfeff;
+  background: rgba(var(--color-accent-rgb), 0.1);
   color: #0f766e;
 }
 
 .card h3 {
   margin: 0;
-  color: #0f172a;
+  color: var(--color-text-primary);
   font-size: 1.05rem;
 }
 
 .card p {
   margin: 0;
-  color: #64748b;
+  color: var(--color-text-secondary);
   line-height: 1.6;
 }
 
@@ -425,7 +407,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  color: #475569;
+  color: var(--color-text-secondary);
   font-size: 0.84rem;
   font-weight: 600;
 
@@ -498,3 +480,5 @@
     color: var(--color-accent);
   }
 }
+
+

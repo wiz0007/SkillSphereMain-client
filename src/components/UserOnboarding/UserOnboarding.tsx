@@ -168,15 +168,6 @@ function UserOnboarding() {
   return (
     <div className={styles.container}>
       <form className={styles.form} onSubmit={handleSubmit}>
-        <header className={styles.header}>
-          <p className={styles.kicker}>Profile Setup</p>
-          <h1>Complete your profile before you start exploring.</h1>
-          <p className={styles.subtitle}>
-            These details help the dashboard, public profile,
-            and session flows stay aligned from the beginning.
-          </p>
-        </header>
-
         {formError ? (
           <div className={styles.errorBanner}>{formError}</div>
         ) : null}

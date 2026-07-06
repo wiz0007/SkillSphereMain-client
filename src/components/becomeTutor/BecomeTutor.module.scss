@@ -5,27 +5,9 @@
 }
 
 .header {
-  display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.82fr);
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-
-  @include respond(md) {
-    grid-template-columns: 1fr;
-  }
-
-  h1 {
-    margin: 0.35rem 0 0.4rem;
-    font-size: clamp(1.9rem, 4vw, 2.8rem);
-    line-height: 1.05;
-    color: #0f172a;
-  }
-
-  p {
-    max-width: 60ch;
-    color: #64748b;
-    font-size: 0.96rem;
-  }
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 1rem;
 }
 
 .kicker {
@@ -41,7 +23,7 @@
 }
 
 .snapshotLabel {
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.78rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -49,12 +31,12 @@
 }
 
 .snapshot strong {
-  color: #0f172a;
+  color: var(--color-text-primary);
   font-size: 1.08rem;
 }
 
 .snapshotHint {
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.88rem;
 }
 
@@ -75,13 +57,13 @@
 
 .statusCard {
   padding: 0.95rem 1rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
   border-radius: 18px;
-  background: #fbfdff;
+  background: var(--color-surface-soft);
 
   span {
     display: block;
-    color: #64748b;
+    color: var(--color-text-secondary);
     font-size: 0.78rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -90,7 +72,7 @@
   }
 
   strong {
-    color: #0f172a;
+    color: var(--color-text-primary);
     font-size: 0.96rem;
     text-transform: capitalize;
   }
@@ -107,7 +89,7 @@
   background:
     radial-gradient(circle at top right, rgba(46, 196, 182, 0.16), transparent 38%),
     #f8fffe;
-  color: #0f172a;
+  color: var(--color-text-primary);
 
   svg {
     color: #2ec4b6;
@@ -116,7 +98,7 @@
   }
 
   span {
-    color: #475569;
+    color: var(--color-text-secondary);
     font-size: 0.9rem;
     line-height: 1.55;
   }
@@ -127,13 +109,13 @@
 
   h2 {
     margin: 0 0 0.25rem;
-    color: #0f172a;
+    color: var(--color-text-primary);
     font-size: 1.08rem;
   }
 
   p {
     margin: 0;
-    color: #64748b;
+    color: var(--color-text-secondary);
     font-size: 0.9rem;
     line-height: 1.55;
   }
@@ -155,7 +137,7 @@
   gap: 0.45rem;
 
   span {
-    color: #475569;
+    color: var(--color-text-secondary);
     font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -180,13 +162,13 @@
   padding: 0.95rem 1rem;
   border: 1px dashed #cbd5e1;
   border-radius: 18px;
-  background: #fbfdff;
+  background: var(--color-surface-soft);
   cursor: pointer;
   transition: border-color 0.2s ease, background 0.2s ease;
 
   &:hover {
     border-color: rgba(46, 196, 182, 0.4);
-    background: #ffffff;
+    background: var(--color-surface);
   }
 
   svg {
@@ -196,13 +178,13 @@
 
   strong {
     display: block;
-    color: #0f172a;
+    color: var(--color-text-primary);
     font-size: 0.9rem;
     margin-bottom: 0.15rem;
   }
 
   small {
-    color: #64748b;
+    color: var(--color-text-secondary);
     font-size: 0.82rem;
     line-height: 1.5;
   }
@@ -211,7 +193,7 @@
 .inputError {
   border-color: rgba(225, 29, 72, 0.55) !important;
   box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.08);
-  background: #fffafc;
+  background: color-mix(in srgb, var(--color-surface) 92%, var(--color-danger) 8%);
 }
 
 .errorText {
@@ -239,7 +221,7 @@
   padding: 0.75rem 0.95rem;
   border: 1px solid #dbe4ee;
   border-radius: 16px;
-  background: #fbfdff;
+  background: var(--color-surface-soft);
   color: #334155;
   cursor: pointer;
 
@@ -277,7 +259,7 @@
   padding: 0.85rem 0.95rem;
   border: 1px solid #fecaca;
   border-radius: 16px;
-  background: #fff5f5;
+  background: color-mix(in srgb, var(--color-surface) 88%, var(--color-danger) 12%);
   color: #b42318;
   font-size: 0.88rem;
   font-weight: 600;
@@ -302,12 +284,12 @@
 
   h2 {
     margin: 0 0 0.35rem;
-    color: #0f172a;
+    color: var(--color-text-primary);
   }
 
   p {
     margin: 0;
-    color: #64748b;
+    color: var(--color-text-secondary);
   }
 }
 
@@ -393,3 +375,5 @@
     color: var(--color-accent);
   }
 }
+
+

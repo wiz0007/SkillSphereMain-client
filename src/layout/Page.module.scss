@@ -3,7 +3,10 @@
 .layout {
   width: 100%;
   min-height: 100vh;
-  background: var(--color-bg);
+  background:
+    radial-gradient(circle at 14% 8%, rgba(var(--color-accent-rgb), 0.1), transparent 28%),
+    radial-gradient(circle at 88% 2%, rgba(255, 183, 3, 0.08), transparent 24%),
+    linear-gradient(180deg, var(--color-bg), color-mix(in srgb, var(--color-bg) 88%, var(--color-surface) 12%));
   transition: background-color 0.25s ease;
 }
 
@@ -52,3 +55,7 @@
     padding-bottom: 80px;
   }
 }
+
+
+
+

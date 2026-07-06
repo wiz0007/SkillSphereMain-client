@@ -9,7 +9,7 @@
 
 .header {
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(240px, 0.8fr);
+  grid-template-columns: minmax(220px, 0.7fr) minmax(260px, 1fr);
   gap: 1rem;
   align-items: stretch;
   margin-bottom: 1.75rem;
@@ -18,19 +18,6 @@
     grid-template-columns: 1fr;
   }
 
-  h1 {
-    margin: 0.25rem 0 0.35rem;
-    font-size: clamp(1.85rem, 4vw, 2.7rem);
-    line-height: 1.05;
-    color: var(--color-text-primary);
-  }
-
-  p {
-    max-width: 60ch;
-    color: var(--color-text-secondary);
-    font-size: 0.95rem;
-    line-height: 1.6;
-  }
 }
 
 .kicker {
@@ -40,6 +27,19 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
+}
+
+.identityStrip {
+  @include panel(22px, 1rem 1.1rem);
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+
+  strong {
+    color: var(--color-text-primary);
+    font-size: 1.05rem;
+  }
 }
 
 .snapshot {
@@ -520,3 +520,5 @@
 .tuitionDanger {
   @include button-danger;
 }
+
+

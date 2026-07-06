@@ -101,6 +101,13 @@ const CourseCard = ({ course }: Props) => {
 
   const isTuition = course.type === "tuition";
 
+  const typeLabel =
+    course.type === "recorded"
+      ? "Recorded unlock"
+      : isTuition
+        ? "Weekly tuition"
+        : "Live session";
+
   const scheduleLabel = isTuition
     ? `${
         course.tuitionSchedule?.days?.length
@@ -120,6 +127,8 @@ const CourseCard = ({ course }: Props) => {
           src={getCategoryImage(course.category)}
           alt={course.category || course.title}
         />
+
+        <span className={styles.typePill}>{typeLabel}</span>
 
         <button
           type="button"
@@ -274,3 +283,6 @@ const CourseCard = ({ course }: Props) => {
 };
 
 export default CourseCard;
+
+
+

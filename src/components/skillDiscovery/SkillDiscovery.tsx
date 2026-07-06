@@ -86,17 +86,9 @@ const SkillDiscovery = () => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <div>
-          <h2>Explore courses and tutor-led skill tracks.</h2>
-          <p>
-            Discover focused sessions, compare teaching styles,
-            and shortlist the paths that match your goals.
-          </p>
-        </div>
-
         <section className={styles.searchPanel} aria-label="Course search">
           <div className={styles.searchPanelHeader}>
-            <span>Find your next skill</span>
+            <span>Skill match desk</span>
             <strong>{filteredCourses.length} matches</strong>
           </div>
 
@@ -105,7 +97,7 @@ const SkillDiscovery = () => {
             <span className={styles.searchLabel}>Search</span>
             <input
               type="search"
-              placeholder="Try React, editing, cricket, beginner..."
+              placeholder="Search a skill, tutor, level, or course type"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -182,3 +174,5 @@ const SkillDiscovery = () => {
 };
 
 export default SkillDiscovery;
+
+

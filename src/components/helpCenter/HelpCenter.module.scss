@@ -18,19 +18,18 @@
 .searchCard,
 .emptyState {
   border: 1px solid rgba(226, 232, 240, 0.92);
-  background: rgba(255, 255, 255, 0.96);
+  background: color-mix(in srgb, var(--color-surface) 96%, transparent);
   box-shadow: $shadow-sm;
 }
 
 .hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.9fr);
+  display: block;
   gap: 1rem;
-  padding: 1.25rem;
-  border-radius: 30px;
-  background:
-    radial-gradient(circle at top left, rgba(46, 196, 182, 0.12), transparent 38%),
-    linear-gradient(120deg, rgba(255, 255, 255, 0.98), rgba(239, 246, 255, 0.98));
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .heroCopy,
@@ -55,7 +54,7 @@
 .heroCopy h1,
 .articleHero h1 {
   margin: 0;
-  color: #0f172a;
+  color: var(--color-text-primary);
   line-height: 1.05;
 }
 
@@ -73,7 +72,7 @@
 .articleCard p,
 .categoryCard p {
   margin: 0;
-  color: #64748b;
+  color: var(--color-text-secondary);
   line-height: 1.7;
 }
 
@@ -83,6 +82,7 @@
   gap: 0.9rem;
   padding: 1rem;
   border-radius: 24px;
+  max-width: 760px;
 }
 
 .searchInput {
@@ -94,7 +94,7 @@
   border-radius: 20px;
   border: 1px solid rgba(203, 213, 225, 0.88);
   background:
-    linear-gradient(135deg, rgba(46, 196, 182, 0.1), rgba(255, 255, 255, 0.94));
+    linear-gradient(135deg, rgba(46, 196, 182, 0.1), color-mix(in srgb, var(--color-surface) 94%, transparent));
 
   svg {
     color: #0f766e;
@@ -106,7 +106,7 @@
     border: none;
     outline: none;
     background: transparent;
-    color: #0f172a;
+    color: var(--color-text-primary);
     font-size: 0.95rem;
   }
 }
@@ -119,9 +119,9 @@
   button {
     min-height: 34px;
     padding: 0.45rem 0.8rem;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--color-border);
     border-radius: 999px;
-    background: #f8fafc;
+    background: var(--color-bg);
     color: #334155;
     font-size: 0.8rem;
     font-weight: 700;
@@ -159,7 +159,7 @@
 .categoryCard strong,
 .miniLinks a,
 .relatedLinks a {
-  color: #0f172a;
+  color: var(--color-text-primary);
 }
 
 .sectionHeader h2,
@@ -200,8 +200,8 @@
     min-height: 28px;
     padding: 0.3rem 0.7rem;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.84);
-    color: #475569;
+    background: color-mix(in srgb, var(--color-surface) 84%, transparent);
+    color: var(--color-text-secondary);
     font-size: 0.75rem;
     font-weight: 700;
   }
@@ -219,7 +219,7 @@
 
 .teal .categoryIcon,
 .supportIcon {
-  background: #ecfeff;
+  background: rgba(var(--color-accent-rgb), 0.1);
   color: #0f766e;
 }
 
@@ -229,7 +229,7 @@
 }
 
 .gold .categoryIcon {
-  background: #fff7ed;
+  background: color-mix(in srgb, var(--color-surface) 88%, #f97316 12%);
   color: #b45309;
 }
 
@@ -276,7 +276,7 @@
   gap: 0.5rem 0.8rem;
 
   span {
-    color: #64748b;
+    color: var(--color-text-secondary);
     font-size: 0.78rem;
     font-weight: 700;
   }
@@ -312,7 +312,7 @@
 }
 
 .supportHint {
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.82rem;
   line-height: 1.6;
 }
@@ -325,7 +325,7 @@
   gap: 0.55rem;
 
   a {
-    color: #0f172a;
+    color: var(--color-text-primary);
     font-size: 0.9rem;
     font-weight: 600;
     text-decoration: none;
@@ -341,7 +341,7 @@
   a,
   span,
   svg {
-    color: #64748b;
+    color: var(--color-text-secondary);
     font-size: 0.82rem;
     text-decoration: none;
   }
@@ -361,7 +361,7 @@
     padding: 1.1rem 1.15rem;
     border-radius: 24px;
     border: 1px solid rgba(226, 232, 240, 0.92);
-    background: rgba(255, 255, 255, 0.97);
+    background: color-mix(in srgb, var(--color-surface) 97%, transparent);
     box-shadow: $shadow-sm;
   }
 
@@ -372,14 +372,14 @@
 
   p {
     margin: 0 0 0.75rem;
-    color: #475569;
+    color: var(--color-text-secondary);
     line-height: 1.75;
   }
 
   ul {
     margin: 0;
     padding-left: 1.15rem;
-    color: #475569;
+    color: var(--color-text-secondary);
     line-height: 1.75;
   }
 }
@@ -398,9 +398,9 @@
     min-width: 88px;
     min-height: 42px;
     padding: 0.65rem 0.9rem;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--color-border);
     border-radius: 999px;
-    background: #ffffff;
+    background: var(--color-surface);
     color: #334155;
     font-size: 0.86rem;
     font-weight: 700;
@@ -428,7 +428,7 @@
 }
 
 .inlineSupportLink {
-  background: #ecfeff;
+  background: rgba(var(--color-accent-rgb), 0.1);
   color: #0f766e;
 }
 
@@ -566,3 +566,5 @@
     align-items: flex-start;
   }
 }
+
+

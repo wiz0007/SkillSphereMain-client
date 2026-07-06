@@ -94,15 +94,6 @@ const YourCourses = () => {
   return (
     <section className={styles.page}>
       <div className={styles.header}>
-        <div>
-          <span className={styles.kicker}>Your Courses</span>
-          <h1>See only the courses that were actually confirmed</h1>
-          <p>
-            Pending requests stay out of this view. You only see accepted
-            and finished course bookings here.
-          </p>
-        </div>
-
         <div className={styles.snapshot}>
           <span className={styles.snapshotLabel}>Confirmed</span>
           <strong>{ongoingCourses.length} ongoing course bookings</strong>

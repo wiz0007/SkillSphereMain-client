@@ -266,16 +266,6 @@ const Messages = () => {
   return (
     <section className={styles.page}>
       <div className={styles.header}>
-        <div>
-          <span className={styles.kicker}>Messages</span>
-          <h1>Keep learner and tutor conversations in one place</h1>
-          <p>
-            Chat becomes available only after a tutor confirms a
-            session booking, so every thread here is tied to a real,
-            accepted learning relationship.
-          </p>
-        </div>
-
         <div className={styles.snapshot}>
           <span className={styles.snapshotLabel}>Inbox</span>
           <strong>

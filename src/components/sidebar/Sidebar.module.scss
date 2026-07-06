@@ -1,4 +1,4 @@
-﻿@use "../../styles/abstracts" as *;
+@use "../../styles/abstracts" as *;
 
 .sidebar {
   box-sizing: border-box;
@@ -142,7 +142,7 @@
 
   &:hover {
     transform: translateX(3px);
-    background: #fff5f5;
+    background: color-mix(in srgb, var(--color-surface) 88%, var(--color-danger) 12%);
     color: #dc2626;
   }
 }
@@ -202,4 +202,32 @@
     width: $shell-sidebar-width-mobile;
   }
 }
+
+
+/* Product shell refinement */
+.sidebar {
+  box-shadow: none;
+}
+
+.menu {
+  gap: 0.46rem;
+}
+
+.menuItem,
+.logout {
+  border-radius: 18px;
+  font-weight: 760;
+}
+
+.active {
+  box-shadow: inset 4px 0 0 var(--color-accent);
+}
+
+:global(html[data-theme="dark"]) .sidebar,
+:global(body[data-theme="dark"]) .sidebar {
+  background:
+    radial-gradient(circle at top left, rgba(var(--color-accent-rgb), 0.14), transparent 28%),
+    linear-gradient(180deg, #0c1728, #091321);
+}
+
 

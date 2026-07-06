@@ -312,29 +312,13 @@ const Register = () => {
   return (
     <section className={styles.page}>
       <div className={styles.shell}>
-        <div className={styles.hero}>
-          <p className={styles.kicker}>
-            {isOtpStep ? "Verify Account" : "Create Account"}
-          </p>
-          <h1>
-            {isOtpStep
-              ? "Finish verification and step into your workspace."
-              : "Start learning, teaching, and booking sessions in one place."}
-          </h1>
-          <p className={styles.subtitle}>
-            {isOtpStep
-              ? "Use the code from your inbox to activate the account you just created."
-              : "Build your profile once, then move through the dashboard, sessions, and tutor tools with a single consistent flow."}
-          </p>
-        </div>
-
         <div className={styles.card}>
           <div className={styles.cardHeader}>
             <h2>{isOtpStep ? "Verify OTP" : "Set up your account"}</h2>
             <p>
               {isOtpStep
                 ? "Verification helps keep the platform clean and secure."
-                : "A few details now and the rest of your profile comes next."}
+                : "Keep it clean: username, email, password, then OTP verification."}
             </p>
           </div>
 
@@ -667,3 +651,5 @@ const Register = () => {
 };
 
 export default Register;
+
+

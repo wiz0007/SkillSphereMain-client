@@ -223,16 +223,6 @@ const HelpCenter = () => {
   return (
     <section className={styles.page}>
       <div className={styles.hero}>
-        <div className={styles.heroCopy}>
-          <span className={styles.heroKicker}>SkillSphere Help Center</span>
-          <h1>Support that feels built into the product</h1>
-          <p>
-            Find quick answers about sessions, SkillCoin, tutor tools,
-            messages, reviews, and account safety without leaving your
-            workflow.
-          </p>
-        </div>
-
         <div className={styles.searchCard}>
           <div className={styles.searchInput}>
             <Search size={18} />

@@ -325,20 +325,6 @@ const SupportCenter = () => {
   return (
     <section className={styles.page}>
       <div className={styles.header}>
-        <div>
-          <span className={styles.kicker}>Support</span>
-          <h1>
-            {isExecutive
-              ? "Executive inbox for live support requests"
-              : "Get human help without leaving SkillSphere"}
-          </h1>
-          <p>
-            {isExecutive
-              ? "Respond to platform issues, payment questions, and learner or tutor support requests from one dedicated queue."
-              : "Start with a support request and continue the conversation in-app whenever you need platform help."}
-          </p>
-        </div>
-
         <div className={styles.snapshot}>
           <span className={styles.snapshotLabel}>
             {isExecutive ? "Queue" : "Support status"}

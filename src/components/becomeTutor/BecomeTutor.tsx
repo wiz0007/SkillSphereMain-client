@@ -336,16 +336,6 @@ const BecomeTutor = () => {
   return (
     <section className={styles.container}>
       <div className={styles.header}>
-        <div>
-          <span className={styles.kicker}>Tutor Onboarding</span>
-          <h1>Turn your profile into a tutor-ready workspace.</h1>
-          <p>
-            Add the signals learners need to trust your expertise,
-            request sessions, and understand your teaching style at
-            a glance.
-          </p>
-        </div>
-
         <div className={styles.snapshot}>
           <span className={styles.snapshotLabel}>Progress</span>
           <strong>

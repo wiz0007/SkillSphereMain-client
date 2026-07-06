@@ -5,27 +5,9 @@
 }
 
 .header {
-  display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.82fr);
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-
-  @include respond(md) {
-    grid-template-columns: 1fr;
-  }
-
-  h1 {
-    margin: 0.35rem 0 0.4rem;
-    font-size: clamp(1.9rem, 4vw, 2.8rem);
-    line-height: 1.05;
-    color: #0f172a;
-  }
-
-  p {
-    max-width: 58ch;
-    color: #64748b;
-    font-size: 0.96rem;
-  }
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 1rem;
 }
 
 .kicker {
@@ -41,7 +23,7 @@
 }
 
 .snapshotLabel {
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.78rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -49,12 +31,12 @@
 }
 
 .snapshot strong {
-  color: #0f172a;
+  color: var(--color-text-primary);
   font-size: 1.08rem;
 }
 
 .snapshotHint {
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.88rem;
 }
 
@@ -72,8 +54,8 @@
     padding: 0.65rem 0.95rem;
     border: 1px solid #dbe4ee;
     border-radius: 999px;
-    background: #ffffff;
-    color: #475569;
+    background: var(--color-surface);
+    color: var(--color-text-secondary);
     cursor: pointer;
     transition:
       transform 0.2s ease,
@@ -134,7 +116,7 @@
   min-height: 100%;
   background:
     radial-gradient(circle at top right, rgba(46, 196, 182, 0.1), transparent 34%),
-    linear-gradient(180deg, #ffffff, #fbfdff);
+    linear-gradient(180deg, var(--color-surface), var(--color-surface-soft));
 }
 
 .cardTop {
@@ -145,14 +127,14 @@
 
   h3 {
     margin: 0 0 0.35rem;
-    color: #0f172a;
+    color: var(--color-text-primary);
     font-size: 1.04rem;
   }
 }
 
 .personLine {
   margin: 0;
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.88rem;
 }
 
@@ -180,7 +162,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
-  color: #475569;
+  color: var(--color-text-secondary);
   font-size: 0.86rem;
   font-weight: 600;
 
@@ -203,12 +185,12 @@
 }
 
 .pending {
-  background: #fff7ed;
+  background: color-mix(in srgb, var(--color-surface) 88%, #f97316 12%);
   color: #c2410c;
 }
 
 .expired {
-  background: #fff1f2;
+  background: color-mix(in srgb, var(--color-surface) 88%, #f43f5e 12%);
   color: #be123c;
 }
 
@@ -223,7 +205,7 @@
 }
 
 .cancelled {
-  background: #fff1f2;
+  background: color-mix(in srgb, var(--color-surface) 88%, #f43f5e 12%);
   color: #be123c;
 }
 
@@ -263,8 +245,8 @@
 
 .ghost {
   border: 1px solid #dbe4ee;
-  background: #ffffff;
-  color: #64748b;
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
   cursor: pointer;
   transition:
     transform 0.2s ease,
@@ -274,7 +256,7 @@
   &:hover {
     transform: translateY(-1px);
     border-color: rgba(15, 23, 42, 0.18);
-    color: #0f172a;
+    color: var(--color-text-primary);
   }
 }
 
@@ -285,7 +267,7 @@
 }
 
 .completedLabel {
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.86rem;
   font-weight: 600;
 }
@@ -293,13 +275,13 @@
 .emptyState,
 .loadingPanel {
   text-align: center;
-  color: #64748b;
+  color: var(--color-text-secondary);
 }
 
 .emptyState strong {
   display: block;
   margin-bottom: 0.35rem;
-  color: #0f172a;
+  color: var(--color-text-primary);
 }
 
 :global(html[data-theme="dark"]) .container,
@@ -369,3 +351,5 @@
     border: 1px solid rgba(96, 165, 250, 0.26);
   }
 }
+
+

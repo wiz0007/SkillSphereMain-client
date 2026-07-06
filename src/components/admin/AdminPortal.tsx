@@ -678,16 +678,6 @@ const AdminPortal = () => {
   return (
     <section className={styles.page}>
       <div className={styles.header}>
-        <div>
-          <span className={styles.kicker}>Admin Portal</span>
-          <h1>Operate SkillSphere from one secure workspace</h1>
-          <p>
-            Review platform activity, moderate courses and reviews, track
-            support conversations, and monitor wallet operations without
-            leaving the admin surface.
-          </p>
-        </div>
-
         <button
           type="button"
           className={styles.refreshButton}

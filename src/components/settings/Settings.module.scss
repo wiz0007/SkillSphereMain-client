@@ -8,15 +8,10 @@
 }
 
 .hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(260px, 0.8fr);
+  display: flex;
   gap: 1.25rem;
   align-items: stretch;
-  margin-bottom: 1.5rem;
-
-  @include respond(md) {
-    grid-template-columns: 1fr;
-  }
+  margin-bottom: 1rem;
 }
 
 .eyebrow {
@@ -494,3 +489,5 @@
     }
   }
 }
+
+

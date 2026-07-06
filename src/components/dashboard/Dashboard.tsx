@@ -242,30 +242,22 @@ const Dashboard = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <div>
-          <span className={styles.kicker}>Dashboard</span>
-          <h1>
-            Welcome back, {displayName || user.username}
-            {user.tutorVerificationStatus === "approved" && (
-              <span className={styles.tutorBadge}>Tutor</span>
-            )}
-            {showVerifiedTick && (
-              <span
-                className={`${styles.verifiedTick} ${
-                  user.isAdmin ? styles.adminTick : ""
-                }`}
-                aria-label={user.isAdmin ? "Admin" : "Verified user"}
-                title={user.isAdmin ? "Admin" : "Verified user"}
-              >
-                <BadgeCheck size={18} />
-              </span>
-            )}
-          </h1>
-          <p>
-            {user.isTutor
-              ? "Monitor your teaching pipeline, revenue, and learner activity."
-              : "Track your learning sessions, upcoming bookings, and recent activity."}
-          </p>
+        <div className={styles.identityStrip}>
+          <strong>{displayName || user.username}</strong>
+          {user.tutorVerificationStatus === "approved" && (
+            <span className={styles.tutorBadge}>Tutor</span>
+          )}
+          {showVerifiedTick && (
+            <span
+              className={`${styles.verifiedTick} ${
+                user.isAdmin ? styles.adminTick : ""
+              }`}
+              aria-label={user.isAdmin ? "Admin" : "Verified user"}
+              title={user.isAdmin ? "Admin" : "Verified user"}
+            >
+              <BadgeCheck size={18} />
+            </span>
+          )}
         </div>
 
         <div className={styles.snapshot}>

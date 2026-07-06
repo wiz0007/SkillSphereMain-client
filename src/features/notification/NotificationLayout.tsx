@@ -62,15 +62,6 @@ const NotificationsLayout = () => {
   return (
     <section className={styles.page}>
       <div className={styles.header}>
-        <div>
-          <span className={styles.kicker}>Notifications</span>
-          <h1>Keep tabs on every session update</h1>
-          <p>
-            Track requests, status changes, and follow-up activity
-            from one clean inbox.
-          </p>
-        </div>
-
         <div className={styles.snapshot}>
           <span className={styles.snapshotLabel}>Inbox status</span>
           <strong>

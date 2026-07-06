@@ -370,15 +370,6 @@ const Settings = () => {
       transition={{ duration: 0.25 }}
     >
       <div className={styles.hero}>
-        <div>
-          <p className={styles.eyebrow}>Workspace Settings</p>
-          <h1>Control your account and learning experience</h1>
-          <p className={styles.subtitle}>
-            Update your public details, manage personal preferences,
-            and secure your account from one place.
-          </p>
-        </div>
-
         <div className={styles.heroCard}>
           <span className={styles.heroLabel}>Signed in as</span>
           <strong>{profile?.username || user?.username}</strong>

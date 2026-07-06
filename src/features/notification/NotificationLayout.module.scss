@@ -5,27 +5,9 @@
 }
 
 .header {
-  display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.9fr);
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-
-  @include respond(md) {
-    grid-template-columns: 1fr;
-  }
-
-  h1 {
-    margin: 0.35rem 0 0.4rem;
-    font-size: clamp(1.9rem, 4vw, 2.8rem);
-    line-height: 1.05;
-    color: var(--color-text-primary);
-  }
-
-  p {
-    max-width: 58ch;
-    color: var(--color-text-secondary);
-    font-size: 0.96rem;
-  }
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 1rem;
 }
 
 .kicker {
@@ -229,3 +211,5 @@
   background: color-mix(in srgb, var(--color-surface-soft) 90%, var(--color-accent) 10%);
   color: var(--color-text-secondary);
 }
+
+

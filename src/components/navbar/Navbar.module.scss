@@ -516,7 +516,7 @@
 }
 
 .walletAuditPending {
-  background: #fff7ed;
+  background: color-mix(in srgb, var(--color-surface) 88%, #f97316 12%);
   color: #c2410c !important;
 }
 
@@ -526,7 +526,7 @@
 }
 
 .walletAuditFailed {
-  background: #fff1f2;
+  background: color-mix(in srgb, var(--color-surface) 88%, #f43f5e 12%);
   color: #be123c !important;
 }
 
@@ -868,7 +868,7 @@
   min-height: 24px;
   padding: 0.2rem 0.55rem;
   border-radius: 999px;
-  background: #ecfeff;
+  background: rgba(var(--color-accent-rgb), 0.1);
   color: #0f766e;
   font-size: 0.7rem;
   font-weight: 800;
@@ -1314,3 +1314,38 @@ body[data-theme="dark"] {
     }
   }
 }
+
+/* Product shell refinement */
+.navbar {
+  border-bottom-color: color-mix(in srgb, var(--color-border) 72%, transparent);
+}
+
+.desktopLinks {
+  background: color-mix(in srgb, var(--color-surface) 72%, transparent);
+}
+
+.desktopLinks a,
+.bottomNav a {
+  letter-spacing: -0.015em;
+}
+
+.walletTrigger,
+.iconWrapper,
+.profile,
+.logo {
+  box-shadow: none;
+}
+
+.walletTrigger:hover,
+.iconWrapper:hover,
+.profile:hover,
+.logo:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+:global(html[data-theme="dark"]) .navbar,
+:global(body[data-theme="dark"]) .navbar {
+  background: color-mix(in srgb, #07111d 86%, transparent);
+}
+
+

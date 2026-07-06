@@ -11,28 +11,9 @@
 }
 
 .header {
-  display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.8fr);
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-
-  @include respond(md) {
-    grid-template-columns: 1fr;
-  }
-
-  h1 {
-    margin: 0.35rem 0 0.4rem;
-    font-size: clamp(1.9rem, 4vw, 2.8rem);
-    line-height: 1.05;
-    color: #0f172a;
-  }
-
-  p {
-    max-width: 58ch;
-    color: #64748b;
-    font-size: 0.96rem;
-    line-height: 1.6;
-  }
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 1rem;
 }
 
 .kicker {
@@ -48,7 +29,7 @@
 }
 
 .snapshotLabel {
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.78rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -56,12 +37,12 @@
 }
 
 .snapshot strong {
-  color: #0f172a;
+  color: var(--color-text-primary);
   font-size: 1.08rem;
 }
 
 .snapshotHint {
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.88rem;
 }
 
@@ -114,10 +95,10 @@
   padding: 0.82rem 0.95rem;
   border: 1px solid #dbe4ee;
   border-radius: 18px;
-  background: #fbfdff;
+  background: var(--color-surface-soft);
 
   svg {
-    color: #64748b;
+    color: var(--color-text-secondary);
     flex-shrink: 0;
   }
 
@@ -125,7 +106,7 @@
     width: 100%;
     border: none;
     background: transparent;
-    color: #0f172a;
+    color: var(--color-text-primary);
     font: inherit;
 
     &:focus {
@@ -150,9 +131,9 @@
   gap: 0.85rem;
   width: 100%;
   padding: 0.9rem;
-  border: 1px solid #edf2f7;
+  border: 1px solid var(--color-border);
   border-radius: 18px;
-  background: #fbfdff;
+  background: var(--color-surface-soft);
   text-align: left;
   cursor: pointer;
   transition:
@@ -169,7 +150,7 @@
 
 .contactCardActive {
   border-color: rgba(46, 196, 182, 0.45);
-  background: linear-gradient(180deg, #f4fcfa, #ffffff);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 92%, var(--color-accent) 8%), var(--color-surface));
 }
 
 .avatar {
@@ -179,7 +160,7 @@
   width: 48px;
   height: 48px;
   border-radius: 16px;
-  background: #ecfeff;
+  background: rgba(var(--color-accent-rgb), 0.1);
   color: #0f766e;
   font-weight: 800;
   overflow: hidden;
@@ -196,7 +177,7 @@
 
   p {
     margin: 0.2rem 0 0;
-    color: #64748b;
+    color: var(--color-text-secondary);
     font-size: 0.84rem;
     line-height: 1.45;
     white-space: nowrap;
@@ -212,7 +193,7 @@
   gap: 0.75rem;
 
   strong {
-    color: #0f172a;
+    color: var(--color-text-primary);
     font-size: 0.92rem;
   }
 
@@ -241,7 +222,7 @@
 }
 
 .contactMeta {
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.78rem;
   font-weight: 600;
 }
@@ -266,7 +247,7 @@
   justify-content: space-between;
   gap: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #edf2f7;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .chatIdentity {
@@ -276,12 +257,12 @@
 
   strong {
     display: block;
-    color: #0f172a;
+    color: var(--color-text-primary);
     font-size: 0.98rem;
   }
 
   span {
-    color: #64748b;
+    color: var(--color-text-secondary);
     font-size: 0.82rem;
   }
 }
@@ -317,7 +298,7 @@
 
   p {
     margin: 0;
-    color: #0f172a;
+    color: var(--color-text-primary);
     font-size: 0.92rem;
     line-height: 1.55;
     white-space: pre-wrap;
@@ -326,7 +307,7 @@
   span {
     display: block;
     margin-top: 0.45rem;
-    color: #64748b;
+    color: var(--color-text-secondary);
     font-size: 0.74rem;
   }
 }
@@ -341,8 +322,8 @@
 }
 
 .theirs .messageBubble {
-  background: #f8fafc;
-  border: 1px solid #edf2f7;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
 }
 
 .composer {
@@ -350,7 +331,7 @@
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 0.85rem;
   padding-top: 1rem;
-  border-top: 1px solid #edf2f7;
+  border-top: 1px solid var(--color-border);
 
   @include respond(sm) {
     grid-template-columns: 1fr;
@@ -390,12 +371,12 @@
   min-height: 180px;
   padding: 1.25rem;
   border-radius: 18px;
-  background: #f8fafc;
-  color: #64748b;
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
   text-align: center;
 
   strong {
-    color: #0f172a;
+    color: var(--color-text-primary);
   }
 
   span {
@@ -418,7 +399,7 @@
   width: 52px;
   height: 52px;
   border-radius: 18px;
-  background: #ecfeff;
+  background: rgba(var(--color-accent-rgb), 0.1);
   color: #0f766e;
 }
 
@@ -484,3 +465,5 @@
     color: var(--color-surface);
   }
 }
+
+

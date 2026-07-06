@@ -109,19 +109,10 @@ export function Login() {
   return (
     <section className={styles.page}>
       <div className={styles.shell}>
-        <div className={styles.hero}>
-          <p className={styles.kicker}>Welcome Back</p>
-          <h1>Pick up exactly where your last session left off.</h1>
-          <p className={styles.subtitle}>
-            Access your dashboard, bookings, saved courses,
-            and teaching workspace from one place.
-          </p>
-        </div>
-
         <div className={styles.card}>
           <div className={styles.cardHeader}>
             <h2>Sign in</h2>
-            <p>Use your account details to enter SkillSphere.</p>
+            <p>Secure access to your learning and teaching workspace.</p>
           </div>
 
           {error ? (
@@ -239,3 +230,5 @@ export function Login() {
     </section>
   );
 }
+
+

@@ -56,15 +56,6 @@ export function ForgotPassword() {
   return (
     <section className={styles.page}>
       <div className={styles.shell}>
-        <div className={styles.hero}>
-          <p className={styles.kicker}>Password Recovery</p>
-          <h1>Get back into SkillSphere without starting over.</h1>
-          <p className={styles.subtitle}>
-            Enter the email linked to your account and we’ll send a secure
-            reset link so you can choose a new password.
-          </p>
-        </div>
-
         <div className={styles.card}>
           <div className={styles.cardHeader}>
             <h2>Forgot password</h2>
@@ -127,3 +118,4 @@ export function ForgotPassword() {
     </section>
   );
 }
+

@@ -38,15 +38,6 @@ const SavedCourses = () => {
   return (
     <section className={styles.page}>
       <div className={styles.header}>
-        <div>
-          <span className={styles.kicker}>Saved</span>
-          <h2>Your saved courses</h2>
-          <p>
-            Everything you bookmarked for later comparison or
-            booking.
-          </p>
-        </div>
-
         <div className={styles.snapshot}>
           <span className={styles.snapshotLabel}>Collection</span>
           <strong>{courses.length} saved items</strong>

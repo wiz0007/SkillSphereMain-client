@@ -568,22 +568,6 @@ const AddCourse = () => {
       ) : null}
 
       <div className={styles.header}>
-        <div>
-          <span className={styles.kicker}>
-            {id ? "Edit Course" : "New Course"}
-          </span>
-          <h1>
-            {id
-              ? "Refresh the details and keep your course current."
-              : "Create a course that feels ready to publish."}
-          </h1>
-           <p>
-            Use the same dashboard language across title, price,
-            duration, and scope so students know exactly what they
-            are booking or unlocking.
-           </p>
-        </div>
-
         <div className={styles.snapshot}>
           <span className={styles.snapshotLabel}>Preview state</span>
           <strong>{form.title || "Untitled course"}</strong>

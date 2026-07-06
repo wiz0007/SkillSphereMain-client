@@ -5,28 +5,9 @@
 }
 
 .header {
-  display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.8fr);
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-
-  @include respond(md) {
-    grid-template-columns: 1fr;
-  }
-
-  h1 {
-    margin: 0.35rem 0 0.4rem;
-    font-size: clamp(1.9rem, 4vw, 2.8rem);
-    line-height: 1.05;
-    color: #0f172a;
-  }
-
-  p {
-    max-width: 58ch;
-    color: #64748b;
-    font-size: 0.96rem;
-    line-height: 1.6;
-  }
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 1rem;
 }
 
 .kicker {
@@ -42,7 +23,7 @@
 }
 
 .snapshotLabel {
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.78rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -50,12 +31,12 @@
 }
 
 .snapshot strong {
-  color: #0f172a;
+  color: var(--color-text-primary);
   font-size: 1.08rem;
 }
 
 .snapshotHint {
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.88rem;
 }
 
@@ -80,8 +61,8 @@
     padding: 0.65rem 0.95rem;
     border: 1px solid #dbe4ee;
     border-radius: 999px;
-    background: #ffffff;
-    color: #475569;
+    background: var(--color-surface);
+    color: var(--color-text-secondary);
     cursor: pointer;
     transition:
       transform 0.2s ease,
@@ -141,13 +122,13 @@
   gap: 1rem;
   background:
     radial-gradient(circle at top right, rgba(46, 196, 182, 0.08), transparent 36%),
-    linear-gradient(180deg, #ffffff, #fbfdff);
+    linear-gradient(180deg, var(--color-surface), var(--color-surface-soft));
 }
 
 .cardTop {
   h3 {
     margin: 0.45rem 0 0.25rem;
-    color: #0f172a;
+    color: var(--color-text-primary);
     font-size: 1.08rem;
   }
 }
@@ -160,7 +141,7 @@
 
 .metaText {
   margin: 0;
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.88rem;
 }
 
@@ -174,7 +155,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
-  color: #475569;
+  color: var(--color-text-secondary);
   font-size: 0.86rem;
   font-weight: 600;
 
@@ -208,10 +189,10 @@
   gap: 0.35rem;
   min-height: 220px;
   text-align: center;
-  color: #64748b;
+  color: var(--color-text-secondary);
 
   strong {
-    color: #0f172a;
+    color: var(--color-text-primary);
   }
 
   span {
@@ -277,3 +258,5 @@
     color: var(--color-bg) !important;
   }
 }
+
+

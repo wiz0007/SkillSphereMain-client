@@ -5,27 +5,9 @@
 }
 
 .header {
-  display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.8fr);
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-
-  @include respond(md) {
-    grid-template-columns: 1fr;
-  }
-
-  h2 {
-    margin: 0.4rem 0 0.35rem;
-    font-size: clamp(1.9rem, 4vw, 2.7rem);
-    line-height: 1.05;
-    color: #0f172a;
-  }
-
-  p {
-    max-width: 58ch;
-    color: #64748b;
-    font-size: 0.96rem;
-  }
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 1rem;
 }
 
 .kicker {
@@ -41,7 +23,7 @@
 }
 
 .snapshotLabel {
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.78rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -49,12 +31,12 @@
 }
 
 .snapshot strong {
-  color: #0f172a;
+  color: var(--color-text-primary);
   font-size: 1.08rem;
 }
 
 .snapshotHint {
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.88rem;
 }
 
@@ -68,7 +50,7 @@
   @include panel(20px, 1.2rem);
   margin-bottom: 1rem;
   text-align: center;
-  color: #64748b;
+  color: var(--color-text-secondary);
 }
 
 .emptyBox {
@@ -79,12 +61,12 @@
 
   h3 {
     margin: 0 0 0.35rem;
-    color: #0f172a;
+    color: var(--color-text-primary);
     font-size: 1.2rem;
   }
 
   p {
-    color: #64748b;
+    color: var(--color-text-secondary);
     margin-bottom: 1rem;
   }
 }
@@ -95,3 +77,5 @@
   border-radius: 999px;
   font-weight: 700;
 }
+
+
