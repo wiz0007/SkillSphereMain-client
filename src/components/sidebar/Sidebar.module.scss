@@ -7,9 +7,10 @@
   left: 0;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: $shell-sidebar-width;
-  height: 100vh;
+  height: 100dvh;
+  max-height: 100dvh;
   padding: 1.25rem 1rem;
   background:
     radial-gradient(circle at top left, rgba(var(--color-accent-rgb), 0.14), transparent 28%),
@@ -23,8 +24,12 @@
   z-index: 1100;
   transform: translateX(-100%);
   transition: transform 0.3s ease;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
   user-select: none;
   -webkit-user-select: none;
+  scrollbar-gutter: stable;
 }
 
 .open {
@@ -128,7 +133,7 @@
 }
 
 .footer {
-  margin-top: 1.25rem;
+  margin-top: auto;
   padding-top: 1rem;
   border-top: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
 }

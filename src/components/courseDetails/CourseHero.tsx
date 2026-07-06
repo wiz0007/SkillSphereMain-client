@@ -23,7 +23,7 @@ const getDemoVideoEmbed = (demoVideoUrl?: string) => {
       return videoId
         ? {
             type: "iframe" as const,
-            src: `https://www.youtube.com/embed/${videoId}`,
+            src: `https://www.youtube-nocookie.com/embed/${videoId}`,
           }
         : null;
     }
@@ -37,7 +37,7 @@ const getDemoVideoEmbed = (demoVideoUrl?: string) => {
       return videoId
         ? {
             type: "iframe" as const,
-            src: `https://www.youtube.com/embed/${videoId}`,
+            src: `https://www.youtube-nocookie.com/embed/${videoId}`,
           }
         : null;
     }
@@ -207,7 +207,7 @@ const CourseHero = ({
         <section className={styles.demoSection}>
           <div className={styles.demoHeader}>
             <span className={styles.kicker}>Watch demo</span>
-            <strong>Preview how this tutor teaches</strong>
+            <strong>Preview the teaching style</strong>
           </div>
 
           <div className={styles.demoFrame}>
