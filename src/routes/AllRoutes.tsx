@@ -23,6 +23,7 @@ import WalletPage from "../pages/wallet/WalletPage";
 import HelpCenterPage from "../pages/helpCenter/HelpCenterPage";
 import SupportPage from "../pages/support/SupportPage";
 import AdminPage from "../pages/admin/AdminPage";
+import SeoHead from "../seo/SeoHead";
 
 import MainLayout from "../layout/MainLayout";
 import ProtectedRoute from "./ProtectedRoute";
@@ -39,8 +40,45 @@ const AllRoutes = () => {
       <Route path="/userDetails" element={<UserDetailFormPage />} />
 
       <Route element={<MainLayout />}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/explore" element={<HomePage />} />
+        <Route
+          path="/"
+          element={
+            <>
+              <SeoHead />
+              <HomePage />
+            </>
+          }
+        />
+        <Route
+          path="/explore"
+          element={
+            <>
+              <SeoHead
+                metadata={{
+                  title: "Explore Online Skill Courses | SkillSphere",
+                  description:
+                    "Browse live and recorded skill courses across programming, design, management, data science, AI, sports, and practical learning categories.",
+                }}
+              />
+              <HomePage />
+            </>
+          }
+        />
+        <Route
+          path="/courses"
+          element={
+            <>
+              <SeoHead
+                metadata={{
+                  title: "Explore Live and Recorded Skill Courses | SkillSphere",
+                  description:
+                    "Find skill courses, compare tutors, and choose live sessions, recorded learning, or recurring tuition through SkillSphere.",
+                }}
+              />
+              <HomePage />
+            </>
+          }
+        />
         <Route path="/help-center" element={<HelpCenterPage />} />
         <Route
           path="/help-center/category/:categorySlug"
@@ -51,7 +89,9 @@ const AllRoutes = () => {
           element={<HelpCenterPage />}
         />
         <Route path="/course/:id" element={<CourseDetailsPage />} />
+        <Route path="/courses/:id" element={<CourseDetailsPage />} />
         <Route path="/public-profile/:userId" element={<PublicProfilePage />} />
+        <Route path="/tutors/:userId" element={<PublicProfilePage />} />
       </Route>
 
       <Route element={<ProtectedRoute />}>

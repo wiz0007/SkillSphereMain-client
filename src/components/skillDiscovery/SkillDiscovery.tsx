@@ -4,6 +4,7 @@ import styles from "./SkillDiscovery.module.scss";
 import CourseCard from "../courseCard/CourseCard";
 import { getAllCourses, type Course } from "../../services/courses.service";
 import { useAuth } from "../../context/AuthContext";
+import { trackSeoEvent } from "../../seo/analytics";
 
 const SkillDiscovery = () => {
   const { user, loading: authLoading } = useAuth();
@@ -99,7 +100,14 @@ const SkillDiscovery = () => {
               type="search"
               placeholder="Search a skill, tutor, level, or course type"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                if (e.target.value.trim().length >= 3) {
+                  trackSeoEvent("search_courses", {
+                    query_length: e.target.value.trim().length,
+                  });
+                }
+              }}
             />
             {search ? (
               <button
@@ -120,7 +128,12 @@ const SkillDiscovery = () => {
                   type="button"
                   key={cat}
                   className={category === cat ? styles.quickPickActive : ""}
-                  onClick={() => setCategory((current) => current === cat ? "" : cat)}
+                  onClick={() => {
+                    setCategory((current) => current === cat ? "" : cat);
+                    trackSeoEvent("apply_filter", {
+                      filter_type: "category",
+                    });
+                  }}
                 >
                   {cat}
                 </button>
@@ -132,7 +145,15 @@ const SkillDiscovery = () => {
 
       {/* FILTERS */}
       <div className={styles.filters}>
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
+        <select
+          value={category}
+          onChange={(e) => {
+            setCategory(e.target.value);
+            trackSeoEvent("apply_filter", {
+              filter_type: "category",
+            });
+          }}
+        >
           <option value="">All Categories</option>
           {categories.map((cat) => (
             <option key={cat} value={cat}>
@@ -141,7 +162,15 @@ const SkillDiscovery = () => {
           ))}
         </select>
 
-        <select value={level} onChange={(e) => setLevel(e.target.value)}>
+        <select
+          value={level}
+          onChange={(e) => {
+            setLevel(e.target.value);
+            trackSeoEvent("apply_filter", {
+              filter_type: "level",
+            });
+          }}
+        >
           <option value="">All Levels</option>
           <option value="Beginner">Beginner</option>
           <option value="Intermediate">Intermediate</option>

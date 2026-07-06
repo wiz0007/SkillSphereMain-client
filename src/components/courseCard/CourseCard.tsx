@@ -100,6 +100,7 @@ const CourseCard = ({ course }: Props) => {
     course.skills?.filter(Boolean).slice(0, 3) || [];
 
   const isTuition = course.type === "tuition";
+  const coursePath = `/courses/${course.slug || course._id}`;
 
   const typeLabel =
     course.type === "recorded"
@@ -121,7 +122,7 @@ const CourseCard = ({ course }: Props) => {
     : "";
 
   return (
-    <article className={styles.card}>
+    <article className={styles.card} onClick={() => navigate(coursePath)}>
       <div className={styles.image}>
         <img
           src={getCategoryImage(course.category)}
@@ -133,7 +134,10 @@ const CourseCard = ({ course }: Props) => {
         <button
           type="button"
           className={styles.save}
-          onClick={() => handleSave(course._id)}
+          onClick={(event) => {
+            event.stopPropagation();
+            handleSave(course._id);
+          }}
         >
           {isSaved(course._id) ? (
             <BookmarkCheck size={18} />
@@ -166,9 +170,10 @@ const CourseCard = ({ course }: Props) => {
         <button
           type="button"
           className={styles.tutor}
-          onClick={() =>
-            navigate(`/public-profile/${course.tutor?._id}`)
-          }
+          onClick={(event) => {
+            event.stopPropagation();
+            navigate(`/tutors/${course.tutor?._id}`);
+          }}
         >
           <img
             src={
@@ -253,7 +258,10 @@ const CourseCard = ({ course }: Props) => {
               <button
                 key={star}
                 type="button"
-                onClick={() => handleRate(star)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleRate(star);
+                }}
                 onMouseEnter={() => setHover(star)}
                 onMouseLeave={() => setHover(0)}
                 className={

@@ -118,6 +118,8 @@ export interface TuitionSchedule {
 
 export interface Course {
   _id: string;
+  slug?: string;
+  seoStatus?: "draft" | "pending-review" | "public-noindex" | "public-indexable" | "suspended" | "archived";
   title: string;
   description?: string;
   type: "live" | "recorded" | "tuition";

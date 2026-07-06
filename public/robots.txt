@@ -1,4 +1,18 @@
 User-agent: *
 Allow: /
 
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /settings/
+Disallow: /messages/
+Disallow: /notifications/
+Disallow: /sessions/
+Disallow: /your-courses/
+Disallow: /saved-courses/
+Disallow: /wallet/
+Disallow: /support/
+Disallow: /add-course/
+Disallow: /userDetails/
+Disallow: /social-auth/
+
 Sitemap: https://skillsphere.space/sitemap.xml

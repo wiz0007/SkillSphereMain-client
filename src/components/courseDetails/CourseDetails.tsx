@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styles from "./CourseDetails.module.scss";
 import CourseHero from "./CourseHero";
@@ -8,6 +8,9 @@ import { useCourseDetails } from "./useCourseDetails";
 import { useSaveCourse } from "./useSaveCourse";
 import RequestSession from "../requestSession/RequestSession";
 import { useAuth } from "../../context/AuthContext";
+import SeoHead from "../../seo/SeoHead";
+import { buildCanonicalUrl, sanitizeSeoText } from "../../seo/seoConfig";
+import { trackSeoEvent } from "../../seo/analytics";
 
 const CourseDetails = () => {
   const { id } = useParams();
@@ -84,8 +87,62 @@ const CourseDetails = () => {
     setOpen(true);
   };
 
+  useEffect(() => {
+    trackSeoEvent("view_course", {
+      course_type: course.type,
+      course_level: course.level || "",
+      course_category: course.category || "",
+    });
+  }, [course._id, course.type, course.level, course.category]);
+
   return (
     <section className={styles.page}>
+      <SeoHead
+        metadata={{
+          title: `${sanitizeSeoText(course.title)}${
+            course.tutor?.fullName || course.tutor?.username
+              ? ` with ${sanitizeSeoText(course.tutor.fullName || course.tutor.username)}`
+              : ""
+          } | SkillSphere`,
+          description: `Learn ${sanitizeSeoText(course.skills?.[0] || course.category || course.title)}${
+            course.tutor?.fullName || course.tutor?.username
+              ? ` with ${sanitizeSeoText(course.tutor.fullName || course.tutor.username)}`
+              : ""
+          }. View level, format, ratings, reviews, and SkillCoin booking details.`,
+          canonicalUrl: buildCanonicalUrl(`/courses/${course.slug || course._id}`),
+          robots:
+            course.seoStatus === "public-indexable"
+              ? "index,follow"
+              : "noindex,follow",
+          type: "website",
+          structuredData: [
+            {
+              "@context": "https://schema.org",
+              "@type": "Course",
+              name: course.title,
+              description: course.description,
+              provider: {
+                "@type": "Person",
+                name: course.tutor?.fullName || course.tutor?.username || "SkillSphere tutor",
+              },
+              offers: {
+                "@type": "Offer",
+                price: course.price || 0,
+                priceCurrency: "INR",
+                availability: "https://schema.org/InStock",
+              },
+              aggregateRating:
+                course.averageRating && course.totalRatings
+                  ? {
+                      "@type": "AggregateRating",
+                      ratingValue: course.averageRating,
+                      ratingCount: course.totalRatings,
+                    }
+                  : undefined,
+            },
+          ],
+        }}
+      />
       <div className={styles.container}>
         <div className={styles.hero}>
           <CourseHero

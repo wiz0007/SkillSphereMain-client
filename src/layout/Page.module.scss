@@ -30,10 +30,10 @@
 @media (min-width: 1024px) {
   .shell {
     width: min(
-      calc(100% - #{$shell-sidebar-width} - #{$shell-gap}),
+      calc(100% - #{$shell-sidebar-width}),
       $shell-content-max-width
     );
-    margin-left: calc(#{$shell-sidebar-width} + #{$shell-gap});
+    margin-left: $shell-sidebar-width;
     margin-right: auto;
   }
 }

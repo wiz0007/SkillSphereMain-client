@@ -16,6 +16,9 @@ import {
   Star,
 } from "lucide-react";
 import { getPublicProfile } from "../../services/profile.service";
+import SeoHead from "../../seo/SeoHead";
+import { buildCanonicalUrl, sanitizeSeoText } from "../../seo/seoConfig";
+import { trackSeoEvent } from "../../seo/analytics";
 
 interface TutorProfile {
   headline?: string;
@@ -195,6 +198,26 @@ const PublicProfile = () => {
   ]
     .filter(Boolean)
     .join(", ");
+  const displayName =
+    profile.fullName || profile.username || "SkillSphere tutor";
+  const primarySkill =
+    tutorProfile.skills?.[0] ||
+    tutorProfile.categories?.[0] ||
+    "online";
+  const canIndexProfile = Boolean(
+    profile.isTutor &&
+      profile.tutorVerificationStatus === "approved" &&
+      (tutorProfile.bio || tutorProfile.headline || profile.bio) &&
+      tutorProfile.skills?.length
+  );
+
+  useEffect(() => {
+    if (!profile) return;
+    trackSeoEvent("view_tutor", {
+      is_verified_tutor: profile.tutorVerificationStatus === "approved",
+      skills_count: tutorProfile.skills?.length || 0,
+    });
+  }, [profile, tutorProfile.skills?.length]);
 
   return (
     <motion.div
@@ -203,6 +226,32 @@ const PublicProfile = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25 }}
     >
+      <SeoHead
+        metadata={{
+          title: `${sanitizeSeoText(displayName)} - ${sanitizeSeoText(primarySkill)} Tutor | SkillSphere`,
+          description: `View ${sanitizeSeoText(displayName)}'s public SkillSphere profile, skills, learning formats, ratings, and available tutoring context.`,
+          canonicalUrl: buildCanonicalUrl(`/tutors/${userId}`),
+          robots: canIndexProfile ? "index,follow" : "noindex,follow",
+          type: "profile",
+          image: profile.profilePhoto,
+          imageAlt: `${sanitizeSeoText(displayName)} SkillSphere profile photo`,
+          structuredData: [
+            {
+              "@context": "https://schema.org",
+              "@type": "ProfilePage",
+              mainEntity: {
+                "@type": "Person",
+                name: displayName,
+                url: buildCanonicalUrl(`/tutors/${userId}`),
+                image: profile.profilePhoto,
+                description:
+                  tutorProfile.headline || tutorProfile.bio || profile.bio,
+                knowsAbout: tutorProfile.skills || [],
+              },
+            },
+          ],
+        }}
+      />
       <div className={styles.header}>
         <div className={styles.heroCard}>
           <span className={styles.kicker}>Public Profile</span>
