@@ -1,9 +1,13 @@
 @use "../../styles/abstracts" as *;
 
 .card {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.95fr);
+  grid-template-areas:
+    "header preview"
+    "actions preview";
+  gap: 1.1rem;
+  align-items: stretch;
   min-height: 100%;
   padding: 1.25rem;
   border: 1px solid var(--color-border);
@@ -23,8 +27,16 @@
     border-color 0.2s ease;
 
   &:hover {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
     box-shadow: $shadow-md;
+  }
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "preview"
+      "actions";
   }
 }
 
@@ -34,14 +46,16 @@
 }
 
 .header {
+  grid-area: header;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
+  min-width: 0;
 
   h3 {
     margin: 0;
-    font-size: 1.05rem;
-    line-height: 1.35;
+    font-size: clamp(1.1rem, 2vw, 1.45rem);
+    line-height: 1.2;
     color: var(--color-text-primary);
   }
 }
@@ -58,20 +72,26 @@
 .previewTrigger {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.65rem;
 }
 
 .previewPanel {
+  grid-area: preview;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--color-surface-soft) 88%, transparent);
 }
 
 .categoryRow {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.8rem;
+  justify-content: flex-start;
+  gap: 0.6rem;
+  flex-wrap: wrap;
 }
 
 .category {
@@ -88,6 +108,7 @@
 }
 
 .selector {
+  margin-left: auto;
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
@@ -99,6 +120,7 @@
   font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
+  border: 1px solid var(--color-border);
 
   input {
     margin: 0;
@@ -110,7 +132,7 @@
   margin: 0;
   color: var(--color-text-secondary);
   font-size: 0.9rem;
-  line-height: 1.6;
+  line-height: 1.65;
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
@@ -119,19 +141,19 @@
 
 .metrics {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.75rem;
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
 
-  @include respond(sm) {
-    grid-template-columns: 1fr;
+  @media (max-width: 900px) and (min-width: 561px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 .metric {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.65rem;
-  padding: 0.85rem 0.9rem;
+  padding: 0.75rem 0.8rem;
   border: 1px solid var(--color-border);
   border-radius: 16px;
   background: var(--color-surface-soft);
@@ -176,9 +198,11 @@
 }
 
 .actions {
+  grid-area: actions;
   display: flex;
   gap: 0.75rem;
-  margin-top: auto;
+  align-self: end;
+  margin-top: 0;
 
   @include respond(sm) {
     flex-direction: column;
@@ -257,7 +281,9 @@
 :global(html[data-theme="dark"]) .selector,
 :global(body[data-theme="dark"]) .selector,
 :global(html[data-theme="dark"]) .metric,
-:global(body[data-theme="dark"]) .metric {
+:global(body[data-theme="dark"]) .metric,
+:global(html[data-theme="dark"]) .previewPanel,
+:global(body[data-theme="dark"]) .previewPanel {
   border: 1px solid var(--color-border);
   background: rgba(15, 23, 42, 0.72);
 }
