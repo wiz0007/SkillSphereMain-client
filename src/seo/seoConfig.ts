@@ -26,7 +26,9 @@ export const seoIndexingEnabled =
 export const defaultSeoImage = `${productionSiteUrl}/skillsphere-icon.svg`;
 
 export const analyticsId =
-  (import.meta.env.VITE_ANALYTICS_ID as string | undefined) || "";
+  (import.meta.env.VITE_GA_MEASUREMENT_ID as string | undefined) ||
+  (import.meta.env.VITE_ANALYTICS_ID as string | undefined) ||
+  "";
 
 export const searchConsoleVerification =
   (import.meta.env.VITE_SEARCH_CONSOLE_VERIFICATION as string | undefined) || "";
